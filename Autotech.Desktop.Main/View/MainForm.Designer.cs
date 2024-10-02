@@ -34,7 +34,6 @@ namespace Autotech.Desktop.Main.View
         private MetroSetLabel lblSalesInfo;
         private PictureBox logoPictureBox;
         private MetroSetLabel lblCashier;
-        private MetroSetTextBox txtCashier;
         private MetroSetLabel lblAccount;
         private MetroSetComboBox comboAccount;
         private MetroSetTextBox txtContactNumber;
@@ -75,9 +74,9 @@ namespace Autotech.Desktop.Main.View
         {
             metroSetTabControl1 = new MetroSetTabControl();
             tabPageSales = new TabPage();
+            lblAgentName = new MetroSetLabel();
             logoPictureBox = new PictureBox();
             lblCashier = new MetroSetLabel();
-            txtCashier = new MetroSetTextBox();
             lblAccount = new MetroSetLabel();
             comboAccount = new MetroSetComboBox();
             lblContactNumber = new MetroSetLabel();
@@ -115,9 +114,9 @@ namespace Autotech.Desktop.Main.View
             lblTotal = new MetroSetLabel();
             txtTotal = new MetroSetTextBox();
             lblSalesInfo = new MetroSetLabel();
-            tabPage1 = new TabPage();
-            tabPage2 = new TabPage();
-            tabPage3 = new TabPage();
+            tabPageInvoice = new TabPage();
+            tabPageMaintenance = new TabPage();
+            tabPageUserDetails = new TabPage();
             metroSetControlBox1 = new MetroSetControlBox();
             btnLogout = new MetroSetButton();
             metroSetTabControl1.SuspendLayout();
@@ -134,9 +133,9 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.AnimateTime = 200;
             metroSetTabControl1.BackgroundColor = Color.White;
             metroSetTabControl1.Controls.Add(tabPageSales);
-            metroSetTabControl1.Controls.Add(tabPage1);
-            metroSetTabControl1.Controls.Add(tabPage2);
-            metroSetTabControl1.Controls.Add(tabPage3);
+            metroSetTabControl1.Controls.Add(tabPageInvoice);
+            metroSetTabControl1.Controls.Add(tabPageMaintenance);
+            metroSetTabControl1.Controls.Add(tabPageUserDetails);
             metroSetTabControl1.Dock = DockStyle.Top;
             metroSetTabControl1.IsDerivedStyle = true;
             metroSetTabControl1.ItemSize = new Size(100, 38);
@@ -150,6 +149,7 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.Style = Style.Light;
             metroSetTabControl1.StyleManager = null;
             metroSetTabControl1.TabIndex = 0;
+            metroSetTabControl1.TabStyle = TabStyle.Style2;
             metroSetTabControl1.ThemeAuthor = "Narwin";
             metroSetTabControl1.ThemeName = "MetroLite";
             metroSetTabControl1.UnselectedTextColor = Color.Gray;
@@ -157,9 +157,9 @@ namespace Autotech.Desktop.Main.View
             // 
             // tabPageSales
             // 
+            tabPageSales.Controls.Add(lblAgentName);
             tabPageSales.Controls.Add(logoPictureBox);
             tabPageSales.Controls.Add(lblCashier);
-            tabPageSales.Controls.Add(txtCashier);
             tabPageSales.Controls.Add(lblAccount);
             tabPageSales.Controls.Add(comboAccount);
             tabPageSales.Controls.Add(lblContactNumber);
@@ -189,6 +189,19 @@ namespace Autotech.Desktop.Main.View
             tabPageSales.Text = "Sales";
             tabPageSales.UseVisualStyleBackColor = true;
             // 
+            // lblAgentName
+            // 
+            lblAgentName.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblAgentName.IsDerivedStyle = true;
+            lblAgentName.Location = new Point(378, 10);
+            lblAgentName.Name = "lblAgentName";
+            lblAgentName.Size = new Size(147, 25);
+            lblAgentName.Style = Style.Light;
+            lblAgentName.StyleManager = null;
+            lblAgentName.TabIndex = 24;
+            lblAgentName.ThemeAuthor = "Narwin";
+            lblAgentName.ThemeName = "MetroLite";
+            // 
             // logoPictureBox
             // 
             logoPictureBox.Location = new Point(10, 10);
@@ -197,7 +210,6 @@ namespace Autotech.Desktop.Main.View
             logoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             logoPictureBox.TabIndex = 1;
             logoPictureBox.TabStop = false;
-            logoPictureBox.Image = System.Drawing.Image.FromFile("logo.jpg");
             // 
             // lblCashier
             // 
@@ -212,35 +224,6 @@ namespace Autotech.Desktop.Main.View
             lblCashier.Text = "Cashier:";
             lblCashier.ThemeAuthor = "Narwin";
             lblCashier.ThemeName = "MetroLite";
-            // 
-            // txtCashier
-            // 
-            txtCashier.AutoCompleteCustomSource = null;
-            txtCashier.AutoCompleteMode = AutoCompleteMode.None;
-            txtCashier.AutoCompleteSource = AutoCompleteSource.None;
-            txtCashier.BorderColor = Color.FromArgb(155, 155, 155);
-            txtCashier.DisabledBackColor = Color.FromArgb(204, 204, 204);
-            txtCashier.DisabledBorderColor = Color.FromArgb(155, 155, 155);
-            txtCashier.DisabledForeColor = Color.FromArgb(136, 136, 136);
-            txtCashier.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtCashier.HoverColor = Color.FromArgb(102, 102, 102);
-            txtCashier.Image = null;
-            txtCashier.IsDerivedStyle = true;
-            txtCashier.Lines = null;
-            txtCashier.Location = new Point(380, 10);
-            txtCashier.MaxLength = 32767;
-            txtCashier.Multiline = false;
-            txtCashier.Name = "txtCashier";
-            txtCashier.ReadOnly = false;
-            txtCashier.Size = new Size(150, 25);
-            txtCashier.Style = Style.Light;
-            txtCashier.StyleManager = null;
-            txtCashier.TabIndex = 3;
-            txtCashier.TextAlign = HorizontalAlignment.Left;
-            txtCashier.ThemeAuthor = "Narwin";
-            txtCashier.ThemeName = "MetroLite";
-            txtCashier.UseSystemPasswordChar = false;
-            txtCashier.WatermarkText = "";
             // 
             // lblAccount
             // 
@@ -1039,29 +1022,29 @@ namespace Autotech.Desktop.Main.View
             lblSalesInfo.ThemeAuthor = "Narwin";
             lblSalesInfo.ThemeName = "MetroLite";
             // 
-            // tabPage1
+            // tabPageInvoice
             // 
-            tabPage1.Location = new Point(4, 42);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Size = new Size(1304, 721);
-            tabPage1.TabIndex = 1;
-            tabPage1.Text = "Invoice";
+            tabPageInvoice.Location = new Point(4, 42);
+            tabPageInvoice.Name = "tabPageInvoice";
+            tabPageInvoice.Size = new Size(1304, 721);
+            tabPageInvoice.TabIndex = 1;
+            tabPageInvoice.Text = "Invoice";
             // 
-            // tabPage2
+            // tabPageMaintenance
             // 
-            tabPage2.Location = new Point(4, 42);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Size = new Size(1304, 721);
-            tabPage2.TabIndex = 2;
-            tabPage2.Text = "Maintenance";
+            tabPageMaintenance.Location = new Point(4, 42);
+            tabPageMaintenance.Name = "tabPageMaintenance";
+            tabPageMaintenance.Size = new Size(1304, 721);
+            tabPageMaintenance.TabIndex = 2;
+            tabPageMaintenance.Text = "Maintenance";
             // 
-            // tabPage3
+            // tabPageUserDetails
             // 
-            tabPage3.Location = new Point(4, 42);
-            tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(1304, 721);
-            tabPage3.TabIndex = 3;
-            tabPage3.Text = "User Details";
+            tabPageUserDetails.Location = new Point(4, 42);
+            tabPageUserDetails.Name = "tabPageUserDetails";
+            tabPageUserDetails.Size = new Size(1304, 721);
+            tabPageUserDetails.TabIndex = 3;
+            tabPageUserDetails.Text = "User Details";
             // 
             // metroSetControlBox1
             // 
@@ -1114,6 +1097,7 @@ namespace Autotech.Desktop.Main.View
             btnLogout.Text = "LOGOUT";
             btnLogout.ThemeAuthor = "Narwin";
             btnLogout.ThemeName = "MetroLite";
+            btnLogout.Click += btnLogout_Click;
             // 
             // MainForm
             // 
@@ -1145,10 +1129,11 @@ namespace Autotech.Desktop.Main.View
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private MetroSetControlBox metroSetControlBox1;
-        private TabPage tabPage1;
-        private TabPage tabPage2;
-        private TabPage tabPage3;
+        private TabPage tabPageInvoice;
+        private TabPage tabPageMaintenance;
+        private TabPage tabPageUserDetails;
         private MetroSetButton btnLogout;
+        private MetroSetLabel lblAgentName;
     }
 }
 

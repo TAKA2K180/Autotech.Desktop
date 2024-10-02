@@ -532,7 +532,7 @@ namespace Autotech.Desktop.Main.View
             Controls.Add(btnRegister);
             Name = "RegistrationForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Customer Registration";
+            Text = "Account Registration";
             ResumeLayout(false);
         }
 

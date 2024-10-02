@@ -12,4 +12,8 @@
     <PackageReference Include="MetroSet_UI" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Autotech.Desktop.BusinessLayer\Autotech.Desktop.BusinessLayer.csproj" />
+  </ItemGroup>
+
 </Project>

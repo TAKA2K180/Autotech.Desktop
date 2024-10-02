@@ -1,4 +1,6 @@
-﻿using MetroSet_UI.Controls;
+﻿using Autotech.Desktop.BusinessLayer.Services;
+using MetroSet_UI.Controls;
+using MetroSet_UI.Forms;
 
 namespace Autotech.Desktop.Main.View
 {
@@ -200,26 +202,57 @@ namespace Autotech.Desktop.Main.View
             ResumeLayout(false);
         }
 
-        private void btnLogin_Click(object sender, System.EventArgs e)
+        public string Username
         {
-            string username = txtUsername.Text;
-            string password = txtPassword.Text;
+            get { return txtUsername.Text; }
+            set { Username = value; }
+        }
 
-            if (ValidateLogin(username, password))
+        public string Password
+        {
+            get { return txtPassword.Text; }
+            set { Password = value; }
+        }
+
+        LoginServices loginServices = new LoginServices();
+
+
+        private async void btnLogin_Click(object sender, System.EventArgs e)
+        {
+            string username = Username;
+            string password = Password;
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Login successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                // Perform necessary actions, such as opening the main form
+                MetroSetMessageBox.Show(this, "Please enter both username and password", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var loginService = new LoginServices();
+
+            bool loginSuccessful = await loginService.LoginAsync(username, password);
+
+            ValidateLogin(loginSuccessful);
+        }
+
+        private void ValidateLogin(bool loginSuccessful)
+        {
+            if (loginSuccessful)
+            {
+                MetroSetMessageBox.Show(this, "Login successful!", "Login", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                bool isMainFormOpen = Application.OpenForms.OfType<MainForm>().Any();
+                if (isMainFormOpen)
+                {
+                    MainForm mainForm = new MainForm();
+                    mainForm.Hide();
+                    mainForm.Show();
+                }
+                this.Hide();
             }
             else
             {
-                MessageBox.Show("Invalid username or password.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MetroSetMessageBox.Show(this, "Invalid username or password. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private bool ValidateLogin(string username, string password)
-        {
-            // Dummy validation logic; replace with actual logic.
-            return username == "admin" && password == "password";
         }
     }
 

@@ -75,6 +75,9 @@ namespace Autotech.Desktop.Main.View
             // Open the main form after the splash screen
             MainForm mainForm = new MainForm();
             mainForm.Show();
+
+            LoginForm loginForm = new LoginForm();
+            loginForm.Show();
         }
 
         // Optional: To stop closing when ESC is pressed
