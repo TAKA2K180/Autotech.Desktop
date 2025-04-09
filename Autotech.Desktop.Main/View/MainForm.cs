@@ -1,4 +1,6 @@
 ﻿using Autotech.Desktop.BusinessLayer.Helpers;
+using Autotech.Desktop.BusinessLayer.Services;
+using Autotech.Desktop.Core.Models;
 using MetroSet_UI.Controls;
 using MetroSet_UI.Forms;
 using System.Windows.Forms;
@@ -16,15 +18,17 @@ namespace Autotech.Desktop.Main.View
             InitializeTimer();
             GetUser();
             SetLocation();
+            InitializeDataGridView();
+            LoadItemsIntoGrid();
         }
         #endregion
 
         #region Variables
         private System.Windows.Forms.Timer dateTimer;
+        private List<Items> allItems = new List<Items>();
         #endregion
 
         #region Props
-        // Define properties for the labels or other UI elements
         public string AgentName
         {
             get { return lblAgentName.Text; }
@@ -35,7 +39,6 @@ namespace Autotech.Desktop.Main.View
             get { return lblSalesInfo.Text; }
             set { lblSalesInfo.Text = value; }
         }
-
         public int SalesNumber { get; set; }
 
         #endregion
@@ -110,6 +113,93 @@ namespace Autotech.Desktop.Main.View
                 throw;
             }
         }
+
+        private async void LoadItemsIntoGrid()
+        {
+            if(SessionManager.AgentDetails != null)
+            {
+                try
+                {
+                    ItemServices itemService = new ItemServices();
+                    allItems = await itemService.GetAllItemsAsync();
+
+                    if (allItems != null && allItems.Count > 0)
+                    {
+                        dataGridViewItemList.DataSource = allItems;
+                    }
+                    else
+                    {
+                        MetroSetMessageBox.Show(this, "No items available", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MetroSetMessageBox.Show(this, $"Error fetching items: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void InitializeDataGridView()
+        {
+            dataGridViewItemList.AutoGenerateColumns = false;
+
+            dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Item Code",
+                DataPropertyName = "ItemCode",
+                Name = "itemCodeColumn"
+            });
+
+            dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Item Name",
+                DataPropertyName = "ItemName",
+                Name = "itemNameColumn"
+            });
+
+            dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Item Description",
+                DataPropertyName = "ItemDescription",
+                Name = "itemDescriptionColumn"
+            });
+
+            dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Date Added",
+                DataPropertyName = "DateAdded",
+                Name = "dateAddedColumn"
+            });
+
+            dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Item Details",
+                DataPropertyName = "itemDetails.PropertyName",
+                Name = "itemDetailsColumn"
+            });
+        }
         #endregion
+
+        private void txtSearchItem_TextChanged(object sender, EventArgs e)
+        {
+            string searchText = txtSearchItem.Text.ToLower();
+
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                // Filter the list based on the search text (for ItemCode, ItemName, or ItemDescription)
+                var filteredItems = allItems.Where(item =>
+                    item.ItemCode.ToLower().Contains(searchText) ||
+                    item.ItemName.ToLower().Contains(searchText) ||
+                    item.ItemDescription.ToLower().Contains(searchText)).ToList();
+
+                // Update the DataGridView with the filtered list
+                dataGridViewItemList.DataSource = filteredItems;
+            }
+            else
+            {
+                // If the search text is empty, reset the DataGridView to show all items
+                dataGridViewItemList.DataSource = allItems;
+            }
+        }
     }
 }

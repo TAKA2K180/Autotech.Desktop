@@ -72,6 +72,7 @@ namespace Autotech.Desktop.Main.View
         private MetroSetRadioButton radioWholesale;
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             metroSetTabControl1 = new MetroSetTabControl();
             tabPageSales = new TabPage();
             lblAgentName = new MetroSetLabel();
@@ -433,9 +434,20 @@ namespace Autotech.Desktop.Main.View
             // 
             // dataGridViewItemList
             // 
+            dataGridViewItemList.AllowUserToAddRows = false;
+            dataGridViewItemList.AllowUserToDeleteRows = false;
             dataGridViewItemList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewItemList.BackgroundColor = SystemColors.InactiveCaption;
+            dataGridViewItemList.BackgroundColor = SystemColors.ControlDarkDark;
             dataGridViewItemList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.WindowFrame;
+            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 13F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = Color.WhiteSmoke;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dataGridViewItemList.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewItemList.GridColor = SystemColors.ControlText;
             dataGridViewItemList.Location = new Point(10, 100);
             dataGridViewItemList.Name = "dataGridViewItemList";
             dataGridViewItemList.Size = new Size(800, 400);
@@ -493,6 +505,7 @@ namespace Autotech.Desktop.Main.View
             txtSearchItem.ThemeName = "MetroLite";
             txtSearchItem.UseSystemPasswordChar = false;
             txtSearchItem.WatermarkText = "Search item...";
+            txtSearchItem.TextChanged += txtSearchItem_TextChanged;
             // 
             // radioBataan
             // 
@@ -1108,6 +1121,7 @@ namespace Autotech.Desktop.Main.View
             Controls.Add(metroSetControlBox1);
             Controls.Add(metroSetTabControl1);
             Name = "MainForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Autotech POS System";
             metroSetTabControl1.ResumeLayout(false);
             tabPageSales.ResumeLayout(false);
