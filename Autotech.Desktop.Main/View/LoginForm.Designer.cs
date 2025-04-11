@@ -36,7 +36,6 @@ namespace Autotech.Desktop.Main.View
         private MetroSetLabel lblPassword;
         private MetroSetTextBox txtPassword;
         private MetroSetButton btnLogin;
-        private MetroSetControlBox metroSetControlBox;
         private void InitializeComponent()
         {
             lblUsername = new MetroSetLabel();
@@ -44,7 +43,6 @@ namespace Autotech.Desktop.Main.View
             lblPassword = new MetroSetLabel();
             txtPassword = new MetroSetTextBox();
             btnLogin = new MetroSetButton();
-            metroSetControlBox = new MetroSetControlBox();
             SuspendLayout();
             // 
             // lblUsername
@@ -132,6 +130,7 @@ namespace Autotech.Desktop.Main.View
             txtPassword.ThemeName = "MetroLite";
             txtPassword.UseSystemPasswordChar = true;
             txtPassword.WatermarkText = "Enter password";
+            txtPassword.KeyPressed += txtPassword_KeyPressed;
             // 
             // btnLogin
             // 
@@ -160,35 +159,9 @@ namespace Autotech.Desktop.Main.View
             btnLogin.ThemeName = "MetroLite";
             btnLogin.Click += btnLogin_Click;
             // 
-            // metroSetControlBox
-            // 
-            metroSetControlBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            metroSetControlBox.CloseHoverBackColor = Color.FromArgb(183, 40, 40);
-            metroSetControlBox.CloseHoverForeColor = Color.White;
-            metroSetControlBox.CloseNormalForeColor = Color.Gray;
-            metroSetControlBox.DisabledForeColor = Color.DimGray;
-            metroSetControlBox.IsDerivedStyle = true;
-            metroSetControlBox.Location = new Point(341, 7);
-            metroSetControlBox.MaximizeBox = false;
-            metroSetControlBox.MaximizeHoverBackColor = Color.FromArgb(238, 238, 238);
-            metroSetControlBox.MaximizeHoverForeColor = Color.Gray;
-            metroSetControlBox.MaximizeNormalForeColor = Color.Gray;
-            metroSetControlBox.MinimizeBox = true;
-            metroSetControlBox.MinimizeHoverBackColor = Color.FromArgb(238, 238, 238);
-            metroSetControlBox.MinimizeHoverForeColor = Color.Gray;
-            metroSetControlBox.MinimizeNormalForeColor = Color.Gray;
-            metroSetControlBox.Name = "metroSetControlBox";
-            metroSetControlBox.Size = new Size(100, 25);
-            metroSetControlBox.Style = MetroSet_UI.Enums.Style.Light;
-            metroSetControlBox.StyleManager = null;
-            metroSetControlBox.TabIndex = 0;
-            metroSetControlBox.ThemeAuthor = "Narwin";
-            metroSetControlBox.ThemeName = "MetroLite";
-            // 
             // LoginForm
             // 
             ClientSize = new Size(445, 300);
-            Controls.Add(metroSetControlBox);
             Controls.Add(lblUsername);
             Controls.Add(txtUsername);
             Controls.Add(lblPassword);
@@ -224,7 +197,7 @@ namespace Autotech.Desktop.Main.View
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                MetroSetMessageBox.Show(this, "Please enter both username and password", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                new ToastMessageForm("Please enter both username and password").Show();
                 return;
             }
 
@@ -239,9 +212,9 @@ namespace Autotech.Desktop.Main.View
         {
             if (loginSuccessful)
             {
-                MetroSetMessageBox.Show(this, "Login successful!", "Login", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                new ToastMessageForm("Login successful!").Show();
                 bool isMainFormOpen = Application.OpenForms.OfType<MainForm>().Any();
-                if (isMainFormOpen)
+                if (!isMainFormOpen)
                 {
                     MainForm mainForm = new MainForm();
                     mainForm.Hide();
@@ -251,7 +224,7 @@ namespace Autotech.Desktop.Main.View
             }
             else
             {
-                MetroSetMessageBox.Show(this, "Invalid username or password. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                new ToastMessageForm("Invalid username or password. Please try again.").Show();
             }
         }
     }

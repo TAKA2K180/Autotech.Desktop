@@ -75,6 +75,9 @@ namespace Autotech.Desktop.Main.View
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             metroSetTabControl1 = new MetroSetTabControl();
             tabPageSales = new TabPage();
+            lblPage = new MetroSetLabel();
+            btnNextPage = new MetroSetButton();
+            btnPrevPage = new MetroSetButton();
             lblAgentName = new MetroSetLabel();
             logoPictureBox = new PictureBox();
             lblCashier = new MetroSetLabel();
@@ -158,6 +161,9 @@ namespace Autotech.Desktop.Main.View
             // 
             // tabPageSales
             // 
+            tabPageSales.Controls.Add(lblPage);
+            tabPageSales.Controls.Add(btnNextPage);
+            tabPageSales.Controls.Add(btnPrevPage);
             tabPageSales.Controls.Add(lblAgentName);
             tabPageSales.Controls.Add(logoPictureBox);
             tabPageSales.Controls.Add(lblCashier);
@@ -189,6 +195,75 @@ namespace Autotech.Desktop.Main.View
             tabPageSales.TabIndex = 0;
             tabPageSales.Text = "Sales";
             tabPageSales.UseVisualStyleBackColor = true;
+            // 
+            // lblPage
+            // 
+            lblPage.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblPage.IsDerivedStyle = true;
+            lblPage.Location = new Point(66, 468);
+            lblPage.Name = "lblPage";
+            lblPage.Size = new Size(66, 25);
+            lblPage.Style = Style.Light;
+            lblPage.StyleManager = null;
+            lblPage.TabIndex = 27;
+            lblPage.Text = "1";
+            lblPage.TextAlign = ContentAlignment.MiddleCenter;
+            lblPage.ThemeAuthor = "Narwin";
+            lblPage.ThemeName = "MetroLite";
+            // 
+            // btnNextPage
+            // 
+            btnNextPage.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnNextPage.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnNextPage.DisabledForeColor = Color.Gray;
+            btnNextPage.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnNextPage.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnNextPage.HoverColor = Color.FromArgb(95, 207, 255);
+            btnNextPage.HoverTextColor = Color.White;
+            btnNextPage.IsDerivedStyle = true;
+            btnNextPage.Location = new Point(138, 461);
+            btnNextPage.Name = "btnNextPage";
+            btnNextPage.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnNextPage.NormalColor = Color.FromArgb(65, 177, 225);
+            btnNextPage.NormalTextColor = Color.White;
+            btnNextPage.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnNextPage.PressColor = Color.FromArgb(35, 147, 195);
+            btnNextPage.PressTextColor = Color.White;
+            btnNextPage.Size = new Size(50, 37);
+            btnNextPage.Style = Style.Light;
+            btnNextPage.StyleManager = null;
+            btnNextPage.TabIndex = 26;
+            btnNextPage.Text = ">>";
+            btnNextPage.ThemeAuthor = "Narwin";
+            btnNextPage.ThemeName = "MetroLite";
+            btnNextPage.Click += btnNextPage_Click;
+            // 
+            // btnPrevPage
+            // 
+            btnPrevPage.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnPrevPage.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnPrevPage.DisabledForeColor = Color.Gray;
+            btnPrevPage.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnPrevPage.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnPrevPage.HoverColor = Color.FromArgb(95, 207, 255);
+            btnPrevPage.HoverTextColor = Color.White;
+            btnPrevPage.IsDerivedStyle = true;
+            btnPrevPage.Location = new Point(10, 461);
+            btnPrevPage.Name = "btnPrevPage";
+            btnPrevPage.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnPrevPage.NormalColor = Color.FromArgb(65, 177, 225);
+            btnPrevPage.NormalTextColor = Color.White;
+            btnPrevPage.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnPrevPage.PressColor = Color.FromArgb(35, 147, 195);
+            btnPrevPage.PressTextColor = Color.White;
+            btnPrevPage.Size = new Size(50, 37);
+            btnPrevPage.Style = Style.Light;
+            btnPrevPage.StyleManager = null;
+            btnPrevPage.TabIndex = 25;
+            btnPrevPage.Text = "<<";
+            btnPrevPage.ThemeAuthor = "Narwin";
+            btnPrevPage.ThemeName = "MetroLite";
+            btnPrevPage.Click += btnPrevPage_Click;
             // 
             // lblAgentName
             // 
@@ -450,8 +525,12 @@ namespace Autotech.Desktop.Main.View
             dataGridViewItemList.GridColor = SystemColors.ControlText;
             dataGridViewItemList.Location = new Point(10, 100);
             dataGridViewItemList.Name = "dataGridViewItemList";
-            dataGridViewItemList.Size = new Size(800, 400);
+            dataGridViewItemList.RowHeadersVisible = false;
+            dataGridViewItemList.RowTemplate.Height = 30;
+            dataGridViewItemList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewItemList.Size = new Size(800, 358);
             dataGridViewItemList.TabIndex = 13;
+            dataGridViewItemList.CellValueChanged += dataGridViewItemList_CellValueChanged;
             // 
             // dataGridViewOrderCart
             // 
@@ -1148,6 +1227,9 @@ namespace Autotech.Desktop.Main.View
         private TabPage tabPageUserDetails;
         private MetroSetButton btnLogout;
         private MetroSetLabel lblAgentName;
+        private MetroSetButton btnNextPage;
+        private MetroSetButton btnPrevPage;
+        private MetroSetLabel lblPage;
     }
 }
 

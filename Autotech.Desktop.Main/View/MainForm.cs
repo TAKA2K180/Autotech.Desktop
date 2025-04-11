@@ -20,12 +20,17 @@ namespace Autotech.Desktop.Main.View
             SetLocation();
             InitializeDataGridView();
             LoadItemsIntoGrid();
+            dataGridViewItemList.CellFormatting += DataGridViewItemList_CellFormatting;
         }
         #endregion
 
         #region Variables
         private System.Windows.Forms.Timer dateTimer;
         private List<Items> allItems = new List<Items>();
+        private int currentPage = 1;
+        private int pageSize = 20;
+        private List<Items> currentPageItems = new();
+        private HashSet<Guid> selectedItemIds = new();
         #endregion
 
         #region Props
@@ -101,7 +106,7 @@ namespace Autotech.Desktop.Main.View
                     {
                         radioZambales.Checked = true;
                     }
-                    else if (location == "Upper Pampanga" || location == "Lowe Pampanga")
+                    else if (location == "Upper Pampanga" || location == "Lower Pampanga")
                     {
                         radioPampanga.Checked = true;
                     }
@@ -113,35 +118,74 @@ namespace Autotech.Desktop.Main.View
                 throw;
             }
         }
+        #endregion
 
-        private async void LoadItemsIntoGrid()
+        #region Paging
+        private async void LoadItemsIntoGrid(int page = 1)
         {
-            if(SessionManager.AgentDetails != null)
+            try
             {
-                try
-                {
-                    ItemServices itemService = new ItemServices();
-                    allItems = await itemService.GetAllItemsAsync();
+                var itemService = new ItemServices();
+                var pagedResult = await itemService.GetPaginatedItemsAsync(page, pageSize);
 
-                    if (allItems != null && allItems.Count > 0)
-                    {
-                        dataGridViewItemList.DataSource = allItems;
-                    }
-                    else
-                    {
-                        MetroSetMessageBox.Show(this, "No items available", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                catch (Exception ex)
+                currentPageItems = pagedResult;
+
+                // Merge paged items into allItems (avoiding duplicates)
+                foreach (var item in pagedResult)
                 {
-                    MetroSetMessageBox.Show(this, $"Error fetching items: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (!allItems.Any(i => i.Id == item.Id))
+                        allItems.Add(item);
                 }
+
+                dataGridViewItemList.DataSource = null;
+                dataGridViewItemList.DataSource = currentPageItems;
+
+                foreach (DataGridViewRow row in dataGridViewItemList.Rows)
+                {
+                    if (row.DataBoundItem is Items item && selectedItemIds.Contains(item.Id))
+                    {
+                        row.Cells["selectColumn"].Value = true;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading items: {ex.Message}", "Error");
+            }
+        }
+        private void btnPrevPage_Click(object sender, EventArgs e)
+        {
+            if (currentPage > 1)
+            {
+                currentPage--;
+                LoadItemsIntoGrid(currentPage);
+                lblPage.Text = currentPage.ToString();
+                RestoreCheckboxStates();
             }
         }
 
+        private void btnNextPage_Click(object sender, EventArgs e)
+        {
+            currentPage++;
+            LoadItemsIntoGrid(currentPage);
+            lblPage.Text = currentPage.ToString();
+            RestoreCheckboxStates();
+        }
+        #endregion
+
+        #region Datagrid
         private void InitializeDataGridView()
         {
             dataGridViewItemList.AutoGenerateColumns = false;
+            var checkboxColumn = new DataGridViewCheckBoxColumn
+            {
+                HeaderText = "",
+                Name = "selectColumn",
+                Width = 30,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            };
+            dataGridViewItemList.Columns.Add(checkboxColumn);
 
             dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
             {
@@ -166,40 +210,115 @@ namespace Autotech.Desktop.Main.View
 
             dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
             {
-                HeaderText = "Date Added",
-                DataPropertyName = "DateAdded",
-                Name = "dateAddedColumn"
-            });
-
-            dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Item Details",
+                HeaderText = "Onhand",
                 DataPropertyName = "itemDetails.PropertyName",
                 Name = "itemDetailsColumn"
             });
+
+            dataGridViewItemList.CellValueChanged += dataGridViewItemList_CellValueChanged;
+
+            dataGridViewItemList.CurrentCellDirtyStateChanged += (s, e) =>
+            {
+                if (dataGridViewItemList.IsCurrentCellDirty)
+                    dataGridViewItemList.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            };
+
+            dataGridViewItemList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridViewItemList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridViewItemList.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dataGridViewItemList.DefaultCellStyle.Padding = new Padding(5);
+            dataGridViewItemList.AutoResizeColumns();
         }
+        private void DataGridViewItemList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            var item = dataGridViewItemList.Rows[e.RowIndex].DataBoundItem as Items;
+
+            if (dataGridViewItemList.Columns[e.ColumnIndex].Name == "itemDetailsColumn" && item != null)
+            {
+                if (item.itemDetails != null)
+                {
+                    e.Value = item.itemDetails.OnHand;
+                }
+                else
+                {
+                    e.Value = "N/A";
+                }
+            }
+        }
+
+        private void dataGridViewItemList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dataGridViewItemList.Columns[e.ColumnIndex].Name == "selectColumn")
+            {
+                var row = dataGridViewItemList.Rows[e.RowIndex];
+                if (row.DataBoundItem is Items item)
+                {
+                    bool isChecked = Convert.ToBoolean(row.Cells["selectColumn"].Value);
+
+                    if (isChecked)
+                        selectedItemIds.Add(item.Id);
+                    else
+                        selectedItemIds.Remove(item.Id);
+                }
+            }
+        }
+        private void RestoreCheckboxStates()
+        {
+            foreach (DataGridViewRow row in dataGridViewItemList.Rows)
+            {
+                if (row.DataBoundItem is Items item && selectedItemIds.Equals(item.Id))
+                {
+                    row.Cells["selectColumn"].Value = true;
+                }
+            }
+        }
+
         #endregion
 
+        #region SearchItems
         private void txtSearchItem_TextChanged(object sender, EventArgs e)
         {
-            string searchText = txtSearchItem.Text.ToLower();
+            string searchText = txtSearchItem.Text.Trim().ToLower();
 
             if (!string.IsNullOrEmpty(searchText))
             {
-                // Filter the list based on the search text (for ItemCode, ItemName, or ItemDescription)
-                var filteredItems = allItems.Where(item =>
+                // Keep checked rows before filtering
+                var checkedIds = new List<Guid>();
+                foreach (DataGridViewRow row in dataGridViewItemList.Rows)
+                {
+                    if (Convert.ToBoolean(row.Cells["selectColumn"].Value))
+                    {
+                        if (row.DataBoundItem is Items item)
+                            checkedIds.Add(item.Id);
+                    }
+                }
+
+                // Filter allItems (not currentPageItems)
+                var filtered = allItems.Where(item =>
                     item.ItemCode.ToLower().Contains(searchText) ||
                     item.ItemName.ToLower().Contains(searchText) ||
                     item.ItemDescription.ToLower().Contains(searchText)).ToList();
 
-                // Update the DataGridView with the filtered list
-                dataGridViewItemList.DataSource = filteredItems;
+                dataGridViewItemList.DataSource = filtered;
+
+                // Restore checkboxes
+                foreach (DataGridViewRow row in dataGridViewItemList.Rows)
+                {
+                    if (row.DataBoundItem is Items item && checkedIds.Contains(item.Id))
+                    {
+                        row.Cells["selectColumn"].Value = true;
+                    }
+                }
             }
             else
             {
-                // If the search text is empty, reset the DataGridView to show all items
-                dataGridViewItemList.DataSource = allItems;
+                // Reset to paginated view
+                dataGridViewItemList.DataSource = currentPageItems;
             }
         }
+
+        #endregion
+
+        
     }
 }
