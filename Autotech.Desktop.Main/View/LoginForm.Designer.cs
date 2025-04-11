@@ -208,19 +208,29 @@ namespace Autotech.Desktop.Main.View
             ValidateLogin(loginSuccessful);
         }
 
-        private void ValidateLogin(bool loginSuccessful)
+        private async void ValidateLogin(bool loginSuccessful)
         {
             if (loginSuccessful)
             {
                 new ToastMessageForm("Login successful!").Show();
-                bool isMainFormOpen = Application.OpenForms.OfType<MainForm>().Any();
-                if (!isMainFormOpen)
-                {
-                    MainForm mainForm = new MainForm();
-                    mainForm.Hide();
-                    mainForm.Show();
-                }
+                // Hide login form
                 this.Hide();
+
+                await Task.Delay(1000);
+
+                // Close any existing MainForm
+                var existingMainForm = Application.OpenForms.OfType<MainForm>().FirstOrDefault();
+                if (existingMainForm != null)
+                {
+                    existingMainForm.Close();
+                }
+
+                // Create a new MainForm
+                MainForm mainForm = new MainForm();
+                mainForm.FormClosed += (s, e) => this.Show(); // Optional: return to login when main closes
+                mainForm.Show();
+
+                
             }
             else
             {
