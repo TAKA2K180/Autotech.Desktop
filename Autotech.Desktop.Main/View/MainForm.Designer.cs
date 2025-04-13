@@ -73,8 +73,17 @@ namespace Autotech.Desktop.Main.View
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             metroSetTabControl1 = new MetroSetTabControl();
             tabPageSales = new TabPage();
+            pnlPricing = new Panel();
+            radioWholesale = new MetroSetRadioButton();
+            radioRetail = new MetroSetRadioButton();
+            pnlLocation = new Panel();
+            radioZambales = new MetroSetRadioButton();
+            radioBataan = new MetroSetRadioButton();
+            radioPampanga = new MetroSetRadioButton();
             lblPage = new MetroSetLabel();
             btnNextPage = new MetroSetButton();
             btnPrevPage = new MetroSetButton();
@@ -94,11 +103,6 @@ namespace Autotech.Desktop.Main.View
             dataGridViewOrderCart = new DataGridView();
             lblOrderCart = new MetroSetLabel();
             txtSearchItem = new MetroSetTextBox();
-            radioBataan = new MetroSetRadioButton();
-            radioPampanga = new MetroSetRadioButton();
-            radioZambales = new MetroSetRadioButton();
-            radioRetail = new MetroSetRadioButton();
-            radioWholesale = new MetroSetRadioButton();
             panelPayment = new MetroSetPanel();
             lblPaymentMethod = new MetroSetLabel();
             comboPaymentMethod = new MetroSetComboBox();
@@ -125,6 +129,8 @@ namespace Autotech.Desktop.Main.View
             btnLogout = new MetroSetButton();
             metroSetTabControl1.SuspendLayout();
             tabPageSales.SuspendLayout();
+            pnlPricing.SuspendLayout();
+            pnlLocation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)logoPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewItemList).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewOrderCart).BeginInit();
@@ -161,6 +167,8 @@ namespace Autotech.Desktop.Main.View
             // 
             // tabPageSales
             // 
+            tabPageSales.Controls.Add(pnlPricing);
+            tabPageSales.Controls.Add(pnlLocation);
             tabPageSales.Controls.Add(lblPage);
             tabPageSales.Controls.Add(btnNextPage);
             tabPageSales.Controls.Add(btnPrevPage);
@@ -180,11 +188,6 @@ namespace Autotech.Desktop.Main.View
             tabPageSales.Controls.Add(dataGridViewOrderCart);
             tabPageSales.Controls.Add(lblOrderCart);
             tabPageSales.Controls.Add(txtSearchItem);
-            tabPageSales.Controls.Add(radioBataan);
-            tabPageSales.Controls.Add(radioPampanga);
-            tabPageSales.Controls.Add(radioZambales);
-            tabPageSales.Controls.Add(radioRetail);
-            tabPageSales.Controls.Add(radioWholesale);
             tabPageSales.Controls.Add(panelPayment);
             tabPageSales.Controls.Add(lblSalesInfo);
             tabPageSales.ForeColor = Color.WhiteSmoke;
@@ -195,6 +198,135 @@ namespace Autotech.Desktop.Main.View
             tabPageSales.TabIndex = 0;
             tabPageSales.Text = "Sales";
             tabPageSales.UseVisualStyleBackColor = true;
+            // 
+            // pnlPricing
+            // 
+            pnlPricing.Controls.Add(radioWholesale);
+            pnlPricing.Controls.Add(radioRetail);
+            pnlPricing.Location = new Point(643, 3);
+            pnlPricing.Name = "pnlPricing";
+            pnlPricing.Size = new Size(92, 53);
+            pnlPricing.TabIndex = 29;
+            // 
+            // radioWholesale
+            // 
+            radioWholesale.BackgroundColor = Color.White;
+            radioWholesale.BorderColor = Color.FromArgb(155, 155, 155);
+            radioWholesale.Checked = false;
+            radioWholesale.CheckSignColor = Color.FromArgb(65, 177, 225);
+            radioWholesale.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
+            radioWholesale.DisabledBorderColor = Color.FromArgb(205, 205, 205);
+            radioWholesale.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            radioWholesale.Group = 0;
+            radioWholesale.IsDerivedStyle = true;
+            radioWholesale.Location = new Point(3, 6);
+            radioWholesale.Name = "radioWholesale";
+            radioWholesale.Size = new Size(100, 17);
+            radioWholesale.Style = Style.Light;
+            radioWholesale.StyleManager = null;
+            radioWholesale.TabIndex = 22;
+            radioWholesale.Text = "Wholesale";
+            radioWholesale.ThemeAuthor = "Narwin";
+            radioWholesale.ThemeName = "MetroLite";
+            radioWholesale.CheckedChanged += radioWholesale_CheckedChanged;
+            // 
+            // radioRetail
+            // 
+            radioRetail.BackgroundColor = Color.White;
+            radioRetail.BorderColor = Color.FromArgb(155, 155, 155);
+            radioRetail.Checked = false;
+            radioRetail.CheckSignColor = Color.FromArgb(65, 177, 225);
+            radioRetail.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
+            radioRetail.DisabledBorderColor = Color.FromArgb(205, 205, 205);
+            radioRetail.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            radioRetail.Group = 0;
+            radioRetail.IsDerivedStyle = true;
+            radioRetail.Location = new Point(3, 30);
+            radioRetail.Name = "radioRetail";
+            radioRetail.Size = new Size(80, 17);
+            radioRetail.Style = Style.Light;
+            radioRetail.StyleManager = null;
+            radioRetail.TabIndex = 21;
+            radioRetail.Text = "Retail";
+            radioRetail.ThemeAuthor = "Narwin";
+            radioRetail.ThemeName = "MetroLite";
+            radioRetail.CheckedChanged += radioRetail_CheckedChanged;
+            // 
+            // pnlLocation
+            // 
+            pnlLocation.Controls.Add(radioZambales);
+            pnlLocation.Controls.Add(radioBataan);
+            pnlLocation.Controls.Add(radioPampanga);
+            pnlLocation.Location = new Point(378, 59);
+            pnlLocation.Name = "pnlLocation";
+            pnlLocation.Size = new Size(357, 31);
+            pnlLocation.TabIndex = 28;
+            // 
+            // radioZambales
+            // 
+            radioZambales.BackgroundColor = Color.White;
+            radioZambales.BorderColor = Color.FromArgb(155, 155, 155);
+            radioZambales.Checked = false;
+            radioZambales.CheckSignColor = Color.FromArgb(65, 177, 225);
+            radioZambales.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
+            radioZambales.DisabledBorderColor = Color.FromArgb(205, 205, 205);
+            radioZambales.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            radioZambales.Group = 0;
+            radioZambales.IsDerivedStyle = true;
+            radioZambales.Location = new Point(84, 1);
+            radioZambales.Name = "radioZambales";
+            radioZambales.Size = new Size(100, 17);
+            radioZambales.Style = Style.Light;
+            radioZambales.StyleManager = null;
+            radioZambales.TabIndex = 20;
+            radioZambales.Text = "Zambales";
+            radioZambales.ThemeAuthor = "Narwin";
+            radioZambales.ThemeName = "MetroLite";
+            radioZambales.CheckedChanged += radioZambales_CheckedChanged;
+            // 
+            // radioBataan
+            // 
+            radioBataan.BackgroundColor = Color.White;
+            radioBataan.BorderColor = Color.FromArgb(155, 155, 155);
+            radioBataan.Checked = false;
+            radioBataan.CheckSignColor = Color.FromArgb(65, 177, 225);
+            radioBataan.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
+            radioBataan.DisabledBorderColor = Color.FromArgb(205, 205, 205);
+            radioBataan.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            radioBataan.Group = 0;
+            radioBataan.IsDerivedStyle = true;
+            radioBataan.Location = new Point(1, 1);
+            radioBataan.Name = "radioBataan";
+            radioBataan.Size = new Size(100, 17);
+            radioBataan.Style = Style.Light;
+            radioBataan.StyleManager = null;
+            radioBataan.TabIndex = 18;
+            radioBataan.Text = "Bataan";
+            radioBataan.ThemeAuthor = "Narwin";
+            radioBataan.ThemeName = "MetroLite";
+            radioBataan.CheckedChanged += radioBataan_CheckedChanged;
+            // 
+            // radioPampanga
+            // 
+            radioPampanga.BackgroundColor = Color.White;
+            radioPampanga.BorderColor = Color.FromArgb(155, 155, 155);
+            radioPampanga.Checked = false;
+            radioPampanga.CheckSignColor = Color.FromArgb(65, 177, 225);
+            radioPampanga.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
+            radioPampanga.DisabledBorderColor = Color.FromArgb(205, 205, 205);
+            radioPampanga.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            radioPampanga.Group = 0;
+            radioPampanga.IsDerivedStyle = true;
+            radioPampanga.Location = new Point(198, 1);
+            radioPampanga.Name = "radioPampanga";
+            radioPampanga.Size = new Size(100, 17);
+            radioPampanga.Style = Style.Light;
+            radioPampanga.StyleManager = null;
+            radioPampanga.TabIndex = 19;
+            radioPampanga.Text = "Pampanga";
+            radioPampanga.ThemeAuthor = "Narwin";
+            radioPampanga.ThemeName = "MetroLite";
+            radioPampanga.CheckedChanged += radioPampanga_CheckedChanged;
             // 
             // lblPage
             // 
@@ -341,6 +473,7 @@ namespace Autotech.Desktop.Main.View
             comboAccount.TabIndex = 5;
             comboAccount.ThemeAuthor = "Narwin";
             comboAccount.ThemeName = "MetroLite";
+            comboAccount.SelectedIndexChanged += comboAccount_SelectedIndexChanged;
             // 
             // lblContactNumber
             // 
@@ -454,6 +587,7 @@ namespace Autotech.Desktop.Main.View
             btnAddToCart.Text = "+";
             btnAddToCart.ThemeAuthor = "Narwin";
             btnAddToCart.ThemeName = "MetroLite";
+            btnAddToCart.Click += btnAddToCart_Click;
             // 
             // btnRemoveItem
             // 
@@ -480,6 +614,7 @@ namespace Autotech.Desktop.Main.View
             btnRemoveItem.Text = "-";
             btnRemoveItem.ThemeAuthor = "Narwin";
             btnRemoveItem.ThemeName = "MetroLite";
+            btnRemoveItem.Click += btnRemoveItem_Click;
             // 
             // btnEmptyCart
             // 
@@ -506,6 +641,7 @@ namespace Autotech.Desktop.Main.View
             btnEmptyCart.Text = "Clear";
             btnEmptyCart.ThemeAuthor = "Narwin";
             btnEmptyCart.ThemeName = "MetroLite";
+            btnEmptyCart.Click += btnEmptyCart_Click;
             // 
             // dataGridViewItemList
             // 
@@ -535,10 +671,21 @@ namespace Autotech.Desktop.Main.View
             // dataGridViewOrderCart
             // 
             dataGridViewOrderCart.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewOrderCart.BackgroundColor = SystemColors.InactiveCaption;
+            dataGridViewOrderCart.BackgroundColor = SystemColors.ControlDarkDark;
             dataGridViewOrderCart.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.White;
+            dataGridViewCellStyle2.Font = new Font("Microsoft Sans Serif", 13F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = Color.WhiteSmoke;
+            dataGridViewCellStyle2.SelectionBackColor = Color.LightBlue;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataGridViewOrderCart.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewOrderCart.GridColor = SystemColors.ControlText;
             dataGridViewOrderCart.Location = new Point(889, 98);
             dataGridViewOrderCart.Name = "dataGridViewOrderCart";
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            dataGridViewOrderCart.RowsDefaultCellStyle = dataGridViewCellStyle3;
             dataGridViewOrderCart.Size = new Size(400, 400);
             dataGridViewOrderCart.TabIndex = 14;
             // 
@@ -586,111 +733,6 @@ namespace Autotech.Desktop.Main.View
             txtSearchItem.WatermarkText = "Search item...";
             txtSearchItem.TextChanged += txtSearchItem_TextChanged;
             // 
-            // radioBataan
-            // 
-            radioBataan.BackgroundColor = Color.White;
-            radioBataan.BorderColor = Color.FromArgb(155, 155, 155);
-            radioBataan.Checked = false;
-            radioBataan.CheckSignColor = Color.FromArgb(65, 177, 225);
-            radioBataan.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
-            radioBataan.DisabledBorderColor = Color.FromArgb(205, 205, 205);
-            radioBataan.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            radioBataan.Group = 0;
-            radioBataan.IsDerivedStyle = true;
-            radioBataan.Location = new Point(378, 70);
-            radioBataan.Name = "radioBataan";
-            radioBataan.Size = new Size(100, 17);
-            radioBataan.Style = Style.Light;
-            radioBataan.StyleManager = null;
-            radioBataan.TabIndex = 18;
-            radioBataan.Text = "Bataan";
-            radioBataan.ThemeAuthor = "Narwin";
-            radioBataan.ThemeName = "MetroLite";
-            // 
-            // radioPampanga
-            // 
-            radioPampanga.BackgroundColor = Color.White;
-            radioPampanga.BorderColor = Color.FromArgb(155, 155, 155);
-            radioPampanga.Checked = false;
-            radioPampanga.CheckSignColor = Color.FromArgb(65, 177, 225);
-            radioPampanga.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
-            radioPampanga.DisabledBorderColor = Color.FromArgb(205, 205, 205);
-            radioPampanga.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            radioPampanga.Group = 0;
-            radioPampanga.IsDerivedStyle = true;
-            radioPampanga.Location = new Point(478, 70);
-            radioPampanga.Name = "radioPampanga";
-            radioPampanga.Size = new Size(100, 17);
-            radioPampanga.Style = Style.Light;
-            radioPampanga.StyleManager = null;
-            radioPampanga.TabIndex = 19;
-            radioPampanga.Text = "Pampanga";
-            radioPampanga.ThemeAuthor = "Narwin";
-            radioPampanga.ThemeName = "MetroLite";
-            // 
-            // radioZambales
-            // 
-            radioZambales.BackgroundColor = Color.White;
-            radioZambales.BorderColor = Color.FromArgb(155, 155, 155);
-            radioZambales.Checked = false;
-            radioZambales.CheckSignColor = Color.FromArgb(65, 177, 225);
-            radioZambales.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
-            radioZambales.DisabledBorderColor = Color.FromArgb(205, 205, 205);
-            radioZambales.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            radioZambales.Group = 0;
-            radioZambales.IsDerivedStyle = true;
-            radioZambales.Location = new Point(596, 70);
-            radioZambales.Name = "radioZambales";
-            radioZambales.Size = new Size(100, 17);
-            radioZambales.Style = Style.Light;
-            radioZambales.StyleManager = null;
-            radioZambales.TabIndex = 20;
-            radioZambales.Text = "Zambales";
-            radioZambales.ThemeAuthor = "Narwin";
-            radioZambales.ThemeName = "MetroLite";
-            // 
-            // radioRetail
-            // 
-            radioRetail.BackgroundColor = Color.White;
-            radioRetail.BorderColor = Color.FromArgb(155, 155, 155);
-            radioRetail.Checked = false;
-            radioRetail.CheckSignColor = Color.FromArgb(65, 177, 225);
-            radioRetail.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
-            radioRetail.DisabledBorderColor = Color.FromArgb(205, 205, 205);
-            radioRetail.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            radioRetail.Group = 0;
-            radioRetail.IsDerivedStyle = true;
-            radioRetail.Location = new Point(596, 37);
-            radioRetail.Name = "radioRetail";
-            radioRetail.Size = new Size(80, 17);
-            radioRetail.Style = Style.Light;
-            radioRetail.StyleManager = null;
-            radioRetail.TabIndex = 21;
-            radioRetail.Text = "Retail";
-            radioRetail.ThemeAuthor = "Narwin";
-            radioRetail.ThemeName = "MetroLite";
-            // 
-            // radioWholesale
-            // 
-            radioWholesale.BackgroundColor = Color.White;
-            radioWholesale.BorderColor = Color.FromArgb(155, 155, 155);
-            radioWholesale.Checked = false;
-            radioWholesale.CheckSignColor = Color.FromArgb(65, 177, 225);
-            radioWholesale.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
-            radioWholesale.DisabledBorderColor = Color.FromArgb(205, 205, 205);
-            radioWholesale.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            radioWholesale.Group = 0;
-            radioWholesale.IsDerivedStyle = true;
-            radioWholesale.Location = new Point(596, 13);
-            radioWholesale.Name = "radioWholesale";
-            radioWholesale.Size = new Size(100, 17);
-            radioWholesale.Style = Style.Light;
-            radioWholesale.StyleManager = null;
-            radioWholesale.TabIndex = 22;
-            radioWholesale.Text = "Wholesale";
-            radioWholesale.ThemeAuthor = "Narwin";
-            radioWholesale.ThemeName = "MetroLite";
-            // 
             // panelPayment
             // 
             panelPayment.BackgroundColor = Color.White;
@@ -729,7 +771,7 @@ namespace Autotech.Desktop.Main.View
             lblPaymentMethod.IsDerivedStyle = true;
             lblPaymentMethod.Location = new Point(10, 10);
             lblPaymentMethod.Name = "lblPaymentMethod";
-            lblPaymentMethod.Size = new Size(100, 23);
+            lblPaymentMethod.Size = new Size(144, 23);
             lblPaymentMethod.Style = Style.Light;
             lblPaymentMethod.StyleManager = null;
             lblPaymentMethod.TabIndex = 0;
@@ -806,6 +848,7 @@ namespace Autotech.Desktop.Main.View
             txtPaidAmount.ThemeName = "MetroLite";
             txtPaidAmount.UseSystemPasswordChar = false;
             txtPaidAmount.WatermarkText = "";
+            txtPaidAmount.TextChanged += txtPaidAmount_TextChanged;
             // 
             // lblChange
             // 
@@ -927,6 +970,7 @@ namespace Autotech.Desktop.Main.View
             btnPay.Text = "Pay";
             btnPay.ThemeAuthor = "Narwin";
             btnPay.ThemeName = "MetroLite";
+            btnPay.Click += btnPay_Click;
             // 
             // lblSubtotal
             // 
@@ -1013,6 +1057,7 @@ namespace Autotech.Desktop.Main.View
             txtTax.ThemeName = "MetroLite";
             txtTax.UseSystemPasswordChar = false;
             txtTax.WatermarkText = "";
+            txtTax.TextChanged += txtTax_TextChanged;
             // 
             // lblDiscount
             // 
@@ -1056,6 +1101,7 @@ namespace Autotech.Desktop.Main.View
             txtDiscount.ThemeName = "MetroLite";
             txtDiscount.UseSystemPasswordChar = false;
             txtDiscount.WatermarkText = "";
+            txtDiscount.TextChanged += txtDiscount_TextChanged;
             // 
             // lblTotal
             // 
@@ -1204,6 +1250,8 @@ namespace Autotech.Desktop.Main.View
             Text = "Autotech POS System";
             metroSetTabControl1.ResumeLayout(false);
             tabPageSales.ResumeLayout(false);
+            pnlPricing.ResumeLayout(false);
+            pnlLocation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)logoPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewItemList).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewOrderCart).EndInit();
@@ -1230,6 +1278,8 @@ namespace Autotech.Desktop.Main.View
         private MetroSetButton btnNextPage;
         private MetroSetButton btnPrevPage;
         private MetroSetLabel lblPage;
+        private Panel pnlLocation;
+        private Panel pnlPricing;
     }
 }
 
