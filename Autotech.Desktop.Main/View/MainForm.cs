@@ -333,6 +333,7 @@ namespace Autotech.Desktop.Main.View
             dataGridViewOrderCart.Columns.Clear();
             dataGridViewOrderCart.RowHeadersVisible = false;
 
+            // ✅ Checkbox column
             var checkboxColumn = new DataGridViewCheckBoxColumn
             {
                 HeaderText = "",
@@ -342,42 +343,71 @@ namespace Autotech.Desktop.Main.View
             };
             dataGridViewOrderCart.Columns.Add(checkboxColumn);
 
+            // ✅ Item Code
             dataGridViewOrderCart.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Item Code",
                 DataPropertyName = "ItemCode",
-                Name = "cartItemCode"
+                Name = "cartItemCode",
+                ReadOnly = true
             });
 
+            // ✅ Item Name
             dataGridViewOrderCart.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Item Name",
                 DataPropertyName = "ItemName",
-                Name = "cartItemName"
+                Name = "cartItemName",
+                ReadOnly = true
             });
 
+            // ✅ Unit Price (readonly)
             dataGridViewOrderCart.Columns.Add(new DataGridViewTextBoxColumn
             {
-                HeaderText = "Description",
-                DataPropertyName = "ItemDescription",
-                Name = "cartItemDescription"
+                HeaderText = "Unit Price",
+                Name = "cartPrice",
+                ReadOnly = true
             });
 
+            // ✅ Quantity (editable)
             dataGridViewOrderCart.Columns.Add(new DataGridViewTextBoxColumn
             {
-                HeaderText = "Price",
-                Name = "cartPrice"
+                HeaderText = "Qty",
+                Name = "cartQuantity",
+                ReadOnly = false
             });
 
+            // ✅ Discount % (editable)
+            dataGridViewOrderCart.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Discount",
+                Name = "cartDiscount",
+                ReadOnly = false
+            });
+
+            // ✅ Subtotal (readonly)
+            dataGridViewOrderCart.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Subtotal",
+                Name = "cartSubtotal",
+                ReadOnly = true
+            });
+
+            // ✅ Event handlers
             dataGridViewOrderCart.CellFormatting += dataGridViewOrderCart_CellFormatting;
+
             dataGridViewOrderCart.CurrentCellDirtyStateChanged += (s, e) =>
             {
                 if (dataGridViewOrderCart.IsCurrentCellDirty)
-                {
                     dataGridViewOrderCart.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                }
             };
+
+            dataGridViewOrderCart.CellValueChanged += DataGridViewOrderCart_CellValueChanged;
+            dataGridViewOrderCart.EditingControlShowing += dataGridViewOrderCart_EditingControlShowing;
+
+            dataGridViewOrderCart.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
+
         private void btnAddToCart_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridViewItemList.Rows)
@@ -389,18 +419,27 @@ namespace Autotech.Desktop.Main.View
                     if (!orderCartItems.Any(i => i.Id == item.Id))
                     {
                         orderCartItems.Add(item);
+
+                        // Add row manually
+                        int rowIndex = dataGridViewOrderCart.Rows.Add();
+                        var cartRow = dataGridViewOrderCart.Rows[rowIndex];
+
+                        double unitPrice = GetPriceBasedOnSelection(item);
+
+                        cartRow.Cells["selectCartItem"].Value = false;
+                        cartRow.Cells["cartItemCode"].Value = item.ItemCode;
+                        cartRow.Cells["cartItemName"].Value = item.ItemName;
+                        cartRow.Cells["cartPrice"].Value = unitPrice;
+                        cartRow.Cells["cartQuantity"].Value = 1;
+                        cartRow.Cells["cartDiscount"].Value = 0;
+                        cartRow.Cells["cartSubtotal"].Value = unitPrice; // default qty = 1, no discount
                     }
                 }
             }
 
-            // Bind cart to grid
-            dataGridViewOrderCart.DataSource = null;
-            dataGridViewOrderCart.DataSource = orderCartItems;
-
-            // Optional: auto-fit columns
-            //dataGridViewOrderCart.AutoResizeColumns();
             CalculateCartSubtotal();
         }
+
         private void dataGridViewOrderCart_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (dataGridViewOrderCart.Columns[e.ColumnIndex].Name == "cartPrice" &&
@@ -433,17 +472,18 @@ namespace Autotech.Desktop.Main.View
         }
         private void CalculateCartSubtotal()
         {
-            double subtotal = 0;
+            decimal subtotal = 0;
 
             foreach (DataGridViewRow row in dataGridViewOrderCart.Rows)
             {
-                if (row.DataBoundItem is Items item)
+                if (row.Cells["cartSubtotal"].Value != null &&
+                    decimal.TryParse(row.Cells["cartSubtotal"].Value.ToString(), out decimal rowSubtotal))
                 {
-                    subtotal += GetPriceBasedOnSelection(item);
+                    subtotal += rowSubtotal;
                 }
             }
 
-            txtSubtotal.Text = subtotal.ToString("C"); // formats as currency
+            txtSubtotal.Text = subtotal.ToString("C");
             CalculateTotal();
         }
 
@@ -472,6 +512,62 @@ namespace Autotech.Desktop.Main.View
             return 0;
         }
 
+        private void DataGridViewOrderCart_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 &&
+                (dataGridViewOrderCart.Columns[e.ColumnIndex].Name == "cartQuantity" ||
+                 dataGridViewOrderCart.Columns[e.ColumnIndex].Name == "cartDiscount"))
+            {
+                var row = dataGridViewOrderCart.Rows[e.RowIndex];
+
+                if (decimal.TryParse(row.Cells["cartPrice"].Value?.ToString(), out decimal price) &&
+                    int.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out int qty) &&
+                    decimal.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out decimal discount))
+                {
+                    var discountAmount = price * (discount / 100);
+                    var subtotal = (price - discountAmount) * qty;
+                    row.Cells["cartSubtotal"].Value = subtotal;
+                }
+
+                // ✅ This keeps subtotal and total updated in real-time
+                CalculateCartSubtotal();
+            }
+        }
+
+        private void UpdateSubtotalFromCart()
+        {
+            decimal total = 0;
+
+            foreach (DataGridViewRow row in dataGridViewOrderCart.Rows)
+            {
+                if (decimal.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out decimal subtotal))
+                {
+                    total += subtotal;
+                }
+            }
+
+            txtSubtotal.Text = total.ToString("0.00");
+        }
+
+        private void dataGridViewOrderCart_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (e.Control is TextBox textBox)
+            {
+                textBox.KeyPress -= TextBox_KeyPress_NumericOnly;
+                textBox.KeyPress += TextBox_KeyPress_NumericOnly;
+            }
+        }
+
+        private void TextBox_KeyPress_NumericOnly(object sender, KeyPressEventArgs e)
+        {
+            // Allow only digits, one dot, and backspace
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+                e.Handled = true;
+
+            // Block multiple dots
+            if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
+                e.Handled = true;
+        }
         #endregion
 
         private void radioWholesale_CheckedChanged(object sender)

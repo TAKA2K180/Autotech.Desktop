@@ -153,7 +153,7 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.Name = "metroSetTabControl1";
             metroSetTabControl1.SelectedIndex = 0;
             metroSetTabControl1.SelectedTextColor = Color.White;
-            metroSetTabControl1.Size = new Size(1312, 767);
+            metroSetTabControl1.Size = new Size(1420, 767);
             metroSetTabControl1.SizeMode = TabSizeMode.Fixed;
             metroSetTabControl1.Speed = 100;
             metroSetTabControl1.Style = Style.Light;
@@ -194,7 +194,7 @@ namespace Autotech.Desktop.Main.View
             tabPageSales.Location = new Point(4, 42);
             tabPageSales.Name = "tabPageSales";
             tabPageSales.Padding = new Padding(10);
-            tabPageSales.Size = new Size(1304, 721);
+            tabPageSales.Size = new Size(1412, 721);
             tabPageSales.TabIndex = 0;
             tabPageSales.Text = "Sales";
             tabPageSales.UseVisualStyleBackColor = true;
@@ -686,8 +686,9 @@ namespace Autotech.Desktop.Main.View
             dataGridViewOrderCart.Name = "dataGridViewOrderCart";
             dataGridViewCellStyle3.ForeColor = Color.Black;
             dataGridViewOrderCart.RowsDefaultCellStyle = dataGridViewCellStyle3;
-            dataGridViewOrderCart.Size = new Size(400, 400);
+            dataGridViewOrderCart.Size = new Size(510, 400);
             dataGridViewOrderCart.TabIndex = 14;
+            dataGridViewOrderCart.EditingControlShowing += dataGridViewOrderCart_EditingControlShowing;
             // 
             // lblOrderCart
             // 
@@ -758,7 +759,7 @@ namespace Autotech.Desktop.Main.View
             panelPayment.IsDerivedStyle = true;
             panelPayment.Location = new Point(10, 515);
             panelPayment.Name = "panelPayment";
-            panelPayment.Size = new Size(1279, 200);
+            panelPayment.Size = new Size(1389, 156);
             panelPayment.Style = Style.Light;
             panelPayment.StyleManager = null;
             panelPayment.TabIndex = 23;
@@ -903,7 +904,7 @@ namespace Autotech.Desktop.Main.View
             btnNext.HoverColor = Color.FromArgb(95, 207, 255);
             btnNext.HoverTextColor = Color.White;
             btnNext.IsDerivedStyle = true;
-            btnNext.Location = new Point(1050, 60);
+            btnNext.Location = new Point(806, 75);
             btnNext.Name = "btnNext";
             btnNext.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnNext.NormalColor = Color.FromArgb(65, 177, 225);
@@ -929,7 +930,7 @@ namespace Autotech.Desktop.Main.View
             btnPrint.HoverColor = Color.FromArgb(95, 207, 255);
             btnPrint.HoverTextColor = Color.White;
             btnPrint.IsDerivedStyle = true;
-            btnPrint.Location = new Point(1050, 110);
+            btnPrint.Location = new Point(912, 75);
             btnPrint.Name = "btnPrint";
             btnPrint.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnPrint.NormalColor = Color.FromArgb(65, 177, 225);
@@ -955,7 +956,7 @@ namespace Autotech.Desktop.Main.View
             btnPay.HoverColor = Color.FromArgb(95, 207, 255);
             btnPay.HoverTextColor = Color.White;
             btnPay.IsDerivedStyle = true;
-            btnPay.Location = new Point(1050, 10);
+            btnPay.Location = new Point(700, 75);
             btnPay.Name = "btnPay";
             btnPay.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnPay.NormalColor = Color.FromArgb(65, 177, 225);
@@ -1164,7 +1165,7 @@ namespace Autotech.Desktop.Main.View
             // 
             tabPageInvoice.Location = new Point(4, 42);
             tabPageInvoice.Name = "tabPageInvoice";
-            tabPageInvoice.Size = new Size(1304, 721);
+            tabPageInvoice.Size = new Size(1412, 721);
             tabPageInvoice.TabIndex = 1;
             tabPageInvoice.Text = "Invoice";
             // 
@@ -1172,7 +1173,7 @@ namespace Autotech.Desktop.Main.View
             // 
             tabPageMaintenance.Location = new Point(4, 42);
             tabPageMaintenance.Name = "tabPageMaintenance";
-            tabPageMaintenance.Size = new Size(1304, 721);
+            tabPageMaintenance.Size = new Size(1412, 721);
             tabPageMaintenance.TabIndex = 2;
             tabPageMaintenance.Text = "Maintenance";
             // 
@@ -1180,7 +1181,7 @@ namespace Autotech.Desktop.Main.View
             // 
             tabPageUserDetails.Location = new Point(4, 42);
             tabPageUserDetails.Name = "tabPageUserDetails";
-            tabPageUserDetails.Size = new Size(1304, 721);
+            tabPageUserDetails.Size = new Size(1412, 721);
             tabPageUserDetails.TabIndex = 3;
             tabPageUserDetails.Text = "User Details";
             // 
@@ -1192,7 +1193,7 @@ namespace Autotech.Desktop.Main.View
             metroSetControlBox1.CloseNormalForeColor = Color.Gray;
             metroSetControlBox1.DisabledForeColor = Color.DimGray;
             metroSetControlBox1.IsDerivedStyle = true;
-            metroSetControlBox1.Location = new Point(1224, 7);
+            metroSetControlBox1.Location = new Point(1332, 7);
             metroSetControlBox1.MaximizeBox = true;
             metroSetControlBox1.MaximizeHoverBackColor = Color.FromArgb(238, 238, 238);
             metroSetControlBox1.MaximizeHoverForeColor = Color.Gray;
@@ -1241,7 +1242,7 @@ namespace Autotech.Desktop.Main.View
             // 
             AutoScaleDimensions = new SizeF(10F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1336, 849);
+            ClientSize = new Size(1444, 798);
             Controls.Add(btnLogout);
             Controls.Add(metroSetControlBox1);
             Controls.Add(metroSetTabControl1);
