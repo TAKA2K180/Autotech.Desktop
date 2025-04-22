@@ -52,8 +52,6 @@ namespace Autotech.Desktop.Main.View
         private MetroSetComboBox comboPaymentMethod;
         private MetroSetLabel lblPaidAmount;
         private MetroSetTextBox txtPaidAmount;
-        private MetroSetLabel lblChange;
-        private MetroSetTextBox txtChange;
         private MetroSetButton btnNext;
         private MetroSetButton btnPrint;
         private MetroSetButton btnPay;
@@ -108,8 +106,6 @@ namespace Autotech.Desktop.Main.View
             comboPaymentMethod = new MetroSetComboBox();
             lblPaidAmount = new MetroSetLabel();
             txtPaidAmount = new MetroSetTextBox();
-            lblChange = new MetroSetLabel();
-            txtChange = new MetroSetTextBox();
             btnNext = new MetroSetButton();
             btnPrint = new MetroSetButton();
             btnPay = new MetroSetButton();
@@ -127,6 +123,10 @@ namespace Autotech.Desktop.Main.View
             tabPageUserDetails = new TabPage();
             metroSetControlBox1 = new MetroSetControlBox();
             btnLogout = new MetroSetButton();
+            lblChange = new MetroSetLabel();
+            txtChange = new MetroSetTextBox();
+            metroSetLabel1 = new MetroSetLabel();
+            txtRemaining = new MetroSetTextBox();
             metroSetTabControl1.SuspendLayout();
             tabPageSales.SuspendLayout();
             pnlPricing.SuspendLayout();
@@ -739,6 +739,8 @@ namespace Autotech.Desktop.Main.View
             panelPayment.BackgroundColor = Color.White;
             panelPayment.BorderColor = Color.FromArgb(150, 150, 150);
             panelPayment.BorderThickness = 1;
+            panelPayment.Controls.Add(metroSetLabel1);
+            panelPayment.Controls.Add(txtRemaining);
             panelPayment.Controls.Add(lblPaymentMethod);
             panelPayment.Controls.Add(comboPaymentMethod);
             panelPayment.Controls.Add(lblPaidAmount);
@@ -850,49 +852,6 @@ namespace Autotech.Desktop.Main.View
             txtPaidAmount.UseSystemPasswordChar = false;
             txtPaidAmount.WatermarkText = "";
             txtPaidAmount.TextChanged += txtPaidAmount_TextChanged;
-            // 
-            // lblChange
-            // 
-            lblChange.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            lblChange.IsDerivedStyle = true;
-            lblChange.Location = new Point(10, 90);
-            lblChange.Name = "lblChange";
-            lblChange.Size = new Size(100, 23);
-            lblChange.Style = Style.Light;
-            lblChange.StyleManager = null;
-            lblChange.TabIndex = 4;
-            lblChange.Text = "Change:";
-            lblChange.ThemeAuthor = "Narwin";
-            lblChange.ThemeName = "MetroLite";
-            // 
-            // txtChange
-            // 
-            txtChange.AutoCompleteCustomSource = null;
-            txtChange.AutoCompleteMode = AutoCompleteMode.None;
-            txtChange.AutoCompleteSource = AutoCompleteSource.None;
-            txtChange.BorderColor = Color.FromArgb(155, 155, 155);
-            txtChange.DisabledBackColor = Color.FromArgb(204, 204, 204);
-            txtChange.DisabledBorderColor = Color.FromArgb(155, 155, 155);
-            txtChange.DisabledForeColor = Color.FromArgb(136, 136, 136);
-            txtChange.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtChange.HoverColor = Color.FromArgb(102, 102, 102);
-            txtChange.Image = null;
-            txtChange.IsDerivedStyle = true;
-            txtChange.Lines = null;
-            txtChange.Location = new Point(160, 90);
-            txtChange.MaxLength = 32767;
-            txtChange.Multiline = false;
-            txtChange.Name = "txtChange";
-            txtChange.ReadOnly = false;
-            txtChange.Size = new Size(200, 25);
-            txtChange.Style = Style.Light;
-            txtChange.StyleManager = null;
-            txtChange.TabIndex = 5;
-            txtChange.TextAlign = HorizontalAlignment.Left;
-            txtChange.ThemeAuthor = "Narwin";
-            txtChange.ThemeName = "MetroLite";
-            txtChange.UseSystemPasswordChar = false;
-            txtChange.WatermarkText = "";
             // 
             // btnNext
             // 
@@ -1238,6 +1197,92 @@ namespace Autotech.Desktop.Main.View
             btnLogout.ThemeName = "MetroLite";
             btnLogout.Click += btnLogout_Click;
             // 
+            // lblChange
+            // 
+            lblChange.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblChange.IsDerivedStyle = true;
+            lblChange.Location = new Point(10, 90);
+            lblChange.Name = "lblChange";
+            lblChange.Size = new Size(100, 23);
+            lblChange.Style = Style.Light;
+            lblChange.StyleManager = null;
+            lblChange.TabIndex = 4;
+            lblChange.Text = "Change:";
+            lblChange.ThemeAuthor = "Narwin";
+            lblChange.ThemeName = "MetroLite";
+            // 
+            // txtChange
+            // 
+            txtChange.AutoCompleteCustomSource = null;
+            txtChange.AutoCompleteMode = AutoCompleteMode.None;
+            txtChange.AutoCompleteSource = AutoCompleteSource.None;
+            txtChange.BorderColor = Color.FromArgb(155, 155, 155);
+            txtChange.DisabledBackColor = Color.FromArgb(204, 204, 204);
+            txtChange.DisabledBorderColor = Color.FromArgb(155, 155, 155);
+            txtChange.DisabledForeColor = Color.FromArgb(136, 136, 136);
+            txtChange.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            txtChange.HoverColor = Color.FromArgb(102, 102, 102);
+            txtChange.Image = null;
+            txtChange.IsDerivedStyle = true;
+            txtChange.Lines = null;
+            txtChange.Location = new Point(160, 90);
+            txtChange.MaxLength = 32767;
+            txtChange.Multiline = false;
+            txtChange.Name = "txtChange";
+            txtChange.ReadOnly = false;
+            txtChange.Size = new Size(200, 25);
+            txtChange.Style = Style.Light;
+            txtChange.StyleManager = null;
+            txtChange.TabIndex = 5;
+            txtChange.TextAlign = HorizontalAlignment.Left;
+            txtChange.ThemeAuthor = "Narwin";
+            txtChange.ThemeName = "MetroLite";
+            txtChange.UseSystemPasswordChar = false;
+            txtChange.WatermarkText = "";
+            // 
+            // metroSetLabel1
+            // 
+            metroSetLabel1.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            metroSetLabel1.IsDerivedStyle = true;
+            metroSetLabel1.Location = new Point(10, 124);
+            metroSetLabel1.Name = "metroSetLabel1";
+            metroSetLabel1.Size = new Size(100, 23);
+            metroSetLabel1.Style = Style.Light;
+            metroSetLabel1.StyleManager = null;
+            metroSetLabel1.TabIndex = 17;
+            metroSetLabel1.Text = "Remaining:";
+            metroSetLabel1.ThemeAuthor = "Narwin";
+            metroSetLabel1.ThemeName = "MetroLite";
+            // 
+            // txtRemaining
+            // 
+            txtRemaining.AutoCompleteCustomSource = null;
+            txtRemaining.AutoCompleteMode = AutoCompleteMode.None;
+            txtRemaining.AutoCompleteSource = AutoCompleteSource.None;
+            txtRemaining.BorderColor = Color.FromArgb(155, 155, 155);
+            txtRemaining.DisabledBackColor = Color.FromArgb(204, 204, 204);
+            txtRemaining.DisabledBorderColor = Color.FromArgb(155, 155, 155);
+            txtRemaining.DisabledForeColor = Color.FromArgb(136, 136, 136);
+            txtRemaining.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            txtRemaining.HoverColor = Color.FromArgb(102, 102, 102);
+            txtRemaining.Image = null;
+            txtRemaining.IsDerivedStyle = true;
+            txtRemaining.Lines = null;
+            txtRemaining.Location = new Point(160, 124);
+            txtRemaining.MaxLength = 32767;
+            txtRemaining.Multiline = false;
+            txtRemaining.Name = "txtRemaining";
+            txtRemaining.ReadOnly = false;
+            txtRemaining.Size = new Size(200, 25);
+            txtRemaining.Style = Style.Light;
+            txtRemaining.StyleManager = null;
+            txtRemaining.TabIndex = 18;
+            txtRemaining.TextAlign = HorizontalAlignment.Left;
+            txtRemaining.ThemeAuthor = "Narwin";
+            txtRemaining.ThemeName = "MetroLite";
+            txtRemaining.UseSystemPasswordChar = false;
+            txtRemaining.WatermarkText = "";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(10F, 20F);
@@ -1281,6 +1326,10 @@ namespace Autotech.Desktop.Main.View
         private MetroSetLabel lblPage;
         private Panel pnlLocation;
         private Panel pnlPricing;
+        private MetroSetLabel metroSetLabel1;
+        private MetroSetTextBox txtRemaining;
+        private MetroSetLabel lblChange;
+        private MetroSetTextBox txtChange;
     }
 }
 

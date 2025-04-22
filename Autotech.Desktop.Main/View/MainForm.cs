@@ -1,4 +1,5 @@
-﻿using Autotech.Desktop.BusinessLayer.Helpers;
+﻿using Autotech.Desktop.BusinessLayer.DTO;
+using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.Enums;
 using Autotech.Desktop.Core.Models;
@@ -498,6 +499,7 @@ namespace Autotech.Desktop.Main.View
 
                 decimal total = subtotal + tax - discount;
                 txtTotal.Text = total.ToString("C");
+                UpdateRemainingBalance();
             }
             catch (Exception ex)
             {
@@ -691,74 +693,152 @@ namespace Autotech.Desktop.Main.View
             }
         }
 
-        private void btnPay_Click(object sender, EventArgs e)
+        private async void btnPay_Click(object sender, EventArgs e)
         {
-            // 1. Validate selection
-            if (comboAccount.SelectedItem is not Accounts selectedAccount)
+            // 1. Validate Inputs
+            if (comboAccount.SelectedItem == null)
             {
-                MessageBox.Show("Please select a customer.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select an account.");
                 return;
             }
 
-            if (comboPaymentMethod.SelectedItem is null)
+            if (comboPaymentMethod.SelectedItem == null)
             {
-                MessageBox.Show("Please select a payment method.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select a payment method.");
                 return;
             }
 
-            if (dataGridViewOrderCart.Rows.Count == 0)
+            if (orderCartItems.Count == 0)
             {
-                MessageBox.Show("Order cart is empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Cart is empty.");
                 return;
             }
 
-            // 2. Get paid amount and total
-            if (!decimal.TryParse(txtPaidAmount.Text, out decimal paidAmount))
+            // ✅ Fix for selected account
+            var selectedAccount = comboAccount.SelectedItem as Accounts;
+            if (selectedAccount == null)
             {
-                MessageBox.Show("Invalid paid amount.");
+                MessageBox.Show("Please select a valid account.");
                 return;
             }
 
-            if (!decimal.TryParse(txtTotal.Text, out decimal totalAmount))
+            var accountId = selectedAccount.Id;
+            var accountName = selectedAccount.Name;
+
+            // ✅ This part is still correct if you're using KeyValuePair for comboPaymentMethod
+            var selectedPaymentMethod = (KeyValuePair<PaymentMethod, string>)comboPaymentMethod.SelectedItem;
+            var paymentMethod = selectedPaymentMethod.Key.ToString();
+
+            // 2. Parse payment values
+            decimal total = ParseCurrency(txtTotal.Text);
+            decimal paidAmount = ParseCurrency(txtPaidAmount.Text);
+            decimal remaining = ParseCurrency(txtRemaining.Text);
+            decimal tax = ParseCurrency(txtTax.Text);
+            decimal discount = ParseCurrency(txtDiscount.Text);
+            decimal discountPercent = discount / (total + discount - tax) * 100;
+
+
+            // 3. Build Invoice DTO
+            var invoiceDto = new InvoiceDTO
             {
-                MessageBox.Show("Invalid total.");
-                return;
-            }
+                DateSold = DateTime.Now,
+                Agent = SessionManager.AgentDetails.AgentName,
+                DiscountPercent = (double)discountPercent,
+                DiscountPeso = (double)discount,
+                Tax = (double)tax,
+                TotalSales = (double)total,
+                AccountName = accountName,
+                PaymentType = paymentMethod,
+                Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
+                DueDate = DateTime.Now.AddDays(int.Parse(txtTerms.Text)),
+                RemainingBalance = (double)remaining,
+                Status = remaining > 0 ? "Pending" : "Paid",
+                TotalLiters = 0, // if applicable
+                Cluster = "", // if needed
+                AccountId = accountId,
+                LocationId = SessionManager.AgentDetails.Location.Id,
+                strInvoiceNumber = "",
+                PurchasedItems = dataGridViewOrderCart.Rows
+                    .Cast<DataGridViewRow>()
+                    .Select(row =>
+                    {
+                        // You need to find the item again by ItemCode or however you can map it
+                        var itemCode = row.Cells["cartItemCode"].Value?.ToString();
+                        var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
 
-            if (paidAmount < totalAmount)
+                        if (item == null) return null; // Skip if item is missing
+
+                        double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
+                        double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
+                        double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
+
+                        return new InvoiceItemDTO
+                        {
+                            ItemId = item.Id,
+                            Quantity = quantity,
+                            ItemPrice = price,
+                            TotalPrice = subtotal,
+                            ItemName =""
+                        };
+                    })
+                    .Where(i => i != null) // Filter nulls
+                    .ToList()
+            };
+
+            // 4. Call backend
+            try
             {
-                MessageBox.Show("Insufficient payment.");
-                return;
+                var service = new SalesService(); // You'll need to add this class if not yet
+                var invoiceId = await service.CreateInvoiceAsync(invoiceDto);
+
+                new ToastMessageForm("Invoice created successfully!").Show();
+
+                // Optional: clear cart and form
+                orderCartItems.Clear();
+                dataGridViewOrderCart.DataSource = null;
+                txtSubtotal.Text = txtTax.Text = txtDiscount.Text = txtTotal.Text =
+                    txtPaidAmount.Text = txtChange.Text = txtRemaining.Text = "";
+
             }
-
-            // 3. Get payment method
-            var selectedPayment = (KeyValuePair<PaymentMethod, string>)comboPaymentMethod.SelectedItem;
-            PaymentMethod paymentMethod = selectedPayment.Key;
-
-            // 4. Build invoice object (simplified)
-            //var invoice = new InvoiceDTO
-            //{
-            //    CustomerId = selectedAccount.Id,
-            //    PaymentMethod = paymentMethod,
-            //    AmountPaid = paidAmount,
-            //    TotalAmount = totalAmount,
-            //    Items = GetCartItems(),
-            //    Change = paidAmount - totalAmount
-            //};
-
-            // 5. Process (mock or send to backend)
-            MessageBox.Show("Payment processed. Invoice will be generated.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            // TODO: Open invoice/print form here
-
-            // 6. Clear UI
-            //ClearCartAndFields();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to create invoice: " + ex.Message);
+            }
         }
 
+        private double GetCartValue<T>(Items item, string columnName)
+        {
+            foreach (DataGridViewRow row in dataGridViewOrderCart.Rows)
+            {
+                if (row.DataBoundItem is Items currentItem && currentItem.Id == item.Id)
+                {
+                    return double.TryParse(row.Cells[columnName].Value?.ToString(), out var value) ? value : 0;
+                }
+            }
+
+            return 0;
+        }
 
         private void txtPaidAmount_TextChanged(object sender, EventArgs e)
         {
             CalculateChange();
+            UpdateRemainingBalance();
+        }
+        private void UpdateRemainingBalance()
+        {
+            try
+            {
+                decimal total = ParseCurrency(txtTotal.Text);
+                decimal paidAmount = ParseCurrency(txtPaidAmount.Text);
+
+                decimal remaining = total - paidAmount;
+                txtChange.Text = (paidAmount > total) ? (paidAmount - total).ToString("C") : "₱0.00";
+                txtRemaining.Text = (remaining > 0 ? remaining : 0).ToString("C");
+            }
+            catch
+            {
+                txtRemaining.Text = "₱0.00";
+            }
         }
         #endregion
 
