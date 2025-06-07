@@ -1,0 +1,6 @@
+- Agent name should tagged for the assigned agent of location
+- Invoice number should continue to increment even after next date - DONE
+- Filter header in invoice
+- Item name, QTY per box, Onhand, item desc, item code - DONE
+- Invoice level add discount column - Done
+- Invoice receipt (make it more compact and if capable of cutting in half of letter
