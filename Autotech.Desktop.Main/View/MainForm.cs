@@ -812,7 +812,7 @@ namespace Autotech.Desktop.Main.View
                 dataGridViewOrderCart.DataSource = null;
                 txtSubtotal.Text = txtTax.Text = txtDiscount.Text = txtTotal.Text =
                     txtPaidAmount.Text = txtChange.Text = txtRemaining.Text = "";
-
+                SalesNumber++;
             }
             catch (Exception ex)
             {
