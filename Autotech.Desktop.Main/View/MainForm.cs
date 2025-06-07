@@ -39,6 +39,7 @@ namespace Autotech.Desktop.Main.View
         private List<Items> currentPageItems = new();
         private HashSet<Guid> selectedItemIds = new();
         private List<Items> orderCartItems = new();
+        private List<SalesDTO> allInvoices = new();
         #endregion
 
         #region Props
@@ -197,16 +198,25 @@ namespace Autotech.Desktop.Main.View
 
             dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
             {
-                HeaderText = "Item Code",
-                DataPropertyName = "ItemCode",
-                Name = "itemCodeColumn"
+                HeaderText = "Item Name",
+                DataPropertyName = "ItemName",
+                Name = "itemNameColumn"
             });
 
             dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
             {
-                HeaderText = "Item Name",
-                DataPropertyName = "ItemName",
-                Name = "itemNameColumn"
+                HeaderText = "Quantity Per Box",
+                DataPropertyName = "QuantityPerBox",
+                Name = "itemQuantityColumn"
+            });
+
+            //qty per box here
+
+            dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Onhand",
+                DataPropertyName = "itemDetails.PropertyName",
+                Name = "itemDetailsColumn"
             });
 
             dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
@@ -218,9 +228,9 @@ namespace Autotech.Desktop.Main.View
 
             dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
             {
-                HeaderText = "Onhand",
-                DataPropertyName = "itemDetails.PropertyName",
-                Name = "itemDetailsColumn"
+                HeaderText = "Item Code",
+                DataPropertyName = "ItemCode",
+                Name = "itemCodeColumn"
             });
 
             dataGridViewItemList.CellValueChanged += dataGridViewItemList_CellValueChanged;
@@ -752,7 +762,7 @@ namespace Autotech.Desktop.Main.View
                 Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
                 DueDate = DateTime.Now.AddDays(int.Parse(txtTerms.Text)),
                 RemainingBalance = (double)remaining,
-                Status = remaining > 0 ? "Pending" : "Paid",
+                Status = "Pending",
                 TotalLiters = 0, // if applicable
                 Cluster = "", // if needed
                 AccountId = accountId,
@@ -771,6 +781,9 @@ namespace Autotech.Desktop.Main.View
                         double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
                         double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
                         double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
+                        double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
+                        double totalDiscount = price - subtotal;
+                        double.TryParse(totalDiscount.ToString(), out double discount);
 
                         return new InvoiceItemDTO
                         {
@@ -778,7 +791,8 @@ namespace Autotech.Desktop.Main.View
                             Quantity = quantity,
                             ItemPrice = price,
                             TotalPrice = subtotal,
-                            ItemName =""
+                            ItemName = "",
+                            Discount = discount
                         };
                     })
                     .Where(i => i != null) // Filter nulls
@@ -888,7 +902,193 @@ namespace Autotech.Desktop.Main.View
         }
         #endregion
 
+        #region Invoice
+        private async void LoadInvoicesAsync()
+        {
+            try
+            {
+                var salesService = new SalesService();
+                var invoices = await salesService.GetAllInvoicesAsync();
+                allInvoices = invoices;
 
+                dataGridViewInvoice.DataSource = null;
+                dataGridViewInvoice.DataSource = invoices;
+
+                dataGridViewInvoice.Columns["Id"].Visible = false;
+
+                // First hide all columns
+                foreach (DataGridViewColumn column in dataGridViewInvoice.Columns)
+                {
+                    column.Visible = false;
+                }
+
+                // Show and rename only selected columns
+                ShowColumn("strInvoiceNumber", "Invoice #");
+                ShowColumn("DateSold", "Date Sold");
+                ShowColumn("Agent", "Agent Name");
+                ShowColumn("AccountName", "Customer Name");
+                ShowColumn("PaymentType", "Payment Method");
+                ShowColumn("TotalSales", "Total Sales");
+                ShowColumn("Tax", "Tax Amount");
+                ShowColumn("DiscountPeso", "Discount (₱)");
+                ShowColumn("Terms", "Terms (Days)");
+                ShowColumn("DueDate", "Due Date");
+                ShowColumn("RemainingBalance", "Balance Remaining");
+                ShowColumn("Status", "Status");
+                ShowColumn("Cluster", "Cluster");
+
+                dataGridViewInvoice.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                dataGridViewInvoice.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                dataGridViewInvoice.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dataGridViewInvoice.DefaultCellStyle.Padding = new Padding(5);
+
+                dataGridViewInvoice.RowPrePaint -= dataGridViewInvoice_RowPrePaint;
+                dataGridViewInvoice.RowPrePaint += dataGridViewInvoice_RowPrePaint;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading invoices: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            void ShowColumn(string columnName, string header)
+            {
+                if (dataGridViewInvoice.Columns.Contains(columnName))
+                {
+                    var column = dataGridViewInvoice.Columns[columnName];
+                    column.Visible = true;
+                    column.HeaderText = header;
+                }
+            }
+        }
+
+        private void dataGridViewInvoice_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var dgv = sender as DataGridView;
+            var row = dgv.Rows[e.RowIndex];
+
+            if (row.Cells["Status"].Value?.ToString() == "Paid")
+            {
+                row.DefaultCellStyle.BackColor = Color.LightGreen;
+            }
+            else if (row.Cells["Status"].Value?.ToString() == "Pending")
+            {
+                row.DefaultCellStyle.BackColor = Color.IndianRed;
+            }
+        }
+
+
+        private void metroSetTabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (metroSetTabControl1.SelectedTab == tabPageInvoice)
+            {
+                LoadInvoicesAsync();
+            }
+        }
+        #endregion
+
+        private void txtSearchInvoice_TextChanged(object sender, EventArgs e)
+        {
+            string searchText = txtSearchInvoice.Text.Trim().ToLower();
+
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                dataGridViewInvoice.DataSource = allInvoices;
+            }
+            else
+            {
+                var filtered = allInvoices.Where(i =>
+                    (!string.IsNullOrEmpty(i.AccountName) && i.AccountName.ToLower().Contains(searchText)) ||
+                    (!string.IsNullOrEmpty(i.strInvoiceNumber) && i.strInvoiceNumber.ToLower().Contains(searchText))
+                ).ToList();
+
+                dataGridViewInvoice.DataSource = filtered;
+            }
+        }
+
+        private async void btnOpenInvoice_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewInvoice.CurrentRow != null)
+            {
+                var selectedRow = dataGridViewInvoice.CurrentRow;
+                var invoiceId = (Guid)selectedRow.Cells["Id"].Value;
+
+                try
+                {
+                    var salesService = new SalesService();
+                    var invoice = await salesService.GetInvoiceByIdAsync(invoiceId);
+
+                    var detailsForm = new InvoiceDetailsForm(invoice);
+                    detailsForm.ShowDialog(); // or .Show() if you prefer
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error loading invoice: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select an invoice first.");
+            }
+        }
+
+
+        private void btnInvoiceExport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var package = new OfficeOpenXml.ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Invoices");
+
+                    // Add headers
+                    int colIndex = 1;
+                    foreach (DataGridViewColumn col in dataGridViewInvoice.Columns)
+                    {
+                        if (col.Visible)
+                        {
+                            worksheet.Cells[1, colIndex].Value = col.HeaderText;
+                            colIndex++;
+                        }
+                    }
+
+                    // Add data
+                    int rowIndex = 2;
+                    foreach (DataGridViewRow row in dataGridViewInvoice.Rows)
+                    {
+                        if (!row.IsNewRow)
+                        {
+                            colIndex = 1;
+                            foreach (DataGridViewColumn col in dataGridViewInvoice.Columns)
+                            {
+                                if (col.Visible)
+                                {
+                                    worksheet.Cells[rowIndex, colIndex].Value = row.Cells[col.Name].Value?.ToString();
+                                    colIndex++;
+                                }
+                            }
+                            rowIndex++;
+                        }
+                    }
+
+                    // Prompt to save file
+                    using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                    {
+                        saveFileDialog.Filter = "Excel Files|*.xlsx";
+                        saveFileDialog.FileName = "InvoiceExport.xlsx";
+
+                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            File.WriteAllBytes(saveFileDialog.FileName, package.GetAsByteArray());
+                            MessageBox.Show("Export successful!", "Excel Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error exporting data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
     }
 }

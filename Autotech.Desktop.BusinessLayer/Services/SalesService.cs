@@ -27,6 +27,41 @@ namespace Autotech.Desktop.BusinessLayer.Services
             var errorMessage = await response.Content.ReadAsStringAsync();
             throw new Exception($"Invoice creation failed: {errorMessage}");
         }
+
+        public async Task<List<SalesDTO>> GetAllInvoicesAsync()
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var response = await httpClient.GetAsync(_apiUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var invoices = await response.Content.ReadFromJsonAsync<List<SalesDTO>>();
+                return invoices ?? new List<SalesDTO>();
+            }
+
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Failed to retrieve invoices: {errorMessage}");
+        }
+
+        public async Task<InvoiceDetailsDTO> GetInvoiceByIdAsync(Guid invoiceId)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var response = await httpClient.GetAsync($"{_apiUrl}/{invoiceId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<InvoiceDetailsDTO>();
+            }
+
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Failed to fetch invoice: {errorMessage}");
+        }
     }
 
     public class InvoiceResponseDTO
