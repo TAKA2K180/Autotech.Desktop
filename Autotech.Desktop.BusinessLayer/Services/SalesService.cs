@@ -62,6 +62,37 @@ namespace Autotech.Desktop.BusinessLayer.Services
             var errorMessage = await response.Content.ReadAsStringAsync();
             throw new Exception($"Failed to fetch invoice: {errorMessage}");
         }
+
+        public async Task<List<PaymentHistoryDTO>> GetPaymentsBySaleIdAsync(Guid saleId)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var response = await httpClient.GetAsync($"{_apiUrl}/payments/sale/{saleId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<PaymentHistoryDTO>>();
+            }
+
+            throw new Exception($"Failed to load payment history: {await response.Content.ReadAsStringAsync()}");
+        }
+
+        public async Task AddPaymentAsync(PaymentHistoryDTO dto)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var response = await httpClient.PostAsJsonAsync($"{_apiUrl}/AddPayment", dto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception("Failed to add payment: " + error);
+            }
+        }
     }
 
     public class InvoiceResponseDTO

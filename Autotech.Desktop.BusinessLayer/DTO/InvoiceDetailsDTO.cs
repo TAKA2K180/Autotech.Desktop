@@ -8,6 +8,7 @@ namespace Autotech.Desktop.BusinessLayer.DTO
 {
     public class InvoiceDetailsDTO
     {
+        public Guid Id { get; set; }
         public string strInvoiceNumber { get; set; }
         public DateTime DateSold { get; set; }
         public string Agent { get; set; }

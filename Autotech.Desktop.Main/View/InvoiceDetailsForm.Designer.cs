@@ -29,7 +29,11 @@
             metroSetLabel5 = new MetroSet_UI.Controls.MetroSetLabel();
             metroSetButton1 = new MetroSet_UI.Controls.MetroSetButton();
             btnConfirmPayment = new MetroSet_UI.Controls.MetroSetButton();
+            dvgPaymentHistory = new DataGridView();
+            metroSetLabel1 = new MetroSet_UI.Controls.MetroSetLabel();
+            btnAddPayment = new MetroSet_UI.Controls.MetroSetButton();
             ((System.ComponentModel.ISupportInitialize)dataGridViewInvoiceDetails).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dvgPaymentHistory).BeginInit();
             SuspendLayout();
             // 
             // lblInvoiceNumber
@@ -88,7 +92,7 @@
             txtSubtotal.Image = null;
             txtSubtotal.IsDerivedStyle = true;
             txtSubtotal.Lines = null;
-            txtSubtotal.Location = new Point(885, 473);
+            txtSubtotal.Location = new Point(477, 473);
             txtSubtotal.MaxLength = 32767;
             txtSubtotal.Multiline = false;
             txtSubtotal.Name = "txtSubtotal";
@@ -117,7 +121,7 @@
             txtTax.Image = null;
             txtTax.IsDerivedStyle = true;
             txtTax.Lines = null;
-            txtTax.Location = new Point(885, 513);
+            txtTax.Location = new Point(477, 513);
             txtTax.MaxLength = 32767;
             txtTax.Multiline = false;
             txtTax.Name = "txtTax";
@@ -146,7 +150,7 @@
             txtDiscount.Image = null;
             txtDiscount.IsDerivedStyle = true;
             txtDiscount.Lines = null;
-            txtDiscount.Location = new Point(885, 553);
+            txtDiscount.Location = new Point(477, 553);
             txtDiscount.MaxLength = 32767;
             txtDiscount.Multiline = false;
             txtDiscount.Name = "txtDiscount";
@@ -175,7 +179,7 @@
             txtTotal.Image = null;
             txtTotal.IsDerivedStyle = true;
             txtTotal.Lines = null;
-            txtTotal.Location = new Point(885, 593);
+            txtTotal.Location = new Point(477, 593);
             txtTotal.MaxLength = 32767;
             txtTotal.Multiline = false;
             txtTotal.Name = "txtTotal";
@@ -224,14 +228,14 @@
             dataGridViewInvoiceDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewInvoiceDetails.Location = new Point(30, 158);
             dataGridViewInvoiceDetails.Name = "dataGridViewInvoiceDetails";
-            dataGridViewInvoiceDetails.Size = new Size(1055, 300);
+            dataGridViewInvoiceDetails.Size = new Size(647, 300);
             dataGridViewInvoiceDetails.TabIndex = 3;
             // 
             // metroSetLabel2
             // 
             metroSetLabel2.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             metroSetLabel2.IsDerivedStyle = true;
-            metroSetLabel2.Location = new Point(817, 480);
+            metroSetLabel2.Location = new Point(409, 480);
             metroSetLabel2.Name = "metroSetLabel2";
             metroSetLabel2.Size = new Size(62, 23);
             metroSetLabel2.Style = MetroSet_UI.Enums.Style.Light;
@@ -245,7 +249,7 @@
             // 
             metroSetLabel3.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             metroSetLabel3.IsDerivedStyle = true;
-            metroSetLabel3.Location = new Point(847, 520);
+            metroSetLabel3.Location = new Point(439, 520);
             metroSetLabel3.Name = "metroSetLabel3";
             metroSetLabel3.Size = new Size(32, 23);
             metroSetLabel3.Style = MetroSet_UI.Enums.Style.Light;
@@ -259,7 +263,7 @@
             // 
             metroSetLabel4.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             metroSetLabel4.IsDerivedStyle = true;
-            metroSetLabel4.Location = new Point(810, 553);
+            metroSetLabel4.Location = new Point(402, 553);
             metroSetLabel4.Name = "metroSetLabel4";
             metroSetLabel4.Size = new Size(69, 23);
             metroSetLabel4.Style = MetroSet_UI.Enums.Style.Light;
@@ -273,7 +277,7 @@
             // 
             metroSetLabel5.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             metroSetLabel5.IsDerivedStyle = true;
-            metroSetLabel5.Location = new Point(834, 593);
+            metroSetLabel5.Location = new Point(426, 593);
             metroSetLabel5.Name = "metroSetLabel5";
             metroSetLabel5.Size = new Size(45, 23);
             metroSetLabel5.Style = MetroSet_UI.Enums.Style.Light;
@@ -320,7 +324,7 @@
             btnConfirmPayment.HoverColor = Color.FromArgb(95, 207, 255);
             btnConfirmPayment.HoverTextColor = Color.White;
             btnConfirmPayment.IsDerivedStyle = true;
-            btnConfirmPayment.Location = new Point(200, 464);
+            btnConfirmPayment.Location = new Point(700, 553);
             btnConfirmPayment.Name = "btnConfirmPayment";
             btnConfirmPayment.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnConfirmPayment.NormalColor = Color.FromArgb(65, 177, 225);
@@ -337,9 +341,65 @@
             btnConfirmPayment.ThemeName = "MetroLite";
             btnConfirmPayment.Click += btnConfirmPayment_Click;
             // 
+            // dvgPaymentHistory
+            // 
+            dvgPaymentHistory.AllowUserToAddRows = false;
+            dvgPaymentHistory.AllowUserToDeleteRows = false;
+            dvgPaymentHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dvgPaymentHistory.Location = new Point(700, 158);
+            dvgPaymentHistory.Name = "dvgPaymentHistory";
+            dvgPaymentHistory.RowHeadersVisible = false;
+            dvgPaymentHistory.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dvgPaymentHistory.Size = new Size(647, 300);
+            dvgPaymentHistory.TabIndex = 16;
+            // 
+            // metroSetLabel1
+            // 
+            metroSetLabel1.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            metroSetLabel1.IsDerivedStyle = true;
+            metroSetLabel1.Location = new Point(700, 130);
+            metroSetLabel1.Name = "metroSetLabel1";
+            metroSetLabel1.Size = new Size(400, 25);
+            metroSetLabel1.Style = MetroSet_UI.Enums.Style.Light;
+            metroSetLabel1.StyleManager = null;
+            metroSetLabel1.TabIndex = 17;
+            metroSetLabel1.Text = "Payment history";
+            metroSetLabel1.ThemeAuthor = "Narwin";
+            metroSetLabel1.ThemeName = "MetroLite";
+            // 
+            // btnAddPayment
+            // 
+            btnAddPayment.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnAddPayment.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnAddPayment.DisabledForeColor = Color.Gray;
+            btnAddPayment.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnAddPayment.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnAddPayment.HoverColor = Color.FromArgb(95, 207, 255);
+            btnAddPayment.HoverTextColor = Color.White;
+            btnAddPayment.IsDerivedStyle = true;
+            btnAddPayment.Location = new Point(700, 464);
+            btnAddPayment.Name = "btnAddPayment";
+            btnAddPayment.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnAddPayment.NormalColor = Color.FromArgb(65, 177, 225);
+            btnAddPayment.NormalTextColor = Color.White;
+            btnAddPayment.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnAddPayment.PressColor = Color.FromArgb(35, 147, 195);
+            btnAddPayment.PressTextColor = Color.White;
+            btnAddPayment.Size = new Size(150, 40);
+            btnAddPayment.Style = MetroSet_UI.Enums.Style.Light;
+            btnAddPayment.StyleManager = null;
+            btnAddPayment.TabIndex = 18;
+            btnAddPayment.Text = "Add Payment";
+            btnAddPayment.ThemeAuthor = "Narwin";
+            btnAddPayment.ThemeName = "MetroLite";
+            btnAddPayment.Click += btnAddPayment_Click;
+            // 
             // InvoiceDetailsForm
             // 
-            ClientSize = new Size(1109, 653);
+            ClientSize = new Size(1370, 653);
+            Controls.Add(btnAddPayment);
+            Controls.Add(metroSetLabel1);
+            Controls.Add(dvgPaymentHistory);
             Controls.Add(btnConfirmPayment);
             Controls.Add(metroSetButton1);
             Controls.Add(metroSetLabel5);
@@ -359,6 +419,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Invoice Details";
             ((System.ComponentModel.ISupportInitialize)dataGridViewInvoiceDetails).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dvgPaymentHistory).EndInit();
             ResumeLayout(false);
         }
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel2;
@@ -367,5 +428,8 @@
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel5;
         private MetroSet_UI.Controls.MetroSetButton metroSetButton1;
         private MetroSet_UI.Controls.MetroSetButton btnConfirmPayment;
+        private DataGridView dvgPaymentHistory;
+        private MetroSet_UI.Controls.MetroSetLabel metroSetLabel1;
+        private MetroSet_UI.Controls.MetroSetButton btnAddPayment;
     }
 }

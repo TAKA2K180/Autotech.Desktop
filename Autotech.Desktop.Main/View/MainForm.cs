@@ -1017,7 +1017,7 @@ namespace Autotech.Desktop.Main.View
                     var salesService = new SalesService();
                     var invoice = await salesService.GetInvoiceByIdAsync(invoiceId);
 
-                    var detailsForm = new InvoiceDetailsForm(invoice);
+                    var detailsForm = new InvoiceDetailsForm(invoice, invoiceId);
                     detailsForm.ShowDialog(); // or .Show() if you prefer
                 }
                 catch (Exception ex)

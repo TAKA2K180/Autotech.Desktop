@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Autotech.Desktop.BusinessLayer.DTO;
+using Autotech.Desktop.BusinessLayer.Helpers;
+using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.DTO; // Ensure this namespace contains InvoiceDTO and InvoiceItemDTO
 //using Autotech.Desktop.Main.Reports;
 using MetroSet_UI.Forms;
@@ -16,7 +18,7 @@ namespace Autotech.Desktop.Main.View
     {
         private InvoiceDetailsDTO _invoice;
 
-        public InvoiceDetailsForm(InvoiceDetailsDTO invoice)
+        public InvoiceDetailsForm(InvoiceDetailsDTO invoice, Guid invoiceId)
         {
             InitializeComponent();
 
@@ -28,6 +30,7 @@ namespace Autotech.Desktop.Main.View
 
             InitializeGrid();
             LoadItemsToGrid();
+            LoadPaymentHistoryAsync(invoiceId);
         }
 
         private void InitializeGrid()
@@ -87,10 +90,11 @@ namespace Autotech.Desktop.Main.View
             };
         }
 
-        private void LoadItemsToGrid()
+        private async void LoadItemsToGrid()
         {
             dataGridViewInvoiceDetails.DataSource = null;
             dataGridViewInvoiceDetails.DataSource = _invoice.PurchasedItems;
+
             RecalculateTotals();
         }
 
@@ -159,5 +163,77 @@ namespace Autotech.Desktop.Main.View
         {
 
         }
+
+        private async Task LoadPaymentHistoryAsync(Guid saleId)
+        {
+            try
+            {
+                var service = new SalesService();
+                var payments = await service.GetPaymentsBySaleIdAsync(saleId);
+
+                // Use invoice-level data (_invoice) for payment method and remaining balance
+                var paymentMethod = _invoice.PaymentType;
+                var remainingBalance = _invoice.RemainingBalance;
+
+                var displayPayments = payments.Select(p => new
+                {
+                    AmountPaid = p.PaymentAmount,
+                    DatePaid = p.DatePaid.ToString("g"),
+                    PaymentMethod = paymentMethod,
+                    RemainingBalance = p.RemainingBalance.ToString("C")
+                }).ToList();
+
+                dvgPaymentHistory.DataSource = null;
+                dvgPaymentHistory.DataSource = displayPayments;
+
+                // Set user-friendly column headers
+                dvgPaymentHistory.Columns["AmountPaid"].HeaderText = "Amount Paid";
+                dvgPaymentHistory.Columns["DatePaid"].HeaderText = "Date Paid";
+                dvgPaymentHistory.Columns["PaymentMethod"].HeaderText = "Payment Method";
+                dvgPaymentHistory.Columns["RemainingBalance"].HeaderText = "Remaining Balance";
+
+                // Optional: format currency
+                dvgPaymentHistory.Columns["AmountPaid"].DefaultCellStyle.Format = "C";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading payment history: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void btnAddPayment_Click(object sender, EventArgs e)
+        {
+            using var dialog = new AddPaymentForm();
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            var payment = new PaymentHistoryDTO
+            {
+                SalesId = _invoice.Id,
+                AccountId = _invoice.AccountId,
+                AgentId = SessionManager.AgentDetails.Id,
+                DatePaid = DateTime.Now,
+                PaymentAmount = dialog.PaymentAmount,
+                PaymentMethod = dialog.SelectedPaymentMethod.ToString(),
+                RemainingBalance = _invoice.RemainingBalance - dialog.PaymentAmount
+            };
+
+            try
+            {
+                var service = new SalesService();
+                await service.AddPaymentAsync(payment);
+                var updatedInvoice = await service.GetInvoiceByIdAsync(_invoice.Id);
+
+                await LoadPaymentHistoryAsync(_invoice.Id);
+                _invoice = updatedInvoice; // update cached copy
+                MessageBox.Show("Payment recorded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to record payment: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
     }
 }
