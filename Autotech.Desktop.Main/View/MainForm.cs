@@ -5,6 +5,7 @@ using Autotech.Desktop.Core.Enums;
 using Autotech.Desktop.Core.Models;
 using MetroSet_UI.Controls;
 using MetroSet_UI.Forms;
+using System.ComponentModel;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
@@ -580,7 +581,6 @@ namespace Autotech.Desktop.Main.View
             if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
                 e.Handled = true;
         }
-        #endregion
 
         private void radioWholesale_CheckedChanged(object sender)
         {
@@ -677,6 +677,7 @@ namespace Autotech.Desktop.Main.View
         {
             CalculateTotal();
         }
+        #endregion
 
         #region Payment
         private void InitializePaymentMethods()
@@ -959,6 +960,26 @@ namespace Autotech.Desktop.Main.View
                     column.HeaderText = header;
                 }
             }
+
+            PopulateFilterCombo();
+        }
+
+        private void PopulateFilterCombo()
+        {
+            cboFilterInvoice.DataSource = Enum.GetValues(typeof(InvoiceFilterOption))
+                .Cast<InvoiceFilterOption>()
+                .Select(val => new
+                {
+                    Key = val,
+                    Value = val.GetType()
+                        .GetField(val.ToString())
+                        .GetCustomAttributes(typeof(DescriptionAttribute), false)
+                        .Cast<DescriptionAttribute>()
+                        .FirstOrDefault()?.Description ?? val.ToString()
+                }).ToList();
+
+            cboFilterInvoice.DisplayMember = "Value";
+            cboFilterInvoice.ValueMember = "Key";
         }
 
         private void dataGridViewInvoice_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -976,7 +997,6 @@ namespace Autotech.Desktop.Main.View
             }
         }
 
-
         private void metroSetTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (metroSetTabControl1.SelectedTab == tabPageInvoice)
@@ -984,25 +1004,10 @@ namespace Autotech.Desktop.Main.View
                 LoadInvoicesAsync();
             }
         }
-        #endregion
 
         private void txtSearchInvoice_TextChanged(object sender, EventArgs e)
         {
-            string searchText = txtSearchInvoice.Text.Trim().ToLower();
-
-            if (string.IsNullOrWhiteSpace(searchText))
-            {
-                dataGridViewInvoice.DataSource = allInvoices;
-            }
-            else
-            {
-                var filtered = allInvoices.Where(i =>
-                    (!string.IsNullOrEmpty(i.AccountName) && i.AccountName.ToLower().Contains(searchText)) ||
-                    (!string.IsNullOrEmpty(i.strInvoiceNumber) && i.strInvoiceNumber.ToLower().Contains(searchText))
-                ).ToList();
-
-                dataGridViewInvoice.DataSource = filtered;
-            }
+            ApplyInvoiceFilterAndSorting();
         }
 
         private async void btnOpenInvoice_Click(object sender, EventArgs e)
@@ -1030,7 +1035,6 @@ namespace Autotech.Desktop.Main.View
                 MessageBox.Show("Please select an invoice first.");
             }
         }
-
 
         private void btnInvoiceExport_Click(object sender, EventArgs e)
         {
@@ -1090,5 +1094,101 @@ namespace Autotech.Desktop.Main.View
             }
         }
 
+        private void cboFilterInvoice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cboFilterInvoice.SelectedItem == null)
+            {
+                cboAddedOption.Visible = false;
+                return;
+            }
+
+            var selectedKey = ((dynamic)cboFilterInvoice.SelectedItem).Key.ToString();
+
+            // Show cboAddedOption only if filter is on a date column
+            if (selectedKey == "DateSold" || selectedKey == "DueDate")
+            {
+                cboAddedOption.Visible = true;
+                PopulateAddedOptionCombo(); // Optional: reload options
+            }
+            else
+            {
+                cboAddedOption.Visible = false;
+            }
+        }
+
+        private void PopulateAddedOptionCombo()
+        {
+            cboAddedOption.DataSource = new List<string>
+            {
+                "Ascending",
+                "Descending"
+            };
+        }
+
+        private void ApplyInvoiceFilterAndSorting()
+        {
+            if (cboFilterInvoice.SelectedItem == null || allInvoices == null)
+                return;
+
+            string keyword = txtSearchInvoice.Text.Trim().ToLower();
+            var selectedKey = ((dynamic)cboFilterInvoice.SelectedItem).Key.ToString();
+            var sortOption = cboAddedOption.SelectedItem?.ToString();
+
+            IEnumerable<SalesDTO> filtered = allInvoices;
+
+            // Filter by selected column
+            switch (selectedKey)
+            {
+                case "strInvoiceNumber":
+                    filtered = filtered.Where(i => i.strInvoiceNumber.ToLower().Contains(keyword));
+                    break;
+                case "Agent":
+                    filtered = filtered.Where(i => i.Agent.ToLower().Contains(keyword));
+                    break;
+                case "DateSold":
+                    if (DateTime.TryParse(keyword, out var dateSold))
+                        filtered = filtered.Where(i => i.DateSold.Date == dateSold.Date);
+                    break;
+                case "AccountName":
+                    filtered = filtered.Where(i => i.AccountName.ToLower().Contains(keyword));
+                    break;
+                case "PaymentType":
+                    filtered = filtered.Where(i => i.PaymentType.ToLower().Contains(keyword));
+                    break;
+                case "DueDate":
+                    if (DateTime.TryParse(keyword, out var dueDate))
+                        filtered = filtered.Where(i => i.DueDate.Date == dueDate.Date);
+                    break;
+                case "Status":
+                    filtered = filtered.Where(i => i.Status.ToLower().Contains(keyword));
+                    break;
+                case "Cluster":
+                    filtered = filtered.Where(i => i.Cluster.ToLower().Contains(keyword));
+                    break;
+            }
+
+            // Apply sorting if date-based column is selected
+            if (selectedKey == "DateSold")
+            {
+                filtered = sortOption == "Descending"
+                    ? filtered.OrderByDescending(i => i.DateSold)
+                    : filtered.OrderBy(i => i.DateSold);
+            }
+            else if (selectedKey == "DueDate")
+            {
+                filtered = sortOption == "Descending"
+                    ? filtered.OrderByDescending(i => i.DueDate)
+                    : filtered.OrderBy(i => i.DueDate);
+            }
+
+            dataGridViewInvoice.DataSource = null;
+            dataGridViewInvoice.DataSource = filtered.ToList();
+        }
+        private void cboAddedOption_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyInvoiceFilterAndSorting();
+        }
+
+        #endregion
     }
 }

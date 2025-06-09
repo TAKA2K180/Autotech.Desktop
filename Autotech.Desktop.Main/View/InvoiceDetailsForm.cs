@@ -161,7 +161,7 @@ namespace Autotech.Desktop.Main.View
 
         private void btnConfirmPayment_Click(object sender, EventArgs e)
         {
-
+            //selected payment to confirm
         }
 
         private async Task LoadPaymentHistoryAsync(Guid saleId)

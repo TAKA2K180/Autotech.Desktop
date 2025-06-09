@@ -119,6 +119,9 @@ namespace Autotech.Desktop.Main.View
             txtTotal = new MetroSetTextBox();
             lblSalesInfo = new MetroSetLabel();
             tabPageInvoice = new TabPage();
+            cboAddedOption = new MetroSetComboBox();
+            cboFilterInvoice = new MetroSetComboBox();
+            metroSetLabel3 = new MetroSetLabel();
             btnInvoiceExport = new MetroSetButton();
             txtSearchInvoice = new TextBox();
             btnOpenInvoice = new MetroSetButton();
@@ -512,7 +515,7 @@ namespace Autotech.Desktop.Main.View
             txtContactNumber.Multiline = false;
             txtContactNumber.Name = "txtContactNumber";
             txtContactNumber.ReadOnly = false;
-            txtContactNumber.Size = new Size(150, 25);
+            txtContactNumber.Size = new Size(200, 25);
             txtContactNumber.Style = Style.Light;
             txtContactNumber.StyleManager = null;
             txtContactNumber.TabIndex = 7;
@@ -526,7 +529,7 @@ namespace Autotech.Desktop.Main.View
             // 
             lblTerms.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             lblTerms.IsDerivedStyle = true;
-            lblTerms.Location = new Point(1180, 49);
+            lblTerms.Location = new Point(1221, 15);
             lblTerms.Name = "lblTerms";
             lblTerms.Size = new Size(53, 23);
             lblTerms.Style = Style.Light;
@@ -550,7 +553,7 @@ namespace Autotech.Desktop.Main.View
             txtTerms.Image = null;
             txtTerms.IsDerivedStyle = true;
             txtTerms.Lines = null;
-            txtTerms.Location = new Point(1239, 43);
+            txtTerms.Location = new Point(1280, 13);
             txtTerms.MaxLength = 32767;
             txtTerms.Multiline = false;
             txtTerms.Name = "txtTerms";
@@ -953,7 +956,7 @@ namespace Autotech.Desktop.Main.View
             btnPay.HoverColor = Color.FromArgb(95, 207, 255);
             btnPay.HoverTextColor = Color.White;
             btnPay.IsDerivedStyle = true;
-            btnPay.Location = new Point(800, 50);
+            btnPay.Location = new Point(800, 64);
             btnPay.Name = "btnPay";
             btnPay.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnPay.NormalColor = Color.FromArgb(65, 177, 225);
@@ -961,7 +964,7 @@ namespace Autotech.Desktop.Main.View
             btnPay.PressBorderColor = Color.FromArgb(35, 147, 195);
             btnPay.PressColor = Color.FromArgb(35, 147, 195);
             btnPay.PressTextColor = Color.White;
-            btnPay.Size = new Size(100, 40);
+            btnPay.Size = new Size(150, 49);
             btnPay.Style = Style.Light;
             btnPay.StyleManager = null;
             btnPay.TabIndex = 8;
@@ -1160,6 +1163,9 @@ namespace Autotech.Desktop.Main.View
             // 
             // tabPageInvoice
             // 
+            tabPageInvoice.Controls.Add(cboAddedOption);
+            tabPageInvoice.Controls.Add(cboFilterInvoice);
+            tabPageInvoice.Controls.Add(metroSetLabel3);
             tabPageInvoice.Controls.Add(btnInvoiceExport);
             tabPageInvoice.Controls.Add(txtSearchInvoice);
             tabPageInvoice.Controls.Add(btnOpenInvoice);
@@ -1171,6 +1177,78 @@ namespace Autotech.Desktop.Main.View
             tabPageInvoice.TabIndex = 1;
             tabPageInvoice.Text = "Invoice";
             // 
+            // cboAddedOption
+            // 
+            cboAddedOption.AllowDrop = true;
+            cboAddedOption.ArrowColor = Color.FromArgb(150, 150, 150);
+            cboAddedOption.BackColor = Color.Transparent;
+            cboAddedOption.BackgroundColor = Color.FromArgb(238, 238, 238);
+            cboAddedOption.BorderColor = Color.FromArgb(150, 150, 150);
+            cboAddedOption.CausesValidation = false;
+            cboAddedOption.DisabledBackColor = Color.FromArgb(204, 204, 204);
+            cboAddedOption.DisabledBorderColor = Color.FromArgb(155, 155, 155);
+            cboAddedOption.DisabledForeColor = Color.FromArgb(136, 136, 136);
+            cboAddedOption.DrawMode = DrawMode.OwnerDrawFixed;
+            cboAddedOption.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboAddedOption.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            cboAddedOption.FormattingEnabled = true;
+            cboAddedOption.IsDerivedStyle = true;
+            cboAddedOption.ItemHeight = 20;
+            cboAddedOption.Location = new Point(288, 43);
+            cboAddedOption.Name = "cboAddedOption";
+            cboAddedOption.SelectedItemBackColor = Color.FromArgb(65, 177, 225);
+            cboAddedOption.SelectedItemForeColor = Color.White;
+            cboAddedOption.Size = new Size(148, 26);
+            cboAddedOption.Style = Style.Light;
+            cboAddedOption.StyleManager = null;
+            cboAddedOption.TabIndex = 10;
+            cboAddedOption.ThemeAuthor = "Narwin";
+            cboAddedOption.ThemeName = "MetroLite";
+            cboAddedOption.SelectedIndexChanged += cboAddedOption_SelectedIndexChanged;
+            // 
+            // cboFilterInvoice
+            // 
+            cboFilterInvoice.AllowDrop = true;
+            cboFilterInvoice.ArrowColor = Color.FromArgb(150, 150, 150);
+            cboFilterInvoice.BackColor = Color.Transparent;
+            cboFilterInvoice.BackgroundColor = Color.FromArgb(238, 238, 238);
+            cboFilterInvoice.BorderColor = Color.FromArgb(150, 150, 150);
+            cboFilterInvoice.CausesValidation = false;
+            cboFilterInvoice.DisabledBackColor = Color.FromArgb(204, 204, 204);
+            cboFilterInvoice.DisabledBorderColor = Color.FromArgb(155, 155, 155);
+            cboFilterInvoice.DisabledForeColor = Color.FromArgb(136, 136, 136);
+            cboFilterInvoice.DrawMode = DrawMode.OwnerDrawFixed;
+            cboFilterInvoice.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboFilterInvoice.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            cboFilterInvoice.FormattingEnabled = true;
+            cboFilterInvoice.IsDerivedStyle = true;
+            cboFilterInvoice.ItemHeight = 20;
+            cboFilterInvoice.Location = new Point(123, 43);
+            cboFilterInvoice.Name = "cboFilterInvoice";
+            cboFilterInvoice.SelectedItemBackColor = Color.FromArgb(65, 177, 225);
+            cboFilterInvoice.SelectedItemForeColor = Color.White;
+            cboFilterInvoice.Size = new Size(159, 26);
+            cboFilterInvoice.Style = Style.Light;
+            cboFilterInvoice.StyleManager = null;
+            cboFilterInvoice.TabIndex = 9;
+            cboFilterInvoice.ThemeAuthor = "Narwin";
+            cboFilterInvoice.ThemeName = "MetroLite";
+            cboFilterInvoice.SelectedIndexChanged += cboFilterInvoice_SelectedIndexChanged;
+            // 
+            // metroSetLabel3
+            // 
+            metroSetLabel3.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            metroSetLabel3.IsDerivedStyle = true;
+            metroSetLabel3.Location = new Point(17, 43);
+            metroSetLabel3.Name = "metroSetLabel3";
+            metroSetLabel3.Size = new Size(65, 23);
+            metroSetLabel3.Style = Style.Light;
+            metroSetLabel3.StyleManager = null;
+            metroSetLabel3.TabIndex = 8;
+            metroSetLabel3.Text = "Filter By:";
+            metroSetLabel3.ThemeAuthor = "Narwin";
+            metroSetLabel3.ThemeName = "MetroLite";
+            // 
             // btnInvoiceExport
             // 
             btnInvoiceExport.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
@@ -1181,7 +1259,7 @@ namespace Autotech.Desktop.Main.View
             btnInvoiceExport.HoverColor = Color.FromArgb(95, 207, 255);
             btnInvoiceExport.HoverTextColor = Color.White;
             btnInvoiceExport.IsDerivedStyle = true;
-            btnInvoiceExport.Location = new Point(147, 561);
+            btnInvoiceExport.Location = new Point(147, 616);
             btnInvoiceExport.Name = "btnInvoiceExport";
             btnInvoiceExport.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnInvoiceExport.NormalColor = Color.FromArgb(65, 177, 225);
@@ -1200,7 +1278,7 @@ namespace Autotech.Desktop.Main.View
             // 
             // txtSearchInvoice
             // 
-            txtSearchInvoice.Location = new Point(121, 29);
+            txtSearchInvoice.Location = new Point(123, 76);
             txtSearchInvoice.Name = "txtSearchInvoice";
             txtSearchInvoice.Size = new Size(159, 27);
             txtSearchInvoice.TabIndex = 4;
@@ -1216,7 +1294,7 @@ namespace Autotech.Desktop.Main.View
             btnOpenInvoice.HoverColor = Color.FromArgb(95, 207, 255);
             btnOpenInvoice.HoverTextColor = Color.White;
             btnOpenInvoice.IsDerivedStyle = true;
-            btnOpenInvoice.Location = new Point(15, 561);
+            btnOpenInvoice.Location = new Point(15, 616);
             btnOpenInvoice.Name = "btnOpenInvoice";
             btnOpenInvoice.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnOpenInvoice.NormalColor = Color.FromArgb(65, 177, 225);
@@ -1240,7 +1318,7 @@ namespace Autotech.Desktop.Main.View
             dataGridViewInvoice.AllowUserToResizeColumns = false;
             dataGridViewInvoice.AllowUserToResizeRows = false;
             dataGridViewInvoice.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewInvoice.Location = new Point(15, 64);
+            dataGridViewInvoice.Location = new Point(15, 119);
             dataGridViewInvoice.Name = "dataGridViewInvoice";
             dataGridViewInvoice.ReadOnly = true;
             dataGridViewInvoice.RowHeadersWidth = 51;
@@ -1253,7 +1331,7 @@ namespace Autotech.Desktop.Main.View
             // 
             metroSetLabel2.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             metroSetLabel2.IsDerivedStyle = true;
-            metroSetLabel2.Location = new Point(15, 33);
+            metroSetLabel2.Location = new Point(17, 80);
             metroSetLabel2.Name = "metroSetLabel2";
             metroSetLabel2.Size = new Size(128, 23);
             metroSetLabel2.Style = Style.Light;
@@ -1387,6 +1465,9 @@ namespace Autotech.Desktop.Main.View
         private TextBox txtSearchInvoice;
         private MetroSetLabel metroSetLabel2;
         private MetroSetButton btnInvoiceExport;
+        private MetroSetComboBox cboFilterInvoice;
+        private MetroSetLabel metroSetLabel3;
+        private MetroSetComboBox cboAddedOption;
     }
 }
 
