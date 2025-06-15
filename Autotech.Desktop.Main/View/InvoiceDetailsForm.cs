@@ -27,6 +27,7 @@ namespace Autotech.Desktop.Main.View
             lblInvoiceNumber.Text = $"Invoice #: {_invoice.strInvoiceNumber}";
             lblCustomer.Text = $"Customer: {_invoice.AccountName}";
             lblDate.Text = $"Date: {_invoice.DateSold.ToShortDateString()}";
+            lblStatus.Text = $"Status: {_invoice.Status}";
 
             InitializeGrid();
             LoadItemsToGrid();
@@ -159,9 +160,40 @@ namespace Autotech.Desktop.Main.View
             this.Close();
         }
 
-        private void btnConfirmPayment_Click(object sender, EventArgs e)
+        private async void btnConfirmPayment_Click(object sender, EventArgs e)
         {
-            //selected payment to confirm
+            try
+            {
+                var salesService = new SalesService();
+                var payments = await salesService.GetPaymentsBySaleIdAsync(_invoice.Id);
+                var invoice = await salesService.GetInvoiceByIdAsync(_invoice.Id);
+
+                double totalPaid = Math.Round(payments.Sum(p => p.PaymentAmount));
+                double invoiceTotal = _invoice.TotalSales;
+
+                string newStatus = "";
+                if (totalPaid > invoiceTotal || invoice.RemainingBalance == 0)
+                {
+                    newStatus = "Fully paid";
+                }
+                else
+                {
+                    newStatus = "Incomplete";
+                }
+
+                    await salesService.ConfirmPaymentStatusAsync(_invoice.Id, newStatus);
+
+                MessageBox.Show($"Invoice status updated to: {newStatus}", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Refresh the invoice object or UI if needed
+                _invoice.Status = newStatus;
+
+                await LoadPaymentHistoryAsync(_invoice.Id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error confirming payment: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async Task LoadPaymentHistoryAsync(Guid saleId)
@@ -213,9 +245,9 @@ namespace Autotech.Desktop.Main.View
                 AccountId = _invoice.AccountId,
                 AgentId = SessionManager.AgentDetails.Id,
                 DatePaid = DateTime.Now,
-                PaymentAmount = dialog.PaymentAmount,
+                PaymentAmount = Math.Round(dialog.PaymentAmount),
                 PaymentMethod = dialog.SelectedPaymentMethod.ToString(),
-                RemainingBalance = _invoice.RemainingBalance - dialog.PaymentAmount
+                RemainingBalance = Math.Round(_invoice.RemainingBalance - dialog.PaymentAmount)
             };
 
             try
@@ -234,6 +266,25 @@ namespace Autotech.Desktop.Main.View
             }
         }
 
+        private async void btnCancelInvoice_Click(object sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show("Are you sure you want to cancel this invoice?", "Confirm Cancel", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
+            if (confirm == DialogResult.Yes)
+            {
+                try
+                {
+                    var salesService = new SalesService();
+                    await salesService.ConfirmPaymentStatusAsync(_invoice.Id, "Denied");
+
+                    MessageBox.Show("Invoice status updated to 'Denied'.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Close(); // Optional: Close the form or refresh status
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to cancel invoice: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
     }
 }

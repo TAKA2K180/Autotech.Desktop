@@ -1418,6 +1418,7 @@ namespace Autotech.Desktop.Main.View
             Controls.Add(btnLogout);
             Controls.Add(metroSetControlBox1);
             Controls.Add(metroSetTabControl1);
+            Enabled = false;
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Autotech POS System";

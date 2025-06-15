@@ -1,4 +1,5 @@
 ﻿using Autotech.Desktop.BusinessLayer.Services;
+using Autotech.Desktop.Core.Models;
 using MetroSet_UI.Forms;
 using System;
 using System.Collections.Generic;
@@ -42,8 +43,11 @@ namespace Autotech.Desktop.Main.View
             var loginService = new LoginServices();
 
             bool loginSuccessful = await loginService.LoginAsync(username, password);
-
+            LoginHelper.isLoggedIn = loginSuccessful;
             ValidateLogin(loginSuccessful);
+            txtUsername.Text = "";
+            txtPassword.Text = "";
+            this.Hide();
         }
     }
 }

@@ -18,17 +18,21 @@ namespace Autotech.Desktop.Main.View
         public MainForm()
         {
             InitializeComponent();
-            InitializeTimer();
-            GetUser();
-            SetLocation();
-            InitializeDataGridView();
-            LoadItemsIntoGrid();
-            InitializeOrderCartGrid();
-            dataGridViewItemList.CellFormatting += DataGridViewItemList_CellFormatting;
-            txtPaidAmount.TextChanged += txtPaidAmount_TextChanged;
-            comboAccount.SelectedIndexChanged += comboAccount_SelectedIndexChanged;
-            InitializePaymentMethods();
-            this.Load += MainForm_Load;
+            if (LoginHelper.isLoggedIn == true)
+            {
+                this.Enabled = true;
+                InitializeTimer();
+                GetUser();
+                SetLocation();
+                InitializeDataGridView();
+                LoadItemsIntoGrid();
+                InitializeOrderCartGrid();
+                dataGridViewItemList.CellFormatting += DataGridViewItemList_CellFormatting;
+                txtPaidAmount.TextChanged += txtPaidAmount_TextChanged;
+                comboAccount.SelectedIndexChanged += comboAccount_SelectedIndexChanged;
+                InitializePaymentMethods();
+                this.Load += MainForm_Load;
+            }
         }
         #endregion
 
@@ -748,57 +752,57 @@ namespace Autotech.Desktop.Main.View
             decimal discount = ParseCurrency(txtDiscount.Text);
             decimal discountPercent = discount / (total + discount - tax) * 100;
 
-
-            // 3. Build Invoice DTO
-            var invoiceDto = new InvoiceDTO
-            {
-                DateSold = DateTime.Now,
-                Agent = SessionManager.AgentDetails.AgentName,
-                DiscountPercent = (double)discountPercent,
-                DiscountPeso = (double)discount,
-                Tax = (double)tax,
-                TotalSales = (double)total,
-                AccountName = accountName,
-                PaymentType = paymentMethod,
-                Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
-                DueDate = DateTime.Now.AddDays(int.Parse(txtTerms.Text)),
-                RemainingBalance = (double)remaining,
-                Status = "Pending",
-                TotalLiters = 0, // if applicable
-                Cluster = "", // if needed
-                AccountId = accountId,
-                LocationId = SessionManager.AgentDetails.Location.Id,
-                strInvoiceNumber = "",
-                PurchasedItems = dataGridViewOrderCart.Rows
-                    .Cast<DataGridViewRow>()
-                    .Select(row =>
-                    {
-                        // You need to find the item again by ItemCode or however you can map it
-                        var itemCode = row.Cells["cartItemCode"].Value?.ToString();
-                        var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
-
-                        if (item == null) return null; // Skip if item is missing
-
-                        double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
-                        double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
-                        double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
-                        double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
-                        double totalDiscount = price - subtotal;
-                        double.TryParse(totalDiscount.ToString(), out double discount);
-
-                        return new InvoiceItemDTO
+            
+                // 3. Build Invoice DTO
+                var invoiceDto = new InvoiceDTO
+                {
+                    DateSold = DateTime.Now,
+                    Agent = SessionManager.AgentDetails.AgentName,
+                    DiscountPercent = (double)discountPercent,
+                    DiscountPeso = (double)discount,
+                    Tax = (double)tax,
+                    TotalSales = (double)total,
+                    AccountName = accountName,
+                    PaymentType = paymentMethod,
+                    Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
+                    DueDate = DateTime.Now.AddDays(int.Parse(txtTerms.Text)),
+                    RemainingBalance = Math.Round((double)remaining),
+                    Status = "For approval",
+                    TotalLiters = 0, // if applicable
+                    Cluster = "", // if needed
+                    AccountId = accountId,
+                    LocationId = SessionManager.AgentDetails.Location.Id,
+                    strInvoiceNumber = "",
+                    PurchasedItems = dataGridViewOrderCart.Rows
+                        .Cast<DataGridViewRow>()
+                        .Select(row =>
                         {
-                            ItemId = item.Id,
-                            Quantity = quantity,
-                            ItemPrice = price,
-                            TotalPrice = subtotal,
-                            ItemName = "",
-                            Discount = discount
-                        };
-                    })
-                    .Where(i => i != null) // Filter nulls
-                    .ToList()
-            };
+                            // You need to find the item again by ItemCode or however you can map it
+                            var itemCode = row.Cells["cartItemCode"].Value?.ToString();
+                            var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
+
+                            if (item == null) return null; // Skip if item is missing
+
+                            double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
+                            double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
+                            double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
+                            double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
+                            double totalDiscount = price - subtotal;
+                            double.TryParse(totalDiscount.ToString(), out double discount);
+
+                            return new InvoiceItemDTO
+                            {
+                                ItemId = item.Id,
+                                Quantity = quantity,
+                                ItemPrice = price,
+                                TotalPrice = subtotal,
+                                ItemName = "",
+                                Discount = discount
+                            };
+                        })
+                        .Where(i => i != null) // Filter nulls
+                        .ToList()
+                };
 
             // 4. Call backend
             try
@@ -987,13 +991,21 @@ namespace Autotech.Desktop.Main.View
             var dgv = sender as DataGridView;
             var row = dgv.Rows[e.RowIndex];
 
-            if (row.Cells["Status"].Value?.ToString() == "Paid")
+            if (row.Cells["Status"].Value?.ToString() == "Fully paid")
             {
                 row.DefaultCellStyle.BackColor = Color.LightGreen;
             }
-            else if (row.Cells["Status"].Value?.ToString() == "Pending")
+            else if (row.Cells["Status"].Value?.ToString() == "Incomplete")
             {
-                row.DefaultCellStyle.BackColor = Color.IndianRed;
+                row.DefaultCellStyle.BackColor = Color.DarkRed;
+            }
+            else if (row.Cells["Status"].Value?.ToString() == "For approval")
+            {
+                row.DefaultCellStyle.BackColor = Color.Yellow;
+            } 
+            else if (row.Cells["Status"].Value?.ToString() == "Denied")
+            {
+                row.DefaultCellStyle.BackColor = Color.DarkGray;
             }
         }
 
@@ -1183,10 +1195,45 @@ namespace Autotech.Desktop.Main.View
 
             dataGridViewInvoice.DataSource = null;
             dataGridViewInvoice.DataSource = filtered.ToList();
+
+
+
+            // Ensure ID is hidden again
+            if (dataGridViewInvoice.Columns.Contains("Id") || dataGridViewInvoice.Columns.Contains("accountId") || dataGridViewInvoice.Columns.Contains("locationId"))
+            {
+                dataGridViewInvoice.Columns["Id"].Visible = false;
+                dataGridViewInvoice.Columns["accountId"].Visible = false;
+                dataGridViewInvoice.Columns["locationId"].Visible = false;
+            }
+
+            // Re-apply visible columns and headers
+            ShowColumn("strInvoiceNumber", "Invoice #");
+            ShowColumn("DateSold", "Date Sold");
+            ShowColumn("Agent", "Agent Name");
+            ShowColumn("AccountName", "Customer Name");
+            ShowColumn("PaymentType", "Payment Method");
+            ShowColumn("TotalSales", "Total Sales");
+            ShowColumn("Tax", "Tax Amount");
+            ShowColumn("DiscountPeso", "Discount (₱)");
+            ShowColumn("Terms", "Terms (Days)");
+            ShowColumn("DueDate", "Due Date");
+            ShowColumn("RemainingBalance", "Balance Remaining");
+            ShowColumn("Status", "Status");
+            ShowColumn("Cluster", "Cluster");
         }
         private void cboAddedOption_SelectedIndexChanged(object sender, EventArgs e)
         {
             ApplyInvoiceFilterAndSorting();
+        }
+
+        void ShowColumn(string columnName, string header)
+        {
+            if (dataGridViewInvoice.Columns.Contains(columnName))
+            {
+                var column = dataGridViewInvoice.Columns[columnName];
+                column.Visible = true;
+                column.HeaderText = header;
+            }
         }
 
         #endregion

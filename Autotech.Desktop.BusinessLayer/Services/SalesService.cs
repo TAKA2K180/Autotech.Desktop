@@ -93,6 +93,21 @@ namespace Autotech.Desktop.BusinessLayer.Services
                 throw new Exception("Failed to add payment: " + error);
             }
         }
+
+        public async Task ConfirmPaymentStatusAsync(Guid saleId, string status)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var content = JsonContent.Create(new { Status = status });
+            var response = await client.PutAsync($"{_apiUrl}/{saleId}/confirm-payment", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception("Failed to confirm payment: " + error);
+            }
+        }
     }
 
     public class InvoiceResponseDTO

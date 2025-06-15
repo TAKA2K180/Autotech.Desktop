@@ -26,4 +26,9 @@ namespace Autotech.Desktop.Core.Models
         public Guid LocationId { get; set; }
         public Locations Location { get; set; }
     }
+
+    public class LoginHelper
+    {
+        public static bool isLoggedIn { get; set; }
+    }
 }
