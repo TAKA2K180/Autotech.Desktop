@@ -27,13 +27,14 @@
             metroSetLabel3 = new MetroSet_UI.Controls.MetroSetLabel();
             metroSetLabel4 = new MetroSet_UI.Controls.MetroSetLabel();
             metroSetLabel5 = new MetroSet_UI.Controls.MetroSetLabel();
-            metroSetButton1 = new MetroSet_UI.Controls.MetroSetButton();
+            btnCloseInvoiceDetails = new MetroSet_UI.Controls.MetroSetButton();
             btnConfirmPayment = new MetroSet_UI.Controls.MetroSetButton();
             dvgPaymentHistory = new DataGridView();
             metroSetLabel1 = new MetroSet_UI.Controls.MetroSetLabel();
             btnAddPayment = new MetroSet_UI.Controls.MetroSetButton();
             lblStatus = new MetroSet_UI.Controls.MetroSetLabel();
             btnCancelInvoice = new MetroSet_UI.Controls.MetroSetButton();
+            lblOrigin = new MetroSet_UI.Controls.MetroSetLabel();
             ((System.ComponentModel.ISupportInitialize)dataGridViewInvoiceDetails).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dvgPaymentHistory).BeginInit();
             SuspendLayout();
@@ -289,32 +290,32 @@
             metroSetLabel5.ThemeAuthor = "Narwin";
             metroSetLabel5.ThemeName = "MetroLite";
             // 
-            // metroSetButton1
+            // btnCloseInvoiceDetails
             // 
-            metroSetButton1.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
-            metroSetButton1.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
-            metroSetButton1.DisabledForeColor = Color.Gray;
-            metroSetButton1.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            metroSetButton1.HoverBorderColor = Color.FromArgb(95, 207, 255);
-            metroSetButton1.HoverColor = Color.FromArgb(95, 207, 255);
-            metroSetButton1.HoverTextColor = Color.White;
-            metroSetButton1.IsDerivedStyle = true;
-            metroSetButton1.Location = new Point(30, 553);
-            metroSetButton1.Name = "metroSetButton1";
-            metroSetButton1.NormalBorderColor = Color.FromArgb(65, 177, 225);
-            metroSetButton1.NormalColor = Color.FromArgb(65, 177, 225);
-            metroSetButton1.NormalTextColor = Color.White;
-            metroSetButton1.PressBorderColor = Color.FromArgb(35, 147, 195);
-            metroSetButton1.PressColor = Color.FromArgb(35, 147, 195);
-            metroSetButton1.PressTextColor = Color.White;
-            metroSetButton1.Size = new Size(150, 40);
-            metroSetButton1.Style = MetroSet_UI.Enums.Style.Light;
-            metroSetButton1.StyleManager = null;
-            metroSetButton1.TabIndex = 14;
-            metroSetButton1.Text = "Close";
-            metroSetButton1.ThemeAuthor = "Narwin";
-            metroSetButton1.ThemeName = "MetroLite";
-            metroSetButton1.Click += metroSetButton1_Click;
+            btnCloseInvoiceDetails.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnCloseInvoiceDetails.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnCloseInvoiceDetails.DisabledForeColor = Color.Gray;
+            btnCloseInvoiceDetails.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnCloseInvoiceDetails.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnCloseInvoiceDetails.HoverColor = Color.FromArgb(95, 207, 255);
+            btnCloseInvoiceDetails.HoverTextColor = Color.White;
+            btnCloseInvoiceDetails.IsDerivedStyle = true;
+            btnCloseInvoiceDetails.Location = new Point(30, 553);
+            btnCloseInvoiceDetails.Name = "btnCloseInvoiceDetails";
+            btnCloseInvoiceDetails.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnCloseInvoiceDetails.NormalColor = Color.FromArgb(65, 177, 225);
+            btnCloseInvoiceDetails.NormalTextColor = Color.White;
+            btnCloseInvoiceDetails.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnCloseInvoiceDetails.PressColor = Color.FromArgb(35, 147, 195);
+            btnCloseInvoiceDetails.PressTextColor = Color.White;
+            btnCloseInvoiceDetails.Size = new Size(150, 40);
+            btnCloseInvoiceDetails.Style = MetroSet_UI.Enums.Style.Light;
+            btnCloseInvoiceDetails.StyleManager = null;
+            btnCloseInvoiceDetails.TabIndex = 14;
+            btnCloseInvoiceDetails.Text = "Close";
+            btnCloseInvoiceDetails.ThemeAuthor = "Narwin";
+            btnCloseInvoiceDetails.ThemeName = "MetroLite";
+            btnCloseInvoiceDetails.Click += btnCloseInvoiceDetail_Click;
             // 
             // btnConfirmPayment
             // 
@@ -416,14 +417,14 @@
             btnCancelInvoice.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
             btnCancelInvoice.DisabledForeColor = Color.Gray;
             btnCancelInvoice.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            btnCancelInvoice.HoverBorderColor = Color.Red;
+            btnCancelInvoice.HoverBorderColor = Color.FromArgb(95, 207, 255);
             btnCancelInvoice.HoverColor = Color.FromArgb(95, 207, 255);
             btnCancelInvoice.HoverTextColor = Color.White;
             btnCancelInvoice.IsDerivedStyle = true;
             btnCancelInvoice.Location = new Point(1197, 553);
             btnCancelInvoice.Name = "btnCancelInvoice";
             btnCancelInvoice.NormalBorderColor = Color.FromArgb(65, 177, 225);
-            btnCancelInvoice.NormalColor = Color.DarkRed;
+            btnCancelInvoice.NormalColor = Color.FromArgb(65, 177, 225);
             btnCancelInvoice.NormalTextColor = Color.White;
             btnCancelInvoice.PressBorderColor = Color.FromArgb(35, 147, 195);
             btnCancelInvoice.PressColor = Color.FromArgb(35, 147, 195);
@@ -437,16 +438,31 @@
             btnCancelInvoice.ThemeName = "MetroLite";
             btnCancelInvoice.Click += btnCancelInvoice_Click;
             // 
+            // lblOrigin
+            // 
+            lblOrigin.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblOrigin.IsDerivedStyle = true;
+            lblOrigin.Location = new Point(477, 105);
+            lblOrigin.Name = "lblOrigin";
+            lblOrigin.Size = new Size(200, 25);
+            lblOrigin.Style = MetroSet_UI.Enums.Style.Light;
+            lblOrigin.StyleManager = null;
+            lblOrigin.TabIndex = 21;
+            lblOrigin.Text = "Origin: ";
+            lblOrigin.ThemeAuthor = "Narwin";
+            lblOrigin.ThemeName = "MetroLite";
+            // 
             // InvoiceDetailsForm
             // 
             ClientSize = new Size(1370, 653);
+            Controls.Add(lblOrigin);
             Controls.Add(btnCancelInvoice);
             Controls.Add(lblStatus);
             Controls.Add(btnAddPayment);
             Controls.Add(metroSetLabel1);
             Controls.Add(dvgPaymentHistory);
             Controls.Add(btnConfirmPayment);
-            Controls.Add(metroSetButton1);
+            Controls.Add(btnCloseInvoiceDetails);
             Controls.Add(metroSetLabel5);
             Controls.Add(metroSetLabel4);
             Controls.Add(metroSetLabel3);
@@ -471,12 +487,13 @@
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel3;
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel4;
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel5;
-        private MetroSet_UI.Controls.MetroSetButton metroSetButton1;
+        private MetroSet_UI.Controls.MetroSetButton btnCloseInvoiceDetails;
         private MetroSet_UI.Controls.MetroSetButton btnConfirmPayment;
         private DataGridView dvgPaymentHistory;
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel1;
         private MetroSet_UI.Controls.MetroSetButton btnAddPayment;
         private MetroSet_UI.Controls.MetroSetLabel lblStatus;
         private MetroSet_UI.Controls.MetroSetButton btnCancelInvoice;
+        private MetroSet_UI.Controls.MetroSetLabel lblOrigin;
     }
 }

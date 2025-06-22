@@ -72,6 +72,7 @@ namespace Autotech.Desktop.Main.View
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             metroSetTabControl1 = new MetroSetTabControl();
+            tabPageMaintenance = new TabPage();
             tabPageSales = new TabPage();
             pnlPricing = new Panel();
             radioWholesale = new MetroSetRadioButton();
@@ -119,6 +120,10 @@ namespace Autotech.Desktop.Main.View
             txtTotal = new MetroSetTextBox();
             lblSalesInfo = new MetroSetLabel();
             tabPageInvoice = new TabPage();
+            lblDateTo = new MetroSetLabel();
+            dtmDateTo = new DateTimePicker();
+            lblDateFrom = new MetroSetLabel();
+            dtmDateFrom = new DateTimePicker();
             cboAddedOption = new MetroSetComboBox();
             cboFilterInvoice = new MetroSetComboBox();
             metroSetLabel3 = new MetroSetLabel();
@@ -127,7 +132,6 @@ namespace Autotech.Desktop.Main.View
             btnOpenInvoice = new MetroSetButton();
             dataGridViewInvoice = new DataGridView();
             metroSetLabel2 = new MetroSetLabel();
-            tabPageMaintenance = new TabPage();
             tabPageUserDetails = new TabPage();
             metroSetControlBox1 = new MetroSetControlBox();
             btnLogout = new MetroSetButton();
@@ -171,6 +175,14 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.UnselectedTextColor = Color.Gray;
             metroSetTabControl1.UseAnimation = false;
             metroSetTabControl1.SelectedIndexChanged += metroSetTabControl1_SelectedIndexChanged;
+            // 
+            // tabPageMaintenance
+            // 
+            tabPageMaintenance.Location = new Point(4, 42);
+            tabPageMaintenance.Name = "tabPageMaintenance";
+            tabPageMaintenance.Size = new Size(1412, 721);
+            tabPageMaintenance.TabIndex = 2;
+            tabPageMaintenance.Text = "Maintenance";
             // 
             // tabPageSales
             // 
@@ -1163,6 +1175,10 @@ namespace Autotech.Desktop.Main.View
             // 
             // tabPageInvoice
             // 
+            tabPageInvoice.Controls.Add(lblDateTo);
+            tabPageInvoice.Controls.Add(dtmDateTo);
+            tabPageInvoice.Controls.Add(lblDateFrom);
+            tabPageInvoice.Controls.Add(dtmDateFrom);
             tabPageInvoice.Controls.Add(cboAddedOption);
             tabPageInvoice.Controls.Add(cboFilterInvoice);
             tabPageInvoice.Controls.Add(metroSetLabel3);
@@ -1176,6 +1192,50 @@ namespace Autotech.Desktop.Main.View
             tabPageInvoice.Size = new Size(1412, 721);
             tabPageInvoice.TabIndex = 1;
             tabPageInvoice.Text = "Invoice";
+            // 
+            // lblDateTo
+            // 
+            lblDateTo.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblDateTo.IsDerivedStyle = true;
+            lblDateTo.Location = new Point(701, 46);
+            lblDateTo.Name = "lblDateTo";
+            lblDateTo.Size = new Size(29, 23);
+            lblDateTo.Style = Style.Light;
+            lblDateTo.StyleManager = null;
+            lblDateTo.TabIndex = 14;
+            lblDateTo.Text = "To:";
+            lblDateTo.ThemeAuthor = "Narwin";
+            lblDateTo.ThemeName = "MetroLite";
+            // 
+            // dtmDateTo
+            // 
+            dtmDateTo.Location = new Point(736, 42);
+            dtmDateTo.Name = "dtmDateTo";
+            dtmDateTo.Size = new Size(200, 27);
+            dtmDateTo.TabIndex = 13;
+            dtmDateTo.ValueChanged += dtmDateTo_ValueChanged;
+            // 
+            // lblDateFrom
+            // 
+            lblDateFrom.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblDateFrom.IsDerivedStyle = true;
+            lblDateFrom.Location = new Point(442, 46);
+            lblDateFrom.Name = "lblDateFrom";
+            lblDateFrom.Size = new Size(47, 23);
+            lblDateFrom.Style = Style.Light;
+            lblDateFrom.StyleManager = null;
+            lblDateFrom.TabIndex = 12;
+            lblDateFrom.Text = "From:";
+            lblDateFrom.ThemeAuthor = "Narwin";
+            lblDateFrom.ThemeName = "MetroLite";
+            // 
+            // dtmDateFrom
+            // 
+            dtmDateFrom.Location = new Point(495, 43);
+            dtmDateFrom.Name = "dtmDateFrom";
+            dtmDateFrom.Size = new Size(200, 27);
+            dtmDateFrom.TabIndex = 11;
+            dtmDateFrom.ValueChanged += dtmDateFrom_ValueChanged;
             // 
             // cboAddedOption
             // 
@@ -1341,14 +1401,6 @@ namespace Autotech.Desktop.Main.View
             metroSetLabel2.ThemeAuthor = "Narwin";
             metroSetLabel2.ThemeName = "MetroLite";
             // 
-            // tabPageMaintenance
-            // 
-            tabPageMaintenance.Location = new Point(4, 42);
-            tabPageMaintenance.Name = "tabPageMaintenance";
-            tabPageMaintenance.Size = new Size(1412, 721);
-            tabPageMaintenance.TabIndex = 2;
-            tabPageMaintenance.Text = "Maintenance";
-            // 
             // tabPageUserDetails
             // 
             tabPageUserDetails.Location = new Point(4, 42);
@@ -1469,6 +1521,10 @@ namespace Autotech.Desktop.Main.View
         private MetroSetComboBox cboFilterInvoice;
         private MetroSetLabel metroSetLabel3;
         private MetroSetComboBox cboAddedOption;
+        private MetroSetLabel lblDateTo;
+        private DateTimePicker dtmDateTo;
+        private MetroSetLabel lblDateFrom;
+        private DateTimePicker dtmDateFrom;
     }
 }
 

@@ -32,6 +32,10 @@ namespace Autotech.Desktop.Main
         {
             metroSetTabControl1 = new MetroSetTabControl();
             tabPageAccounts = new TabPage();
+            panel2 = new Panel();
+            dataGridViewAccounts = new DataGridView();
+            txtSearchAccount = new MetroSetTextBox();
+            lblSearchAccount = new MetroSetLabel();
             tabPageAgents = new TabPage();
             tabPageItems = new TabPage();
             tabPageSales = new TabPage();
@@ -44,6 +48,9 @@ namespace Autotech.Desktop.Main
             btnRefresh = new MetroSetButton();
             panel1 = new Panel();
             metroSetTabControl1.SuspendLayout();
+            tabPageAccounts.SuspendLayout();
+            panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewAccounts).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -76,16 +83,86 @@ namespace Autotech.Desktop.Main
             metroSetTabControl1.ThemeName = "MetroLite";
             metroSetTabControl1.UnselectedTextColor = Color.Gray;
             metroSetTabControl1.UseAnimation = false;
+            metroSetTabControl1.SelectedIndexChanged += metroSetTabControl1_SelectedIndexChanged;
             // 
             // tabPageAccounts
             // 
             tabPageAccounts.BackColor = Color.White;
+            tabPageAccounts.Controls.Add(panel2);
             tabPageAccounts.Location = new Point(4, 42);
             tabPageAccounts.Name = "tabPageAccounts";
             tabPageAccounts.Padding = new Padding(3);
             tabPageAccounts.Size = new Size(768, 497);
             tabPageAccounts.TabIndex = 0;
             tabPageAccounts.Text = "Accounts";
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(dataGridViewAccounts);
+            panel2.Controls.Add(txtSearchAccount);
+            panel2.Controls.Add(lblSearchAccount);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(3, 3);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(762, 491);
+            panel2.TabIndex = 3;
+            // 
+            // dataGridViewAccounts
+            // 
+            dataGridViewAccounts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewAccounts.Dock = DockStyle.Top;
+            dataGridViewAccounts.Location = new Point(0, 53);
+            dataGridViewAccounts.Name = "dataGridViewAccounts";
+            dataGridViewAccounts.RowHeadersVisible = false;
+            dataGridViewAccounts.RowTemplate.Height = 25;
+            dataGridViewAccounts.Size = new Size(762, 382);
+            dataGridViewAccounts.TabIndex = 0;
+            // 
+            // txtSearchAccount
+            // 
+            txtSearchAccount.AutoCompleteCustomSource = null;
+            txtSearchAccount.AutoCompleteMode = AutoCompleteMode.None;
+            txtSearchAccount.AutoCompleteSource = AutoCompleteSource.None;
+            txtSearchAccount.BorderColor = Color.FromArgb(155, 155, 155);
+            txtSearchAccount.DisabledBackColor = Color.FromArgb(204, 204, 204);
+            txtSearchAccount.DisabledBorderColor = Color.FromArgb(155, 155, 155);
+            txtSearchAccount.DisabledForeColor = Color.FromArgb(136, 136, 136);
+            txtSearchAccount.Dock = DockStyle.Top;
+            txtSearchAccount.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            txtSearchAccount.HoverColor = Color.FromArgb(102, 102, 102);
+            txtSearchAccount.Image = null;
+            txtSearchAccount.IsDerivedStyle = true;
+            txtSearchAccount.Lines = null;
+            txtSearchAccount.Location = new Point(0, 23);
+            txtSearchAccount.MaxLength = 32767;
+            txtSearchAccount.Multiline = false;
+            txtSearchAccount.Name = "txtSearchAccount";
+            txtSearchAccount.ReadOnly = false;
+            txtSearchAccount.Size = new Size(762, 30);
+            txtSearchAccount.Style = MetroSet_UI.Enums.Style.Light;
+            txtSearchAccount.StyleManager = null;
+            txtSearchAccount.TabIndex = 2;
+            txtSearchAccount.TextAlign = HorizontalAlignment.Left;
+            txtSearchAccount.ThemeAuthor = "Narwin";
+            txtSearchAccount.ThemeName = "MetroLite";
+            txtSearchAccount.UseSystemPasswordChar = false;
+            txtSearchAccount.WatermarkText = "";
+            txtSearchAccount.TextChanged += txtSearchAccount_TextChanged;
+            // 
+            // lblSearchAccount
+            // 
+            lblSearchAccount.Dock = DockStyle.Top;
+            lblSearchAccount.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblSearchAccount.IsDerivedStyle = true;
+            lblSearchAccount.Location = new Point(0, 0);
+            lblSearchAccount.Name = "lblSearchAccount";
+            lblSearchAccount.Size = new Size(762, 23);
+            lblSearchAccount.Style = MetroSet_UI.Enums.Style.Light;
+            lblSearchAccount.StyleManager = null;
+            lblSearchAccount.TabIndex = 1;
+            lblSearchAccount.Text = "Search Account:";
+            lblSearchAccount.ThemeAuthor = "Narwin";
+            lblSearchAccount.ThemeName = "MetroLite";
             // 
             // tabPageAgents
             // 
@@ -158,7 +235,7 @@ namespace Autotech.Desktop.Main
             btnAdd.HoverColor = Color.FromArgb(95, 207, 255);
             btnAdd.HoverTextColor = Color.White;
             btnAdd.IsDerivedStyle = true;
-            btnAdd.Location = new Point(150, 0);
+            btnAdd.Location = new Point(248, 0);
             btnAdd.Name = "btnAdd";
             btnAdd.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnAdd.NormalColor = Color.FromArgb(65, 177, 225);
@@ -166,7 +243,7 @@ namespace Autotech.Desktop.Main
             btnAdd.PressBorderColor = Color.FromArgb(35, 147, 195);
             btnAdd.PressColor = Color.FromArgb(35, 147, 195);
             btnAdd.PressTextColor = Color.White;
-            btnAdd.Size = new Size(75, 65);
+            btnAdd.Size = new Size(135, 65);
             btnAdd.Style = MetroSet_UI.Enums.Style.Light;
             btnAdd.StyleManager = null;
             btnAdd.TabIndex = 1;
@@ -194,7 +271,7 @@ namespace Autotech.Desktop.Main
             btnEdit.PressBorderColor = Color.FromArgb(35, 147, 195);
             btnEdit.PressColor = Color.FromArgb(35, 147, 195);
             btnEdit.PressTextColor = Color.White;
-            btnEdit.Size = new Size(75, 65);
+            btnEdit.Size = new Size(123, 65);
             btnEdit.Style = MetroSet_UI.Enums.Style.Light;
             btnEdit.StyleManager = null;
             btnEdit.TabIndex = 2;
@@ -214,7 +291,7 @@ namespace Autotech.Desktop.Main
             btnDelete.HoverColor = Color.FromArgb(95, 207, 255);
             btnDelete.HoverTextColor = Color.White;
             btnDelete.IsDerivedStyle = true;
-            btnDelete.Location = new Point(75, 0);
+            btnDelete.Location = new Point(123, 0);
             btnDelete.Name = "btnDelete";
             btnDelete.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnDelete.NormalColor = Color.FromArgb(65, 177, 225);
@@ -222,7 +299,7 @@ namespace Autotech.Desktop.Main
             btnDelete.PressBorderColor = Color.FromArgb(35, 147, 195);
             btnDelete.PressColor = Color.FromArgb(35, 147, 195);
             btnDelete.PressTextColor = Color.White;
-            btnDelete.Size = new Size(75, 65);
+            btnDelete.Size = new Size(125, 65);
             btnDelete.Style = MetroSet_UI.Enums.Style.Light;
             btnDelete.StyleManager = null;
             btnDelete.TabIndex = 3;
@@ -242,7 +319,7 @@ namespace Autotech.Desktop.Main
             btnRefresh.HoverColor = Color.FromArgb(95, 207, 255);
             btnRefresh.HoverTextColor = Color.White;
             btnRefresh.IsDerivedStyle = true;
-            btnRefresh.Location = new Point(225, 0);
+            btnRefresh.Location = new Point(383, 0);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnRefresh.NormalColor = Color.FromArgb(65, 177, 225);
@@ -250,7 +327,7 @@ namespace Autotech.Desktop.Main
             btnRefresh.PressBorderColor = Color.FromArgb(35, 147, 195);
             btnRefresh.PressColor = Color.FromArgb(35, 147, 195);
             btnRefresh.PressTextColor = Color.White;
-            btnRefresh.Size = new Size(75, 65);
+            btnRefresh.Size = new Size(151, 65);
             btnRefresh.Style = MetroSet_UI.Enums.Style.Light;
             btnRefresh.StyleManager = null;
             btnRefresh.TabIndex = 4;
@@ -280,6 +357,9 @@ namespace Autotech.Desktop.Main
             Text = "Autotech POS System - Maintenance";
             WindowState = FormWindowState.Maximized;
             metroSetTabControl1.ResumeLayout(false);
+            tabPageAccounts.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dataGridViewAccounts).EndInit();
             panel1.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -297,6 +377,10 @@ namespace Autotech.Desktop.Main
         private MetroSetButton btnDelete;
         private MetroSetButton btnRefresh;
         private Panel panel1;
+        private DataGridView dataGridViewAccounts;
+        private MetroSetTextBox txtSearchAccount;
+        private MetroSetLabel lblSearchAccount;
+        private Panel panel2;
     }
 }
 

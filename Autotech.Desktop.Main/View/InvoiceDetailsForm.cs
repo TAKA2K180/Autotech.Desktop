@@ -17,17 +17,20 @@ namespace Autotech.Desktop.Main.View
     public partial class InvoiceDetailsForm : MetroSetForm
     {
         private InvoiceDetailsDTO _invoice;
+        private readonly MainForm _mainForm;
 
-        public InvoiceDetailsForm(InvoiceDetailsDTO invoice, Guid invoiceId)
+        public InvoiceDetailsForm(InvoiceDetailsDTO invoice, Guid invoiceId, MainForm mainForm)
         {
             InitializeComponent();
 
             _invoice = invoice;
+            _mainForm = mainForm;
 
             lblInvoiceNumber.Text = $"Invoice #: {_invoice.strInvoiceNumber}";
             lblCustomer.Text = $"Customer: {_invoice.AccountName}";
             lblDate.Text = $"Date: {_invoice.DateSold.ToShortDateString()}";
             lblStatus.Text = $"Status: {_invoice.Status}";
+            lblOrigin.Text = _invoice.isMobile == true ? "Origin: Mobile" : "Origin: Desktop";
 
             InitializeGrid();
             LoadItemsToGrid();
@@ -155,9 +158,10 @@ namespace Autotech.Desktop.Main.View
             }
         }
 
-        private void metroSetButton1_Click(object sender, EventArgs e)
+        private async void btnCloseInvoiceDetail_Click(object sender, EventArgs e)
         {
             this.Close();
+            await _mainForm.LoadInvoicesAsync(); // Refresh main invoice list
         }
 
         private async void btnConfirmPayment_Click(object sender, EventArgs e)

@@ -26,6 +26,7 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public Guid LocationId { get; set; }
         public Guid AccountId { get; set; }
         public List<PurchasedItemDetailsDTO> PurchasedItems { get; set; }
+        public bool? isMobile { get; set; }
     }
 
     public class PurchasedItemDetailsDTO

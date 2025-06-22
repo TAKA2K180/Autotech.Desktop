@@ -32,6 +32,7 @@ namespace Autotech.Desktop.Main.View
                 comboAccount.SelectedIndexChanged += comboAccount_SelectedIndexChanged;
                 InitializePaymentMethods();
                 this.Load += MainForm_Load;
+                PopulateFilterCombo();
             }
         }
         #endregion
@@ -740,7 +741,7 @@ namespace Autotech.Desktop.Main.View
             var accountId = selectedAccount.Id;
             var accountName = selectedAccount.Name;
 
-            // ✅ This part is still correct if you're using KeyValuePair for comboPaymentMethod
+            // ✅ Payment method
             var selectedPaymentMethod = (KeyValuePair<PaymentMethod, string>)comboPaymentMethod.SelectedItem;
             var paymentMethod = selectedPaymentMethod.Key.ToString();
 
@@ -752,72 +753,88 @@ namespace Autotech.Desktop.Main.View
             decimal discount = ParseCurrency(txtDiscount.Text);
             decimal discountPercent = discount / (total + discount - tax) * 100;
 
-            
-                // 3. Build Invoice DTO
-                var invoiceDto = new InvoiceDTO
-                {
-                    DateSold = DateTime.Now,
-                    Agent = SessionManager.AgentDetails.AgentName,
-                    DiscountPercent = (double)discountPercent,
-                    DiscountPeso = (double)discount,
-                    Tax = (double)tax,
-                    TotalSales = (double)total,
-                    AccountName = accountName,
-                    PaymentType = paymentMethod,
-                    Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
-                    DueDate = DateTime.Now.AddDays(int.Parse(txtTerms.Text)),
-                    RemainingBalance = Math.Round((double)remaining),
-                    Status = "For approval",
-                    TotalLiters = 0, // if applicable
-                    Cluster = "", // if needed
-                    AccountId = accountId,
-                    LocationId = SessionManager.AgentDetails.Location.Id,
-                    strInvoiceNumber = "",
-                    PurchasedItems = dataGridViewOrderCart.Rows
-                        .Cast<DataGridViewRow>()
-                        .Select(row =>
+            // 3. Build Invoice DTO
+            var invoiceDto = new InvoiceDTO
+            {
+                DateSold = DateTime.Now,
+                Agent = SessionManager.AgentDetails.AgentName,
+                DiscountPercent = (double)discountPercent,
+                DiscountPeso = (double)discount,
+                Tax = (double)tax,
+                TotalSales = (double)total,
+                AccountName = accountName,
+                PaymentType = paymentMethod,
+                Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
+                DueDate = DateTime.Now.AddDays(int.TryParse(txtTerms.Text, out var dVal) ? dVal : 0),
+                RemainingBalance = Math.Round((double)remaining),
+                Status = "For approval",
+                TotalLiters = 0,
+                Cluster = "",
+                AccountId = accountId,
+                LocationId = SessionManager.AgentDetails.Location.Id,
+                strInvoiceNumber = "",
+                PurchasedItems = dataGridViewOrderCart.Rows
+                    .Cast<DataGridViewRow>()
+                    .Select(row =>
+                    {
+                        var itemCode = row.Cells["cartItemCode"].Value?.ToString();
+                        var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
+                        if (item == null) return null;
+
+                        double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
+                        double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
+                        double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
+                        double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
+                        double totalDiscount = price - subtotal;
+
+                        return new InvoiceItemDTO
                         {
-                            // You need to find the item again by ItemCode or however you can map it
-                            var itemCode = row.Cells["cartItemCode"].Value?.ToString();
-                            var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
-
-                            if (item == null) return null; // Skip if item is missing
-
-                            double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
-                            double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
-                            double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
-                            double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
-                            double totalDiscount = price - subtotal;
-                            double.TryParse(totalDiscount.ToString(), out double discount);
-
-                            return new InvoiceItemDTO
-                            {
-                                ItemId = item.Id,
-                                Quantity = quantity,
-                                ItemPrice = price,
-                                TotalPrice = subtotal,
-                                ItemName = "",
-                                Discount = discount
-                            };
-                        })
-                        .Where(i => i != null) // Filter nulls
-                        .ToList()
-                };
+                            ItemId = item.Id,
+                            Quantity = quantity,
+                            ItemPrice = price,
+                            TotalPrice = subtotal,
+                            ItemName = "",
+                            Discount = totalDiscount
+                        };
+                    })
+                    .Where(i => i != null)
+                    .ToList()
+            };
 
             // 4. Call backend
             try
             {
-                var service = new SalesService(); // You'll need to add this class if not yet
+                var service = new SalesService();
                 var invoiceId = await service.CreateInvoiceAsync(invoiceDto);
 
                 new ToastMessageForm("Invoice created successfully!").Show();
 
-                // Optional: clear cart and form
+                // ✅ Clear cart and reset
                 orderCartItems.Clear();
                 dataGridViewOrderCart.DataSource = null;
-                txtSubtotal.Text = txtTax.Text = txtDiscount.Text = txtTotal.Text =
-                    txtPaidAmount.Text = txtChange.Text = txtRemaining.Text = "";
+                dataGridViewOrderCart.Rows.Clear();
+                dataGridViewOrderCart.Refresh();
+
+                // ✅ Clear input fields
+                txtSubtotal.Text = "";
+                txtTax.Text = "";
+                txtDiscount.Text = "";
+                txtTotal.Text = "";
+                txtPaidAmount.Text = "";
+                txtChange.Text = "";
+                txtRemaining.Text = "";
+
                 SalesNumber++;
+
+                // Optional: Uncheck item list selections if needed
+                foreach (DataGridViewRow row in dataGridViewItemList.Rows)
+                {
+                    if (dataGridViewItemList.Columns.Contains("selectColumn"))
+                    {
+                        row.Cells["selectColumn"].Value = false;
+                    }
+                }
+                LoadItemsIntoGrid();
             }
             catch (Exception ex)
             {
@@ -908,51 +925,79 @@ namespace Autotech.Desktop.Main.View
         #endregion
 
         #region Invoice
-        private async void LoadInvoicesAsync()
+        public async Task LoadInvoicesAsync()
         {
+            ToastMessageForm loadingToast = null;
             try
             {
-                var salesService = new SalesService();
-                var invoices = await salesService.GetAllInvoicesAsync();
-                allInvoices = invoices;
+                // ✅ Show loading toast
+                loadingToast = new ToastMessageForm("Loading invoices...");
+                loadingToast.Show();
+                loadingToast.TopMost = true;
+                loadingToast.BringToFront();
+                dataGridViewInvoice.Enabled = false;
 
-                dataGridViewInvoice.DataSource = null;
-                dataGridViewInvoice.DataSource = invoices;
-
-                dataGridViewInvoice.Columns["Id"].Visible = false;
-
-                // First hide all columns
-                foreach (DataGridViewColumn column in dataGridViewInvoice.Columns)
+                await Task.Run(async () =>
                 {
-                    column.Visible = false;
-                }
+                    await Task.Delay(1000);
 
-                // Show and rename only selected columns
-                ShowColumn("strInvoiceNumber", "Invoice #");
-                ShowColumn("DateSold", "Date Sold");
-                ShowColumn("Agent", "Agent Name");
-                ShowColumn("AccountName", "Customer Name");
-                ShowColumn("PaymentType", "Payment Method");
-                ShowColumn("TotalSales", "Total Sales");
-                ShowColumn("Tax", "Tax Amount");
-                ShowColumn("DiscountPeso", "Discount (₱)");
-                ShowColumn("Terms", "Terms (Days)");
-                ShowColumn("DueDate", "Due Date");
-                ShowColumn("RemainingBalance", "Balance Remaining");
-                ShowColumn("Status", "Status");
-                ShowColumn("Cluster", "Cluster");
+                    var salesService = new SalesService();
+                    var invoices = await salesService.GetAllInvoicesAsync();
+                    allInvoices = invoices;
 
-                dataGridViewInvoice.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                dataGridViewInvoice.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-                dataGridViewInvoice.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-                dataGridViewInvoice.DefaultCellStyle.Padding = new Padding(5);
+                    // Switch back to UI thread to update UI controls
+                    Invoke(new Action(() =>
+                    {
+                        
+                        dataGridViewInvoice.DataSource = null;
+                        dataGridViewInvoice.DataSource = invoices;
 
-                dataGridViewInvoice.RowPrePaint -= dataGridViewInvoice_RowPrePaint;
-                dataGridViewInvoice.RowPrePaint += dataGridViewInvoice_RowPrePaint;
+                        dataGridViewInvoice.Columns["Id"].Visible = false;
+
+                        foreach (DataGridViewColumn column in dataGridViewInvoice.Columns)
+                        {
+                            column.Visible = false;
+                        }
+
+                        ShowColumn("strInvoiceNumber", "Invoice #");
+                        ShowColumn("DateSold", "Date Sold");
+                        ShowColumn("Agent", "Agent Name");
+                        ShowColumn("AccountName", "Customer Name");
+                        ShowColumn("PaymentType", "Payment Method");
+                        ShowColumn("TotalSales", "Total Sales");
+                        ShowColumn("Tax", "Tax Amount");
+                        ShowColumn("DiscountPeso", "Discount (₱)");
+                        ShowColumn("Terms", "Terms (Days)");
+                        ShowColumn("DueDate", "Due Date");
+                        ShowColumn("RemainingBalance", "Balance Remaining");
+                        ShowColumn("Status", "Status");
+                        ShowColumn("Cluster", "Cluster");
+
+                        dataGridViewInvoice.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                        dataGridViewInvoice.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                        dataGridViewInvoice.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                        dataGridViewInvoice.DefaultCellStyle.Padding = new Padding(5);
+
+                        dataGridViewInvoice.RowPrePaint -= dataGridViewInvoice_RowPrePaint;
+                        dataGridViewInvoice.RowPrePaint += dataGridViewInvoice_RowPrePaint;
+                    }));
+                });
+
+                dataGridViewInvoice.Enabled = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error loading invoices: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                
+                // ✅ Close loading toast
+                if (loadingToast != null && !loadingToast.IsDisposed)
+                {
+                    
+                    loadingToast.Close();
+                }
             }
 
             void ShowColumn(string columnName, string header)
@@ -965,7 +1010,7 @@ namespace Autotech.Desktop.Main.View
                 }
             }
 
-            PopulateFilterCombo();
+            ApplyInvoiceFilterAndSorting();
         }
 
         private void PopulateFilterCombo()
@@ -1002,18 +1047,22 @@ namespace Autotech.Desktop.Main.View
             else if (row.Cells["Status"].Value?.ToString() == "For approval")
             {
                 row.DefaultCellStyle.BackColor = Color.Yellow;
-            } 
+            }
             else if (row.Cells["Status"].Value?.ToString() == "Denied")
             {
                 row.DefaultCellStyle.BackColor = Color.DarkGray;
             }
         }
 
-        private void metroSetTabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private async void metroSetTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (metroSetTabControl1.SelectedTab == tabPageInvoice)
             {
-                LoadInvoicesAsync();
+                await LoadInvoicesAsync();
+            }
+            else if (metroSetTabControl1.SelectedTab == tabPageMaintenance)
+            {
+                LoadMaintenanceTab();
             }
         }
 
@@ -1034,7 +1083,7 @@ namespace Autotech.Desktop.Main.View
                     var salesService = new SalesService();
                     var invoice = await salesService.GetInvoiceByIdAsync(invoiceId);
 
-                    var detailsForm = new InvoiceDetailsForm(invoice, invoiceId);
+                    var detailsForm = new InvoiceDetailsForm(invoice, invoiceId, this);
                     detailsForm.ShowDialog(); // or .Show() if you prefer
                 }
                 catch (Exception ex)
@@ -1110,7 +1159,7 @@ namespace Autotech.Desktop.Main.View
         {
             if (cboFilterInvoice.SelectedItem == null)
             {
-                cboAddedOption.Visible = false;
+                FilterComboVisibility(false);
                 return;
             }
 
@@ -1119,12 +1168,32 @@ namespace Autotech.Desktop.Main.View
             // Show cboAddedOption only if filter is on a date column
             if (selectedKey == "DateSold" || selectedKey == "DueDate")
             {
-                cboAddedOption.Visible = true;
+                FilterComboVisibility(true);
                 PopulateAddedOptionCombo(); // Optional: reload options
             }
             else
             {
-                cboAddedOption.Visible = false;
+                FilterComboVisibility(false);
+            }
+        }
+
+        private void FilterComboVisibility(bool value)
+        {
+            if (value == false) 
+            {
+                cboAddedOption.Visible = value;
+                dtmDateFrom.Visible = value;
+                dtmDateTo.Visible = value;
+                lblDateFrom.Visible = value;
+                lblDateTo.Visible = value;
+            }
+            else
+            {
+                cboAddedOption.Visible = value;
+                dtmDateFrom.Visible = value;
+                dtmDateTo.Visible = value;
+                lblDateFrom.Visible = value;
+                lblDateTo.Visible = value;
             }
         }
 
@@ -1158,8 +1227,10 @@ namespace Autotech.Desktop.Main.View
                     filtered = filtered.Where(i => i.Agent.ToLower().Contains(keyword));
                     break;
                 case "DateSold":
-                    if (DateTime.TryParse(keyword, out var dateSold))
-                        filtered = filtered.Where(i => i.DateSold.Date == dateSold.Date);
+                    // Apply date range filter instead of keyword-based match
+                    filtered = filtered.Where(i =>
+                        i.DateSold.Date >= dtmDateFrom.Value.Date &&
+                        i.DateSold.Date <= dtmDateTo.Value.Date);
                     break;
                 case "AccountName":
                     filtered = filtered.Where(i => i.AccountName.ToLower().Contains(keyword));
@@ -1168,8 +1239,9 @@ namespace Autotech.Desktop.Main.View
                     filtered = filtered.Where(i => i.PaymentType.ToLower().Contains(keyword));
                     break;
                 case "DueDate":
-                    if (DateTime.TryParse(keyword, out var dueDate))
-                        filtered = filtered.Where(i => i.DueDate.Date == dueDate.Date);
+                    filtered = filtered.Where(i =>
+                        i.DueDate.Date >= dtmDateFrom.Value.Date &&
+                        i.DueDate.Date <= dtmDateTo.Value.Date);
                     break;
                 case "Status":
                     filtered = filtered.Where(i => i.Status.ToLower().Contains(keyword));
@@ -1221,11 +1293,11 @@ namespace Autotech.Desktop.Main.View
             ShowColumn("Status", "Status");
             ShowColumn("Cluster", "Cluster");
         }
+
         private void cboAddedOption_SelectedIndexChanged(object sender, EventArgs e)
         {
             ApplyInvoiceFilterAndSorting();
         }
-
         void ShowColumn(string columnName, string header)
         {
             if (dataGridViewInvoice.Columns.Contains(columnName))
@@ -1235,7 +1307,26 @@ namespace Autotech.Desktop.Main.View
                 column.HeaderText = header;
             }
         }
+        private void dtmDateFrom_ValueChanged(object sender, EventArgs e)
+        {
+            ApplyInvoiceFilterAndSorting();
+        }
 
+        private void dtmDateTo_ValueChanged(object sender, EventArgs e)
+        {
+            ApplyInvoiceFilterAndSorting();
+        }
+
+        #endregion
+
+        #region Maintenance
+        private void LoadMaintenanceTab()
+        {
+            var maintenanceForm = new MaintenanceForm();
+            tabPageMaintenance.Controls.Clear(); // Optional: in case you're reloading
+            tabPageMaintenance.Controls.Add(maintenanceForm);
+            maintenanceForm.Show(); // Must call Show() after adding
+        }
         #endregion
     }
 }
