@@ -28,5 +28,19 @@ namespace Autotech.Desktop.BusinessLayer.Services
 
             throw new Exception("Failed to fetch accounts.");
         }
+
+        public async Task UpdateAccountAsync(Accounts account)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var response = await client.PutAsJsonAsync($"{apiUrl}/{account.Id}", account);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to update account: {response.StatusCode} - {error}");
+            }
+        }
     }
 }

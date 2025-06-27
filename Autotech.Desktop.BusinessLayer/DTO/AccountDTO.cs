@@ -1,19 +1,17 @@
-﻿using System;
+﻿using Autotech.Desktop.Core.Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Autotech.Desktop.Core.Models
+namespace Autotech.Desktop.BusinessLayer.DTO
 {
-    public class Accounts : BaseModel
+    public class AccountDTO
     {
-        [Required]
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string? ContactPerson { get; set; }
-        [EmailAddress]
         public string? Email { get; set; }
         public string? ContactNumber { get; set; }
         public string? Address { get; set; }
@@ -22,8 +20,11 @@ namespace Autotech.Desktop.Core.Models
         public string? Cluster { get; set; }
         public bool isActive { get; set; }
         public DateTime RegisterDate { get; set; }
+        public AccountDetails AccountDetails { get; set; }
         // Foreign key to Location
         public Guid LocationId { get; set; }
         public Locations Location { get; set; }
+        public double LitersOrdered { get; set; }
+        public int OpenReceipts { get; set; }
     }
 }

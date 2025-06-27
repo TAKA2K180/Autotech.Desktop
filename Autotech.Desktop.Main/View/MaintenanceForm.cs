@@ -1,4 +1,5 @@
-﻿using Autotech.Desktop.BusinessLayer.Services;
+﻿using Autotech.Desktop.BusinessLayer.DTO;
+using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.Models;
 using Autotech.Desktop.Main.View;
 using MetroSet_UI.Forms;
@@ -9,6 +10,9 @@ namespace Autotech.Desktop.Main
     public partial class MaintenanceForm : MetroSetForm
     {
         private List<Accounts> _accounts;
+        private bool isAccountClicked = false;
+        private bool isAgentClicked = false;
+        private bool isItemClicked = false;
         public MaintenanceForm()
         {
             InitializeComponent();
@@ -20,6 +24,7 @@ namespace Autotech.Desktop.Main
         }
         private async void MaintenanceForm_Load(object sender, EventArgs e)
         {
+            await LoadAgentsAsync();
             await LoadAccountsAsync(); // Your async method now runs properly
             //await LoadAccountsAsync();
         }
@@ -43,10 +48,7 @@ namespace Autotech.Desktop.Main
             await LoadAccountsAsync();
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
@@ -74,15 +76,6 @@ namespace Autotech.Desktop.Main
                 dataGridViewAccounts.Columns.Clear();
                 dataGridViewAccounts.AutoGenerateColumns = false;
 
-                // ✅ Add Checkbox Column
-                var checkboxColumn = new DataGridViewCheckBoxColumn
-                {
-                    HeaderText = "",
-                    Name = "SelectColumn",
-                    Width = 30
-                };
-                dataGridViewAccounts.Columns.Add(checkboxColumn);
-                
 
                 // ✅ Add Data Columns
                 dataGridViewAccounts.Columns.Add(new DataGridViewTextBoxColumn
@@ -129,22 +122,6 @@ namespace Autotech.Desktop.Main
                 }
             }
         }
-
-
-        #endregion
-
-        private async void metroSetTabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (metroSetTabControl1.SelectedTab == tabPageAccounts)
-            {
-                //await LoadAccountsAsync();
-            }
-            //else if (metroSetTabControl1.SelectedTab == tabPageMaintenance)
-            //{
-            //    LoadMaintenanceTab();
-            //}
-        }
-
         private void txtSearchAccount_TextChanged(object sender, EventArgs e)
         {
             string keyword = txtSearchAccount.Text.Trim().ToLower();
@@ -155,6 +132,163 @@ namespace Autotech.Desktop.Main
 
             dataGridViewAccounts.DataSource = null;
             dataGridViewAccounts.DataSource = filtered;
+        }
+
+        #endregion
+
+        #region Agents
+        private async Task LoadAgentsAsync()
+        {
+            ToastMessageForm loadingToast = null;
+
+            try
+            {
+                // ✅ Show loading toast
+                loadingToast = new ToastMessageForm("Loading agents...");
+                loadingToast.Show();
+                loadingToast.TopMost = true;
+                loadingToast.BringToFront();
+
+                // ✅ Fetch agents from API/service
+                var agentService = new AgentsService();
+                var agents = await agentService.GetAllAgentsAsync(); // Assumes it returns List<AgentDTO>
+
+                // ✅ Setup DataGridView
+                dtgAgents.DataSource = null;
+                dtgAgents.Columns.Clear();
+                dtgAgents.AutoGenerateColumns = false;
+
+                dtgAgents.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    HeaderText = "Agent Name",
+                    DataPropertyName = "AgentName",
+                    Name = "AgentName",
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                });
+
+                dtgAgents.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    HeaderText = "Username",
+                    DataPropertyName = "Username",
+                    Name = "Username"
+                });
+
+                dtgAgents.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    HeaderText = "Email",
+                    DataPropertyName = "Email",
+                    Name = "Email"
+                });
+
+                dtgAgents.Columns.Add(new DataGridViewCheckBoxColumn
+                {
+                    HeaderText = "Active",
+                    DataPropertyName = "IsActive",
+                    Name = "IsActive"
+                });
+
+                dtgAgents.Columns.Add(new DataGridViewCheckBoxColumn
+                {
+                    HeaderText = "Last Login",
+                    DataPropertyName = "DateLastLogin",
+                    Name = "DateLastLogin"
+                });
+
+                dtgAgents.DataSource = agents;
+
+                // ✅ Optional formatting
+                dtgAgents.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                dtgAgents.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dtgAgents.DefaultCellStyle.Padding = new Padding(5);
+                dtgAgents.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load agents: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // ✅ Close loading toast
+                if (loadingToast != null && !loadingToast.IsDisposed)
+                {
+                    loadingToast.Close();
+                }
+            }
+        }
+
+        #endregion
+
+        private async void metroSetTabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (metroSetTabControl1.SelectedTab == tabPageAccounts)
+            {
+                if (!isAccountClicked)
+                {
+                    await LoadAccountsAsync();
+                }
+                isAccountClicked = true;
+            }
+            else if (metroSetTabControl1.SelectedTab == tabPageAgents)
+            {
+                //if (!isAgentClicked)
+                //{
+                //    await LoadAgentsAsync();
+                //}
+                //isAgentClicked = true;
+            }
+            //else if (metroSetTabControl1.SelectedTab == tabPageMaintenance)
+            //{
+            //    LoadMaintenanceTab();
+            //}
+        }
+
+        private async void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (metroSetTabControl1.SelectedTab == tabPageAccounts)
+            {
+                if (dataGridViewAccounts.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select an account to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var selectedRow = dataGridViewAccounts.SelectedRows[0];
+                var boundItem = selectedRow.DataBoundItem;
+
+
+                if (boundItem is Accounts selectedAccount)
+                {
+                    using (var editForm = new EditAccountForm(selectedAccount))
+                    {
+                        if (editForm.ShowDialog() == DialogResult.OK)
+                        {
+                            await LoadAccountsAsync(); // Refresh after editing
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("The selected row is not a valid Account.", "Type Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else if (metroSetTabControl1.SelectedTab == tabPageAgents)
+            {
+                if (dtgAgents.CurrentRow != null && dtgAgents.CurrentRow.DataBoundItem is AgentDTO selectedAgent)
+                {
+                    using (var editForm = new EditAgentForm(selectedAgent))
+                    {
+                        if (editForm.ShowDialog() == DialogResult.OK)
+                        {
+                            await LoadAgentsAsync(); // Refresh the list after saving
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select an agent to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+
         }
     }
 }

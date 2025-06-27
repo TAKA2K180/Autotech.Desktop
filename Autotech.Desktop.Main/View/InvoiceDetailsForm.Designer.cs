@@ -423,8 +423,8 @@
             btnCancelInvoice.IsDerivedStyle = true;
             btnCancelInvoice.Location = new Point(1197, 553);
             btnCancelInvoice.Name = "btnCancelInvoice";
-            btnCancelInvoice.NormalBorderColor = Color.FromArgb(65, 177, 225);
-            btnCancelInvoice.NormalColor = Color.FromArgb(65, 177, 225);
+            btnCancelInvoice.NormalBorderColor = Color.FromArgb(64, 0, 0);
+            btnCancelInvoice.NormalColor = Color.Maroon;
             btnCancelInvoice.NormalTextColor = Color.White;
             btnCancelInvoice.PressBorderColor = Color.FromArgb(35, 147, 195);
             btnCancelInvoice.PressColor = Color.FromArgb(35, 147, 195);
