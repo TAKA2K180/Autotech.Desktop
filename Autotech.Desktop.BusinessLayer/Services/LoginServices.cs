@@ -1,5 +1,6 @@
 ﻿using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.Core.DTO;
+using Autotech.Desktop.Core.Enums;
 using Autotech.Desktop.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
                         string jwtToken = loginResponse.Token;
                         SessionManager.StoreToken(jwtToken);
                         await FetchAgentDetailsAsync(loginResponse.Agent.Id);
+                        LoginHelper.agentRole = loginResponse.Agent.AgentRole;
                         return true;
                     }
                     else

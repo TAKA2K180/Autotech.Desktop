@@ -10,6 +10,7 @@ namespace Autotech.Desktop.Main
     public partial class MaintenanceForm : MetroSetForm
     {
         private List<Accounts> _accounts;
+        private List<Items> _items;
         private bool isAccountClicked = false;
         private bool isAgentClicked = false;
         private bool isItemClicked = false;
@@ -21,6 +22,7 @@ namespace Autotech.Desktop.Main
             this.Dock = DockStyle.Fill;          // Fills the parent container
             this.Load += MaintenanceForm_Load;
             txtSearchAccount.TextChanged += txtSearchAccount_TextChanged;
+            txtSearchItems.TextChanged += txtSearchItems_TextChanged;
         }
         private async void MaintenanceForm_Load(object sender, EventArgs e)
         {
@@ -30,27 +32,18 @@ namespace Autotech.Desktop.Main
         }
 
         #region Events
-        private void btnAdd_Click(object sender, EventArgs e)
+        private async void btnAdd_Click(object sender, EventArgs e)
         {
-
+            var form = new ImportExcelForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                await LoadItemsAsync(); // Refresh table
+            }
         }
 
         #endregion
 
-
         private void MainForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private async void btnRefresh_Click(object sender, EventArgs e)
-        {
-            await LoadAccountsAsync();
-        }
-
-        
-
-        private void btnDelete_Click(object sender, EventArgs e)
         {
 
         }
@@ -100,7 +93,7 @@ namespace Autotech.Desktop.Main
                     DataPropertyName = "Address",
                     Name = "Address"
                 });
-                
+
                 // ✅ Bind data
                 dataGridViewAccounts.DataSource = accounts;
 
@@ -218,8 +211,164 @@ namespace Autotech.Desktop.Main
 
         #endregion
 
+        #region Items
+        private async Task LoadItemsAsync()
+        {
+            ToastMessageForm loadingToast = null;
+
+            try
+            {
+                loadingToast = new ToastMessageForm("Loading items...");
+                loadingToast.Show();
+                loadingToast.TopMost = true;
+                loadingToast.BringToFront();
+
+                var service = new ItemServices();
+                var items = await service.GetAllItemsAsync(); // List<Items>
+                _items = items;
+
+                dtgItems.DataSource = null;
+                dtgItems.AutoGenerateColumns = false;
+
+                // Flatten item + itemDetails for display
+                var viewModel = items.Select(i => new
+                {
+                    i.ItemCode,
+                    i.ItemName,
+                    i.ItemDescription,
+                    OnHand = i.itemDetails?.OnHand ?? 0,
+                    BataanRetail = i.itemDetails?.BataanRetail ?? 0,
+                    BataanWholesale = i.itemDetails?.BataanWholeSale ?? 0,
+                    PampangaRetail = i.itemDetails?.PampangaRetail ?? 0,
+                    PampangaWholesale = i.itemDetails?.PampangaWholeSale ?? 0,
+                    ZambalesRetail = i.itemDetails?.ZambalesRetail ?? 0,
+                    ZambalesWholesale = i.itemDetails?.ZambalesWholeSale ?? 0
+                }).ToList();
+
+                // Define columns once
+                if (dtgItems.Columns.Count == 0)
+                {
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Code",
+                        DataPropertyName = "ItemCode",
+                        Width = 120
+                    });
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Name",
+                        DataPropertyName = "ItemName",
+                        Width = 200
+                    });
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Description",
+                        DataPropertyName = "ItemDescription",
+                        Width = 250
+                    });
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "On Hand",
+                        DataPropertyName = "OnHand",
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" },
+                        Width = 120
+                    });
+
+                    // 📍 Bataan
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Bataan Retail",
+                        DataPropertyName = "BataanRetail",
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        Width = 120
+                    });
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Bataan Wholesale",
+                        DataPropertyName = "BataanWholesale",
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        Width = 120
+                    });
+
+                    // 📍 Pampanga
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Pampanga Retail",
+                        DataPropertyName = "PampangaRetail",
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        Width = 120
+                    });
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Pampanga Wholesale",
+                        DataPropertyName = "PampangaWholesale",
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        Width = 120
+                    });
+
+                    // 📍 Zambales
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Zambales Retail",
+                        DataPropertyName = "ZambalesRetail",
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        Width = 120
+                    });
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Zambales Wholesale",
+                        DataPropertyName = "ZambalesWholesale",
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        Width = 120
+                    });
+                }
+
+                dtgItems.DataSource = viewModel;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load items: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (loadingToast != null && !loadingToast.IsDisposed)
+                {
+                    loadingToast.Close();
+                }
+            }
+        }
+        private void FilterItems(string keyword)
+        {
+            var filtered = _items
+                .Where(i => i.ItemName != null && i.ItemName.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                .Select(i => new
+                {
+                    i.ItemCode,
+                    i.ItemName,
+                    i.ItemDescription,
+                    OnHand = i.itemDetails?.OnHand ?? 0,
+                    BataanRetail = i.itemDetails?.BataanRetail ?? 0,
+                    BataanWholesale = i.itemDetails?.BataanWholeSale ?? 0,
+                    PampangaRetail = i.itemDetails?.PampangaRetail ?? 0,
+                    PampangaWholesale = i.itemDetails?.PampangaWholeSale ?? 0,
+                    ZambalesRetail = i.itemDetails?.ZambalesRetail ?? 0,
+                    ZambalesWholesale = i.itemDetails?.ZambalesWholeSale ?? 0
+                })
+                .ToList();
+
+            dtgItems.DataSource = filtered;
+        }
+        private void txtSearchItems_TextChanged(object sender, EventArgs e)
+        {
+            FilterItems(txtSearchItems.Text.Trim());
+        }
+
+        #endregion
+
+        #region Buttons
         private async void metroSetTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            btnImportToExcel.Visible = false;
             if (metroSetTabControl1.SelectedTab == tabPageAccounts)
             {
                 if (!isAccountClicked)
@@ -235,6 +384,15 @@ namespace Autotech.Desktop.Main
                 //    await LoadAgentsAsync();
                 //}
                 //isAgentClicked = true;
+            }
+            else if (metroSetTabControl1.SelectedTab == tabPageItems)
+            {
+                btnImportToExcel.Visible = true;
+                if (!isItemClicked)
+                {
+                    await LoadItemsAsync();
+                }
+                isItemClicked = true;
             }
             //else if (metroSetTabControl1.SelectedTab == tabPageMaintenance)
             //{
@@ -288,7 +446,51 @@ namespace Autotech.Desktop.Main
                     MessageBox.Show("Please select an agent to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+            else if (metroSetTabControl1.SelectedTab == tabPageItems)
+            {
+                if (dtgItems.CurrentRow != null)
+                {
+                    var selectedRow = dtgItems.SelectedRows[0];
+                    var boundItem = selectedRow.DataBoundItem;
+                    if (boundItem is Items selectedItem)
+                    {
+                        using (var editForm = new EditItemForm(selectedItem))
+                        {
+                            if (editForm.ShowDialog() == DialogResult.OK)
+                            {
+                                await LoadAccountsAsync();
+                            }
+                        }
+                    }
+                }
+            }
 
+        }
+        private async void btnRefresh_Click(object sender, EventArgs e)
+        {
+            await LoadAccountsAsync();
+        }
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+
+        private void btnAdd_Click_1(object sender, EventArgs e)
+        {
+            if (metroSetTabControl1.SelectedTab == tabPageAccounts)
+            {
+                
+            }
+            else if (metroSetTabControl1.SelectedTab == tabPageAgents)
+            {
+                
+            }
+            else if(metroSetTabControl1.SelectedTab == tabPageItems)
+            {
+
+            }
         }
     }
 }

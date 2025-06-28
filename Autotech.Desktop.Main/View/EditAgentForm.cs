@@ -1,5 +1,6 @@
 ﻿using Autotech.Desktop.BusinessLayer.DTO;
 using Autotech.Desktop.BusinessLayer.Services;
+using Autotech.Desktop.Core.Enums;
 using Autotech.Desktop.Core.Models;
 using MetroSet_UI.Forms;
 using System;
@@ -66,7 +67,7 @@ namespace Autotech.Desktop.Main.View
             txtAgentName.Text = _agent.AgentName;
             txtContact.Text = _agent.AgentContactNumber;
             txtAddress.Text = _agent.AgentAddress;
-            txtRole.Text = _agent.AgentRole;
+            cboUserRole.Text = _agent.AgentRole;
             cboLocation.Text = _agent.Location.LocationName;
         }
 
@@ -82,7 +83,7 @@ namespace Autotech.Desktop.Main.View
                     AgentName = txtAgentName.Text,
                     AgentContactNumber = txtContact.Text,
                     AgentAddress = txtAddress.Text,
-                    AgentRole = txtRole.Text,
+                    AgentRole = cboUserRole.Text,
                     DateCreated = _agent.DateCreated,
                     DateLastLogin = _agent.DateLastLogin,
                     LocationId = _agent.LocationId,
@@ -106,6 +107,30 @@ namespace Autotech.Desktop.Main.View
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void cboUserRole_Click(object sender, EventArgs e)
+        {
+            PopulateUserRoles();
+        }
+        private void PopulateUserRoles()
+        {
+            var roles = Enum.GetValues(typeof(UserRoles))
+                .Cast<UserRoles>()
+                .Select(role => new
+                {
+                    Value = role,
+                    Text = role.GetType()
+                               .GetField(role.ToString())
+                               ?.GetCustomAttributes(typeof(DescriptionAttribute), false)
+                               is DescriptionAttribute[] attrs && attrs.Length > 0
+                               ? attrs[0].Description
+                               : role.ToString()
+                }).ToList();
+
+            cboUserRole.DisplayMember = "Text";
+            cboUserRole.ValueMember = "Value";
+            cboUserRole.DataSource = roles;
         }
     }
 }

@@ -18,11 +18,12 @@
             txtAgentName = new TextBox();
             txtContact = new TextBox();
             txtAddress = new TextBox();
-            txtRole = new TextBox();
             cboLocation = new ComboBox();
             btnSave = new Button();
             metroSetLabel1 = new MetroSet_UI.Controls.MetroSetLabel();
             btnCancel = new Button();
+            cboUserRole = new ComboBox();
+            metroSetLabel2 = new MetroSet_UI.Controls.MetroSetLabel();
             SuspendLayout();
             // 
             // txtUsername
@@ -66,18 +67,10 @@
             txtAddress.Size = new Size(250, 27);
             txtAddress.TabIndex = 4;
             // 
-            // txtRole
-            // 
-            txtRole.Location = new Point(20, 267);
-            txtRole.Name = "txtRole";
-            txtRole.PlaceholderText = "Role";
-            txtRole.Size = new Size(250, 27);
-            txtRole.TabIndex = 5;
-            // 
             // cboLocation
             // 
             cboLocation.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboLocation.Location = new Point(19, 330);
+            cboLocation.Location = new Point(20, 352);
             cboLocation.Name = "cboLocation";
             cboLocation.Size = new Size(250, 28);
             cboLocation.TabIndex = 8;
@@ -85,7 +78,7 @@
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(24, 393);
+            btnSave.Location = new Point(25, 433);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(99, 30);
             btnSave.TabIndex = 9;
@@ -96,7 +89,7 @@
             // 
             metroSetLabel1.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             metroSetLabel1.IsDerivedStyle = true;
-            metroSetLabel1.Location = new Point(19, 304);
+            metroSetLabel1.Location = new Point(20, 326);
             metroSetLabel1.Name = "metroSetLabel1";
             metroSetLabel1.Size = new Size(100, 23);
             metroSetLabel1.Style = MetroSet_UI.Enums.Style.Light;
@@ -108,16 +101,41 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(152, 393);
+            btnCancel.Location = new Point(153, 433);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(99, 30);
             btnCancel.TabIndex = 11;
             btnCancel.Text = "Cancel";
             btnCancel.Click += btnCancel_Click;
             // 
+            // cboUserRole
+            // 
+            cboUserRole.FormattingEnabled = true;
+            cboUserRole.Location = new Point(20, 291);
+            cboUserRole.Name = "cboUserRole";
+            cboUserRole.Size = new Size(249, 28);
+            cboUserRole.TabIndex = 12;
+            cboUserRole.Click += cboUserRole_Click;
+            // 
+            // metroSetLabel2
+            // 
+            metroSetLabel2.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            metroSetLabel2.IsDerivedStyle = true;
+            metroSetLabel2.Location = new Point(20, 265);
+            metroSetLabel2.Name = "metroSetLabel2";
+            metroSetLabel2.Size = new Size(100, 23);
+            metroSetLabel2.Style = MetroSet_UI.Enums.Style.Light;
+            metroSetLabel2.StyleManager = null;
+            metroSetLabel2.TabIndex = 13;
+            metroSetLabel2.Text = "User Role";
+            metroSetLabel2.ThemeAuthor = "Narwin";
+            metroSetLabel2.ThemeName = "MetroLite";
+            // 
             // EditAgentForm
             // 
-            ClientSize = new Size(288, 446);
+            ClientSize = new Size(288, 501);
+            Controls.Add(metroSetLabel2);
+            Controls.Add(cboUserRole);
             Controls.Add(btnCancel);
             Controls.Add(metroSetLabel1);
             Controls.Add(txtUsername);
@@ -125,7 +143,6 @@
             Controls.Add(txtAgentName);
             Controls.Add(txtContact);
             Controls.Add(txtAddress);
-            Controls.Add(txtRole);
             Controls.Add(cboLocation);
             Controls.Add(btnSave);
             Name = "EditAgentForm";
@@ -140,10 +157,11 @@
         private TextBox txtAgentName;
         private TextBox txtContact;
         private TextBox txtAddress;
-        private TextBox txtRole;
         private ComboBox cboLocation;
         private Button btnSave;
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel1;
         private Button btnCancel;
+        private ComboBox cboUserRole;
+        private MetroSet_UI.Controls.MetroSetLabel metroSetLabel2;
     }
 }

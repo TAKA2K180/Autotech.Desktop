@@ -21,6 +21,10 @@ namespace Autotech.Desktop.Main.View
             if (LoginHelper.isLoggedIn == true)
             {
                 this.Enabled = true;
+                if (LoginHelper.agentRole != "Admin")
+                {
+                    metroSetTabControl1.TabPages.Remove(tabPageMaintenance);
+                }
                 InitializeTimer();
                 GetUser();
                 SetLocation();
@@ -33,6 +37,7 @@ namespace Autotech.Desktop.Main.View
                 InitializePaymentMethods();
                 this.Load += MainForm_Load;
                 PopulateFilterCombo();
+                
             }
         }
         #endregion
@@ -786,6 +791,7 @@ namespace Autotech.Desktop.Main.View
                         double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
                         double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
                         double totalDiscount = price - subtotal;
+                        totalDiscount = Math.Round(totalDiscount, 2);
 
                         return new InvoiceItemDTO
                         {

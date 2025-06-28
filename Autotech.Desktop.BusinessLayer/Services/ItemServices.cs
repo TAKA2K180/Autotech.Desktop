@@ -1,4 +1,5 @@
-﻿using Autotech.Desktop.BusinessLayer.Helpers;
+﻿using Autotech.Desktop.BusinessLayer.DTO;
+using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -83,6 +84,39 @@ namespace Autotech.Desktop.BusinessLayer.Services
             }
 
             throw new Exception("Failed to retrieve paginated items.");
+        }
+
+        public async Task<bool> UpdateItemAsync(Items item)
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+                var response = await httpClient.PutAsJsonAsync($"{apiUrl}/{item.Id}", item);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> CreateBulkItemsAsync(List<ItemRequestDto> items)
+        {
+            try
+            {
+                using var client = new HttpClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+                var response = await client.PostAsJsonAsync(apiUrl, items);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 

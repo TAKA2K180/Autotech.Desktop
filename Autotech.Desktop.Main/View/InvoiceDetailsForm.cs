@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Windows.Forms;
 using Autotech.Desktop.BusinessLayer.DTO;
 using Autotech.Desktop.BusinessLayer.Helpers;
@@ -18,6 +19,9 @@ namespace Autotech.Desktop.Main.View
     {
         private InvoiceDetailsDTO _invoice;
         private readonly MainForm _mainForm;
+        private List<PaymentHistoryDTO> paymentHistoryDTOs;
+        private PrintDocument printDoc = new PrintDocument();
+        private PrintPreviewDialog previewDialog = new PrintPreviewDialog();
 
         public InvoiceDetailsForm(InvoiceDetailsDTO invoice, Guid invoiceId, MainForm mainForm)
         {
@@ -31,7 +35,7 @@ namespace Autotech.Desktop.Main.View
             lblDate.Text = $"Date: {_invoice.DateSold.ToShortDateString()}";
             lblStatus.Text = $"Status: {_invoice.Status}";
             lblOrigin.Text = _invoice.isMobile == true ? "Origin: Mobile" : "Origin: Desktop";
-
+            
             InitializeGrid();
             LoadItemsToGrid();
             LoadPaymentHistoryAsync(invoiceId);
@@ -72,7 +76,7 @@ namespace Autotech.Desktop.Main.View
             {
                 HeaderText = "Discount",
                 DataPropertyName = "Discount",
-                Name = "price"
+                Name = "Discount"
             });
 
             dataGridViewInvoiceDetails.Columns.Add(new DataGridViewTextBoxColumn
@@ -87,17 +91,38 @@ namespace Autotech.Desktop.Main.View
             dataGridViewInvoiceDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
 
             dataGridViewInvoiceDetails.CellValueChanged += dataGridViewInvoiceDetails_CellValueChanged;
+            dataGridViewInvoiceDetails.CellFormatting += dataGridViewInvoiceDetails_CellFormatting;
             dataGridViewInvoiceDetails.CurrentCellDirtyStateChanged += (s, e) =>
             {
                 if (dataGridViewInvoiceDetails.IsCurrentCellDirty)
                     dataGridViewInvoiceDetails.CommitEdit(DataGridViewDataErrorContexts.Commit);
             };
         }
+        private void dataGridViewInvoiceDetails_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            try
+            {
+                if (dataGridViewInvoiceDetails.Columns[e.ColumnIndex].Name == "Discount")
+                {
+                    if (e.Value != null && double.TryParse(e.Value.ToString(), out double discount))
+                    {
+                        e.Value = discount.ToString("N2");
+                        e.FormattingApplied = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
 
         private async void LoadItemsToGrid()
         {
             dataGridViewInvoiceDetails.DataSource = null;
             dataGridViewInvoiceDetails.DataSource = _invoice.PurchasedItems;
+            
 
             RecalculateTotals();
         }
@@ -133,7 +158,7 @@ namespace Autotech.Desktop.Main.View
             double discount = _invoice.DiscountPeso;
             double total = subtotal + tax - discount;
 
-            txtTax.Text = tax.ToString("C");
+            txtTax.Text = _invoice.Tax.ToString("C");
             txtDiscount.Text = discount.ToString("C");
             txtTotal.Text = total.ToString("C");
         }
@@ -142,15 +167,15 @@ namespace Autotech.Desktop.Main.View
         {
             if (_invoice != null)
             {
-                ////var report = new InvoiceReport();
-
-                //// Set the data source
-                //report.DataSource = new List<InvoiceDetailsDTO> { _invoice };
-                //report.DataMember = ""; // root object
-
-                //// Wrap in ReportPrintTool to access preview features
-                ////var printTool = new ReportPrintTool(report);
-                ////printTool.ShowPreviewDialog();
+                var settings = new PageSettings
+                {
+                    Margins = new Margins(10, 10, 10, 10),
+                    PaperSize = new PaperSize("A4", 827, 1169)
+                };
+                printDoc.DefaultPageSettings = settings;
+                printDoc.PrintPage += PrintDoc_PrintPage;
+                previewDialog.Document = printDoc;
+                previewDialog.ShowDialog();
             }
             else
             {
@@ -206,6 +231,7 @@ namespace Autotech.Desktop.Main.View
             {
                 var service = new SalesService();
                 var payments = await service.GetPaymentsBySaleIdAsync(saleId);
+                paymentHistoryDTOs = payments;
 
                 // Use invoice-level data (_invoice) for payment method and remaining balance
                 var paymentMethod = _invoice.PaymentType;
@@ -289,6 +315,114 @@ namespace Autotech.Desktop.Main.View
                     MessageBox.Show($"Failed to cancel invoice: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+        private void PrintDoc_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            int itemCount = _invoice.PurchasedItems.Count;
+            int paymentCount = paymentHistoryDTOs?.Count ?? 0;
+            float estimatedHeight = 300 + (itemCount * 20) + (paymentCount * 18);
+            float halfA4Height = 792 / 2;
+
+            if (estimatedHeight < halfA4Height)
+                e.PageSettings.PaperSize = new PaperSize("HalfA4", 827, (int)estimatedHeight);
+
+            Font headerFont = new Font("Arial", 12, FontStyle.Bold);
+            Font bodyFont = new Font("Arial", 10);
+            float x = e.MarginBounds.Left;
+            float y = e.MarginBounds.Top;
+            float right = e.MarginBounds.Right;
+            float usableWidth = right - x;
+            float lineHeight = bodyFont.GetHeight(g) + 2;
+
+            float colDescription = x;
+            float colQty = x + usableWidth * 0.50f;
+            float colUnit = x + usableWidth * 0.65f;
+            float colDiscount = x + usableWidth * 0.75f;
+            float colTotal = x + usableWidth * 0.85f;
+
+            // Header
+            g.DrawString("AUTOTECH CAR CARE CENTER", headerFont, Brushes.Black, x + usableWidth / 4, y); y += lineHeight;
+            g.DrawString("Wawa, Abucay, Bataan", bodyFont, Brushes.Black, x + usableWidth / 3, y); y += lineHeight;
+            g.DrawString("TRUST RECEIPT", headerFont, Brushes.Black, x + usableWidth / 3, y); y += lineHeight;
+            g.DrawString("*THIS IS NOT YOUR OFFICIAL RECEIPT*", bodyFont, Brushes.Black, x + usableWidth / 4, y); y += lineHeight;
+
+            // Info
+            g.DrawString($"Receipt #: {_invoice.strInvoiceNumber}", bodyFont, Brushes.Black, x, y);
+            g.DrawString($"Date: {DateTime.Now:g}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y); y += lineHeight;
+            g.DrawString($"Prepared by: {SessionManager.AgentDetails?.AgentName ?? "N/A"}", bodyFont, Brushes.Black, x, y); y += lineHeight;
+            g.DrawString($"Customer: {_invoice.AccountName}", bodyFont, Brushes.Black, x, y); y += lineHeight;
+
+            // Table Header
+            g.DrawString("Description", bodyFont, Brushes.Black, colDescription, y);
+            g.DrawString("Qty", bodyFont, Brushes.Black, colQty, y);
+            g.DrawString("Unit", bodyFont, Brushes.Black, colUnit, y);
+            g.DrawString("Disc", bodyFont, Brushes.Black, colDiscount, y);
+            g.DrawString("Total", bodyFont, Brushes.Black, colTotal, y);
+            y += lineHeight;
+
+            g.DrawLine(Pens.Black, x, y, right, y); y += 4;
+
+            // Items
+            foreach (var item in _invoice.PurchasedItems)
+            {
+                g.DrawString(item.ItemName, bodyFont, Brushes.Black, colDescription, y);
+                g.DrawString(item.Quantity.ToString(), bodyFont, Brushes.Black, colQty, y);
+                g.DrawString(item.ItemPrice.ToString("C"), bodyFont, Brushes.Black, colUnit, y);
+                g.DrawString(item.Discount.ToString("C"), bodyFont, Brushes.Black, colDiscount, y);
+                g.DrawString(item.TotalPrice.ToString("C"), bodyFont, Brushes.Black, colTotal, y);
+                y += lineHeight;
+            }
+
+            y += 6;
+            g.DrawLine(Pens.Black, x, y, right, y); y += lineHeight;
+
+            // Set up columns: Totals on right, Payment history on left
+            float colSplit = x + usableWidth * 0.70f;
+            float leftY = y;
+            float rightY = y;
+
+            // Totals (Right)
+            double subtotal = _invoice.PurchasedItems.Sum(i => i.TotalPrice);
+            double tax = _invoice.Tax;
+            double discount = _invoice.DiscountPeso;
+            double total = _invoice.TotalSales;
+
+            g.DrawString($"Subtotal: {subtotal:C}", bodyFont, Brushes.Black, colSplit, rightY); rightY += lineHeight;
+            g.DrawString($"Tax: {tax:C}", bodyFont, Brushes.Black, colSplit, rightY); rightY += lineHeight;
+            g.DrawString($"Discount: {discount:C}", bodyFont, Brushes.Black, colSplit, rightY); rightY += lineHeight;
+            g.DrawString($"Total: {total:C}", headerFont, Brushes.Black, colSplit, rightY); rightY += lineHeight * 2;
+
+            // Payment History (Left)
+            g.DrawString("PAYMENT HISTORY", headerFont, Brushes.Black, x, leftY); leftY += lineHeight;
+
+            if (paymentHistoryDTOs != null && paymentHistoryDTOs.Any())
+            {
+                foreach (var p in paymentHistoryDTOs)
+                {
+                    string line = $"Paid: {p.PaymentAmount:C} on {p.DatePaid:g} ---- Balance history: {p.RemainingBalance:C}";
+                    g.DrawString(line, bodyFont, Brushes.Black, x, leftY);
+                    leftY += lineHeight;
+                }
+                g.DrawString($"Remaining Balance: {_invoice.RemainingBalance:C}", bodyFont, Brushes.Black, x, leftY);
+                leftY += lineHeight * 2;
+            }
+            else
+            {
+                g.DrawString("No payment history available.", bodyFont, Brushes.Black, x, leftY);
+                leftY += lineHeight * 2;
+            }
+
+            // Set Y to max of both columns
+            y = Math.Max(leftY, rightY);
+
+            // Signature
+            g.DrawString("Received by: ___________________________", bodyFont, Brushes.Black, x, y); y += lineHeight + 5;
+            g.DrawString("SIGNATURE OVER PRINTED NAME", bodyFont, Brushes.Black, x + 150, y); y += lineHeight * 2;
+
+
+            
         }
     }
 }

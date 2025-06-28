@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autotech.Desktop.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -30,5 +31,6 @@ namespace Autotech.Desktop.Core.Models
     public class LoginHelper
     {
         public static bool isLoggedIn { get; set; }
+        public static string agentRole { get; set; }
     }
 }
