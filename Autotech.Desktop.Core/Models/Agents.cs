@@ -31,6 +31,5 @@ namespace Autotech.Desktop.Core.Models
     public class LoginHelper
     {
         public static bool isLoggedIn { get; set; }
-        public static string agentRole { get; set; }
     }
 }

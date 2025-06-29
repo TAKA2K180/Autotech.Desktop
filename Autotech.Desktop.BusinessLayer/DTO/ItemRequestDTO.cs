@@ -8,6 +8,7 @@ namespace Autotech.Desktop.BusinessLayer.DTO
 {
     public class ItemRequestDto
     {
+        public Guid Id { get; set; }
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
         public string ItemDescription { get; set; }

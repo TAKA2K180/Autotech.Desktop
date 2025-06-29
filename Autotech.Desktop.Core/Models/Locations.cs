@@ -10,6 +10,7 @@ namespace Autotech.Desktop.Core.Models
     public class Locations : BaseModel
     {
         public string LocationName { get; set; }
+        public double CostPerLiter { get; set; }
 
         // Navigation properties
         [JsonIgnore]

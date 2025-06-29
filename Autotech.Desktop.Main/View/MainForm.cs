@@ -21,7 +21,7 @@ namespace Autotech.Desktop.Main.View
             if (LoginHelper.isLoggedIn == true)
             {
                 this.Enabled = true;
-                if (LoginHelper.agentRole != "Admin")
+                if (SessionManager.AgentDetails.AgentRole != "Admin")
                 {
                     metroSetTabControl1.TabPages.Remove(tabPageMaintenance);
                 }
@@ -1068,7 +1068,7 @@ namespace Autotech.Desktop.Main.View
             }
             else if (metroSetTabControl1.SelectedTab == tabPageMaintenance)
             {
-                LoadMaintenanceTab();
+                await LoadMaintenanceTab();
             }
         }
 
@@ -1326,12 +1326,15 @@ namespace Autotech.Desktop.Main.View
         #endregion
 
         #region Maintenance
-        private void LoadMaintenanceTab()
+        private async Task LoadMaintenanceTab()
         {
             var maintenanceForm = new MaintenanceForm();
-            tabPageMaintenance.Controls.Clear(); // Optional: in case you're reloading
-            tabPageMaintenance.Controls.Add(maintenanceForm);
-            maintenanceForm.Show(); // Must call Show() after adding
+
+            tabPageMaintenance.Controls.Clear();              // Safe on UI thread
+            tabPageMaintenance.Controls.Add(maintenanceForm); // Add to container
+            maintenanceForm.Show();                           // Display the embedded form
+
+            await Task.CompletedTask; // Optional, just to preserve async signature
         }
         #endregion
     }

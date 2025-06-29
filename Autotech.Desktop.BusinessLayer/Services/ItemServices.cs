@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using static Autotech.Desktop.BusinessLayer.Helpers.PagingHelper;
 
@@ -92,6 +93,10 @@ namespace Autotech.Desktop.BusinessLayer.Services
             {
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+                var json = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
 
                 var response = await httpClient.PutAsJsonAsync($"{apiUrl}/{item.Id}", item);
 

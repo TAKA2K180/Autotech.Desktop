@@ -20,14 +20,46 @@ namespace Autotech.Desktop.Main
             this.TopLevel = false;                // Allows it to behave like a control
             this.FormBorderStyle = FormBorderStyle.None; // Removes window borders
             this.Dock = DockStyle.Fill;          // Fills the parent container
-            this.Load += MaintenanceForm_Load;
+            //this.Load += await MaintenanceForm_Load;
             txtSearchAccount.TextChanged += txtSearchAccount_TextChanged;
             txtSearchItems.TextChanged += txtSearchItems_TextChanged;
+            _ = LoadAsync();
+            btnDelete.Visible = false;
+            btnAdd.Visible = false;
+        }
+        private async Task LoadAsync()
+        {
+            ToastMessageForm loadingToast = null;
+            try
+            {
+                // ✅ Show loading toast
+                loadingToast = new ToastMessageForm("Loading please wait...");
+                loadingToast.Show();
+                loadingToast.TopMost = true;
+                loadingToast.BringToFront();
+                await Task.Delay(1000);
+
+                await LoadAgentsAsync();
+                await LoadAccountsAsync();
+                await Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // ✅ Close loading toast
+                if (loadingToast != null && !loadingToast.IsDisposed)
+                {
+                    loadingToast.Close();
+                }
+            }
         }
         private async void MaintenanceForm_Load(object sender, EventArgs e)
         {
             await LoadAgentsAsync();
-            await LoadAccountsAsync(); // Your async method now runs properly
+            //await LoadAccountsAsync(); // Your async method now runs properly
             //await LoadAccountsAsync();
         }
 
@@ -55,52 +87,59 @@ namespace Autotech.Desktop.Main
 
             try
             {
-                // ✅ Show loading toast
                 loadingToast = new ToastMessageForm("Loading accounts...");
                 loadingToast.Show();
                 loadingToast.TopMost = true;
                 loadingToast.BringToFront();
 
-                var service = new AccountService(); // Your service class to fetch accounts
-                var accounts = await service.GetAllAccountsAsync(); // Returns List<AccountDTO>
+                var service = new AccountService();
+
+                // 🔹 1. Fetch data in background
+                var accounts = await service.GetAllAccountsAsync();
                 _accounts = accounts;
 
+                // 🔹 2. Suspend layout & begin UI update
+                dataGridViewAccounts.SuspendLayout();
                 dataGridViewAccounts.DataSource = null;
-                dataGridViewAccounts.Columns.Clear();
-                dataGridViewAccounts.AutoGenerateColumns = false;
 
-
-                // ✅ Add Data Columns
-                dataGridViewAccounts.Columns.Add(new DataGridViewTextBoxColumn
+                if (dataGridViewAccounts.Columns.Count == 0)
                 {
-                    HeaderText = "Account Name",
-                    DataPropertyName = "Name",
-                    Name = "Name",
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                });
-                Task.Delay(1000).Wait();
+                    dataGridViewAccounts.AutoGenerateColumns = false;
 
-                dataGridViewAccounts.Columns.Add(new DataGridViewTextBoxColumn
-                {
-                    HeaderText = "Contact Person",
-                    DataPropertyName = "ContactPerson",
-                    Name = "ContactPerson"
-                });
+                    dataGridViewAccounts.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Account Name",
+                        DataPropertyName = "Name",
+                        Name = "Name",
+                        AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                    });
 
-                dataGridViewAccounts.Columns.Add(new DataGridViewTextBoxColumn
-                {
-                    HeaderText = "Address",
-                    DataPropertyName = "Address",
-                    Name = "Address"
-                });
+                    dataGridViewAccounts.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Contact Person",
+                        DataPropertyName = "ContactPerson",
+                        Name = "ContactPerson",
+                        AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                    });
 
-                // ✅ Bind data
+                    dataGridViewAccounts.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Address",
+                        DataPropertyName = "Address",
+                        Name = "Address",
+                        AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                    });
+                }
+
+                // 🔹 3. Bind data
                 dataGridViewAccounts.DataSource = accounts;
 
-                dataGridViewAccounts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                // 🔹 4. Final layout optimizations
                 dataGridViewAccounts.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 dataGridViewAccounts.DefaultCellStyle.Padding = new Padding(5);
                 dataGridViewAccounts.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+
+                dataGridViewAccounts.ResumeLayout();
             }
             catch (Exception ex)
             {
@@ -108,13 +147,13 @@ namespace Autotech.Desktop.Main
             }
             finally
             {
-                // ✅ Close loading toast
                 if (loadingToast != null && !loadingToast.IsDisposed)
                 {
                     loadingToast.Close();
                 }
             }
         }
+
         private void txtSearchAccount_TextChanged(object sender, EventArgs e)
         {
             string keyword = txtSearchAccount.Text.Trim().ToLower();
@@ -233,9 +272,14 @@ namespace Autotech.Desktop.Main
                 // Flatten item + itemDetails for display
                 var viewModel = items.Select(i => new
                 {
+                    i.Id,
                     i.ItemCode,
                     i.ItemName,
                     i.ItemDescription,
+                    i.Quantity,
+                    i.itemDetails.ItemId,
+                    i.itemDetails.ItemsSold,
+                    i.itemDetails.Sales,
                     OnHand = i.itemDetails?.OnHand ?? 0,
                     BataanRetail = i.itemDetails?.BataanRetail ?? 0,
                     BataanWholesale = i.itemDetails?.BataanWholeSale ?? 0,
@@ -379,11 +423,7 @@ namespace Autotech.Desktop.Main
             }
             else if (metroSetTabControl1.SelectedTab == tabPageAgents)
             {
-                //if (!isAgentClicked)
-                //{
-                //    await LoadAgentsAsync();
-                //}
-                //isAgentClicked = true;
+                // do nothing, staging fix
             }
             else if (metroSetTabControl1.SelectedTab == tabPageItems)
             {
@@ -394,10 +434,6 @@ namespace Autotech.Desktop.Main
                 }
                 isItemClicked = true;
             }
-            //else if (metroSetTabControl1.SelectedTab == tabPageMaintenance)
-            //{
-            //    LoadMaintenanceTab();
-            //}
         }
 
         private async void btnEdit_Click(object sender, EventArgs e)
@@ -448,17 +484,21 @@ namespace Autotech.Desktop.Main
             }
             else if (metroSetTabControl1.SelectedTab == tabPageItems)
             {
-                if (dtgItems.CurrentRow != null)
+                if (dtgItems.CurrentRow?.DataBoundItem is not null)
                 {
-                    var selectedRow = dtgItems.SelectedRows[0];
-                    var boundItem = selectedRow.DataBoundItem;
-                    if (boundItem is Items selectedItem)
+                    // The anonymous object includes Id
+                    dynamic rowData = dtgItems.CurrentRow.DataBoundItem;
+
+                    Guid itemId = rowData.Id; // ✅ this works even if Id column is not shown
+
+                    var selectedItem = _items.FirstOrDefault(i => i.Id == itemId);
+                    if (selectedItem != null)
                     {
                         using (var editForm = new EditItemForm(selectedItem))
                         {
                             if (editForm.ShowDialog() == DialogResult.OK)
                             {
-                                await LoadAccountsAsync();
+                                await LoadItemsAsync();
                             }
                         }
                     }
@@ -481,16 +521,22 @@ namespace Autotech.Desktop.Main
         {
             if (metroSetTabControl1.SelectedTab == tabPageAccounts)
             {
-                
+
             }
             else if (metroSetTabControl1.SelectedTab == tabPageAgents)
             {
-                
+
             }
-            else if(metroSetTabControl1.SelectedTab == tabPageItems)
+            else if (metroSetTabControl1.SelectedTab == tabPageItems)
             {
 
             }
+        }
+
+        private void btnProfitPerMonth_Click(object sender, EventArgs e)
+        {
+            var showProfitForm = new ProfitPerMonthForm();
+            showProfitForm.ShowDialog();
         }
     }
 }

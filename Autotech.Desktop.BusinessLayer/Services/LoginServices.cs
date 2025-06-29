@@ -36,7 +36,6 @@ namespace Autotech.Desktop.BusinessLayer.Services
                         string jwtToken = loginResponse.Token;
                         SessionManager.StoreToken(jwtToken);
                         await FetchAgentDetailsAsync(loginResponse.Agent.Id);
-                        LoginHelper.agentRole = loginResponse.Agent.AgentRole;
                         return true;
                     }
                     else

@@ -31,10 +31,9 @@ namespace Autotech.Desktop.Main
         private void InitializeComponent()
         {
             metroSetTabControl1 = new MetroSetTabControl();
-            tabPageItems = new TabPage();
-            dtgItems = new DataGridView();
-            txtSearchItems = new MetroSetTextBox();
-            label1 = new Label();
+            tabPageReports = new TabPage();
+            metroSetButton2 = new MetroSetButton();
+            btnProfitPerMonth = new MetroSetButton();
             tabPageAgents = new TabPage();
             dtgAgents = new DataGridView();
             txtSearchAgent = new MetroSetTextBox();
@@ -44,8 +43,10 @@ namespace Autotech.Desktop.Main
             dataGridViewAccounts = new DataGridView();
             txtSearchAccount = new MetroSetTextBox();
             lblSearchAccount = new MetroSetLabel();
-            tabPageSales = new TabPage();
-            tabPageReports = new TabPage();
+            tabPageItems = new TabPage();
+            dtgItems = new DataGridView();
+            txtSearchItems = new MetroSetTextBox();
+            lblSearchItems = new MetroSetLabel();
             btnImportToExcel = new MetroSetButton();
             btnEdit = new MetroSetButton();
             btnDelete = new MetroSetButton();
@@ -53,13 +54,14 @@ namespace Autotech.Desktop.Main
             panel1 = new Panel();
             btnAdd = new MetroSetButton();
             metroSetTabControl1.SuspendLayout();
-            tabPageItems.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dtgItems).BeginInit();
+            tabPageReports.SuspendLayout();
             tabPageAgents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dtgAgents).BeginInit();
             tabPageAccounts.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewAccounts).BeginInit();
+            tabPageItems.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dtgItems).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -68,10 +70,9 @@ namespace Autotech.Desktop.Main
             metroSetTabControl1.AnimateEasingType = MetroSet_UI.Enums.EasingType.CubeOut;
             metroSetTabControl1.AnimateTime = 200;
             metroSetTabControl1.BackgroundColor = Color.White;
-            metroSetTabControl1.Controls.Add(tabPageItems);
             metroSetTabControl1.Controls.Add(tabPageAgents);
             metroSetTabControl1.Controls.Add(tabPageAccounts);
-            metroSetTabControl1.Controls.Add(tabPageSales);
+            metroSetTabControl1.Controls.Add(tabPageItems);
             metroSetTabControl1.Controls.Add(tabPageReports);
             metroSetTabControl1.Dock = DockStyle.Top;
             metroSetTabControl1.IsDerivedStyle = true;
@@ -93,74 +94,72 @@ namespace Autotech.Desktop.Main
             metroSetTabControl1.UseAnimation = false;
             metroSetTabControl1.SelectedIndexChanged += metroSetTabControl1_SelectedIndexChanged;
             // 
-            // tabPageItems
+            // tabPageReports
             // 
-            tabPageItems.BackColor = Color.White;
-            tabPageItems.Controls.Add(dtgItems);
-            tabPageItems.Controls.Add(txtSearchItems);
-            tabPageItems.Controls.Add(label1);
-            tabPageItems.Location = new Point(4, 42);
-            tabPageItems.Name = "tabPageItems";
-            tabPageItems.Padding = new Padding(3);
-            tabPageItems.Size = new Size(768, 497);
-            tabPageItems.TabIndex = 2;
-            tabPageItems.Text = "Items";
+            tabPageReports.BackColor = Color.White;
+            tabPageReports.Controls.Add(metroSetButton2);
+            tabPageReports.Controls.Add(btnProfitPerMonth);
+            tabPageReports.Location = new Point(4, 42);
+            tabPageReports.Name = "tabPageReports";
+            tabPageReports.Padding = new Padding(3);
+            tabPageReports.Size = new Size(768, 497);
+            tabPageReports.TabIndex = 5;
+            tabPageReports.Text = "Reports";
             // 
-            // dtgItems
+            // metroSetButton2
             // 
-            dtgItems.AllowUserToAddRows = false;
-            dtgItems.AllowUserToDeleteRows = false;
-            dtgItems.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dtgItems.Dock = DockStyle.Top;
-            dtgItems.Location = new Point(3, 55);
-            dtgItems.Name = "dtgItems";
-            dtgItems.ReadOnly = true;
-            dtgItems.RowHeadersVisible = false;
-            dtgItems.RowTemplate.Height = 25;
-            dtgItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dtgItems.Size = new Size(762, 413);
-            dtgItems.TabIndex = 2;
+            metroSetButton2.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            metroSetButton2.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            metroSetButton2.DisabledForeColor = Color.Gray;
+            metroSetButton2.Dock = DockStyle.Top;
+            metroSetButton2.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            metroSetButton2.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            metroSetButton2.HoverColor = Color.FromArgb(95, 207, 255);
+            metroSetButton2.HoverTextColor = Color.White;
+            metroSetButton2.IsDerivedStyle = true;
+            metroSetButton2.Location = new Point(3, 77);
+            metroSetButton2.Name = "metroSetButton2";
+            metroSetButton2.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            metroSetButton2.NormalColor = Color.FromArgb(65, 177, 225);
+            metroSetButton2.NormalTextColor = Color.White;
+            metroSetButton2.PressBorderColor = Color.FromArgb(35, 147, 195);
+            metroSetButton2.PressColor = Color.FromArgb(35, 147, 195);
+            metroSetButton2.PressTextColor = Color.White;
+            metroSetButton2.Size = new Size(762, 74);
+            metroSetButton2.Style = MetroSet_UI.Enums.Style.Light;
+            metroSetButton2.StyleManager = null;
+            metroSetButton2.TabIndex = 1;
+            metroSetButton2.Text = "Item sales";
+            metroSetButton2.ThemeAuthor = "Narwin";
+            metroSetButton2.ThemeName = "MetroLite";
             // 
-            // txtSearchItems
+            // btnProfitPerMonth
             // 
-            txtSearchItems.AutoCompleteCustomSource = null;
-            txtSearchItems.AutoCompleteMode = AutoCompleteMode.None;
-            txtSearchItems.AutoCompleteSource = AutoCompleteSource.None;
-            txtSearchItems.BorderColor = Color.FromArgb(155, 155, 155);
-            txtSearchItems.DisabledBackColor = Color.FromArgb(204, 204, 204);
-            txtSearchItems.DisabledBorderColor = Color.FromArgb(155, 155, 155);
-            txtSearchItems.DisabledForeColor = Color.FromArgb(136, 136, 136);
-            txtSearchItems.Dock = DockStyle.Top;
-            txtSearchItems.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            txtSearchItems.HoverColor = Color.FromArgb(102, 102, 102);
-            txtSearchItems.Image = null;
-            txtSearchItems.IsDerivedStyle = true;
-            txtSearchItems.Lines = null;
-            txtSearchItems.Location = new Point(3, 25);
-            txtSearchItems.MaxLength = 32767;
-            txtSearchItems.Multiline = false;
-            txtSearchItems.Name = "txtSearchItems";
-            txtSearchItems.ReadOnly = false;
-            txtSearchItems.Size = new Size(762, 30);
-            txtSearchItems.Style = MetroSet_UI.Enums.Style.Light;
-            txtSearchItems.StyleManager = null;
-            txtSearchItems.TabIndex = 1;
-            txtSearchItems.TextAlign = HorizontalAlignment.Left;
-            txtSearchItems.ThemeAuthor = "Narwin";
-            txtSearchItems.ThemeName = "MetroLite";
-            txtSearchItems.UseSystemPasswordChar = false;
-            txtSearchItems.WatermarkText = "";
-            txtSearchItems.TextChanged += txtSearchItems_TextChanged;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Top;
-            label1.Location = new Point(3, 3);
-            label1.Name = "label1";
-            label1.Size = new Size(114, 22);
-            label1.TabIndex = 0;
-            label1.Text = "Search Items";
+            btnProfitPerMonth.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnProfitPerMonth.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnProfitPerMonth.DisabledForeColor = Color.Gray;
+            btnProfitPerMonth.Dock = DockStyle.Top;
+            btnProfitPerMonth.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnProfitPerMonth.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnProfitPerMonth.HoverColor = Color.FromArgb(95, 207, 255);
+            btnProfitPerMonth.HoverTextColor = Color.White;
+            btnProfitPerMonth.IsDerivedStyle = true;
+            btnProfitPerMonth.Location = new Point(3, 3);
+            btnProfitPerMonth.Name = "btnProfitPerMonth";
+            btnProfitPerMonth.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnProfitPerMonth.NormalColor = Color.FromArgb(65, 177, 225);
+            btnProfitPerMonth.NormalTextColor = Color.White;
+            btnProfitPerMonth.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnProfitPerMonth.PressColor = Color.FromArgb(35, 147, 195);
+            btnProfitPerMonth.PressTextColor = Color.White;
+            btnProfitPerMonth.Size = new Size(762, 74);
+            btnProfitPerMonth.Style = MetroSet_UI.Enums.Style.Light;
+            btnProfitPerMonth.StyleManager = null;
+            btnProfitPerMonth.TabIndex = 0;
+            btnProfitPerMonth.Text = "Profit Per Month";
+            btnProfitPerMonth.ThemeAuthor = "Narwin";
+            btnProfitPerMonth.ThemeName = "MetroLite";
+            btnProfitPerMonth.Click += btnProfitPerMonth_Click;
             // 
             // tabPageAgents
             // 
@@ -321,25 +320,79 @@ namespace Autotech.Desktop.Main
             lblSearchAccount.ThemeAuthor = "Narwin";
             lblSearchAccount.ThemeName = "MetroLite";
             // 
-            // tabPageSales
+            // tabPageItems
             // 
-            tabPageSales.BackColor = Color.White;
-            tabPageSales.Location = new Point(4, 42);
-            tabPageSales.Name = "tabPageSales";
-            tabPageSales.Padding = new Padding(3);
-            tabPageSales.Size = new Size(768, 497);
-            tabPageSales.TabIndex = 3;
-            tabPageSales.Text = "Sales";
+            tabPageItems.BackColor = Color.White;
+            tabPageItems.Controls.Add(dtgItems);
+            tabPageItems.Controls.Add(txtSearchItems);
+            tabPageItems.Controls.Add(lblSearchItems);
+            tabPageItems.Location = new Point(4, 42);
+            tabPageItems.Name = "tabPageItems";
+            tabPageItems.Padding = new Padding(3);
+            tabPageItems.Size = new Size(768, 497);
+            tabPageItems.TabIndex = 2;
+            tabPageItems.Text = "Items";
             // 
-            // tabPageReports
+            // dtgItems
             // 
-            tabPageReports.BackColor = Color.White;
-            tabPageReports.Location = new Point(4, 42);
-            tabPageReports.Name = "tabPageReports";
-            tabPageReports.Padding = new Padding(3);
-            tabPageReports.Size = new Size(768, 497);
-            tabPageReports.TabIndex = 5;
-            tabPageReports.Text = "Reports";
+            dtgItems.AllowUserToAddRows = false;
+            dtgItems.AllowUserToDeleteRows = false;
+            dtgItems.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dtgItems.Dock = DockStyle.Top;
+            dtgItems.Location = new Point(3, 56);
+            dtgItems.Name = "dtgItems";
+            dtgItems.ReadOnly = true;
+            dtgItems.RowHeadersVisible = false;
+            dtgItems.RowTemplate.Height = 25;
+            dtgItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dtgItems.Size = new Size(762, 413);
+            dtgItems.TabIndex = 3;
+            // 
+            // txtSearchItems
+            // 
+            txtSearchItems.AutoCompleteCustomSource = null;
+            txtSearchItems.AutoCompleteMode = AutoCompleteMode.None;
+            txtSearchItems.AutoCompleteSource = AutoCompleteSource.None;
+            txtSearchItems.BorderColor = Color.FromArgb(155, 155, 155);
+            txtSearchItems.DisabledBackColor = Color.FromArgb(204, 204, 204);
+            txtSearchItems.DisabledBorderColor = Color.FromArgb(155, 155, 155);
+            txtSearchItems.DisabledForeColor = Color.FromArgb(136, 136, 136);
+            txtSearchItems.Dock = DockStyle.Top;
+            txtSearchItems.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            txtSearchItems.HoverColor = Color.FromArgb(102, 102, 102);
+            txtSearchItems.Image = null;
+            txtSearchItems.IsDerivedStyle = true;
+            txtSearchItems.Lines = null;
+            txtSearchItems.Location = new Point(3, 26);
+            txtSearchItems.MaxLength = 32767;
+            txtSearchItems.Multiline = false;
+            txtSearchItems.Name = "txtSearchItems";
+            txtSearchItems.ReadOnly = false;
+            txtSearchItems.Size = new Size(762, 30);
+            txtSearchItems.Style = MetroSet_UI.Enums.Style.Light;
+            txtSearchItems.StyleManager = null;
+            txtSearchItems.TabIndex = 2;
+            txtSearchItems.TextAlign = HorizontalAlignment.Left;
+            txtSearchItems.ThemeAuthor = "Narwin";
+            txtSearchItems.ThemeName = "MetroLite";
+            txtSearchItems.UseSystemPasswordChar = false;
+            txtSearchItems.WatermarkText = "";
+            txtSearchItems.TextChanged += txtSearchItems_TextChanged;
+            // 
+            // lblSearchItems
+            // 
+            lblSearchItems.Dock = DockStyle.Top;
+            lblSearchItems.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblSearchItems.IsDerivedStyle = true;
+            lblSearchItems.Location = new Point(3, 3);
+            lblSearchItems.Name = "lblSearchItems";
+            lblSearchItems.Size = new Size(762, 23);
+            lblSearchItems.Style = MetroSet_UI.Enums.Style.Light;
+            lblSearchItems.StyleManager = null;
+            lblSearchItems.TabIndex = 4;
+            lblSearchItems.Text = "Search Items";
+            lblSearchItems.ThemeAuthor = "Narwin";
+            lblSearchItems.ThemeName = "MetroLite";
             // 
             // btnImportToExcel
             // 
@@ -505,14 +558,14 @@ namespace Autotech.Desktop.Main
             Text = "Autotech POS System - Maintenance";
             WindowState = FormWindowState.Maximized;
             metroSetTabControl1.ResumeLayout(false);
-            tabPageItems.ResumeLayout(false);
-            tabPageItems.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dtgItems).EndInit();
+            tabPageReports.ResumeLayout(false);
             tabPageAgents.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dtgAgents).EndInit();
             tabPageAccounts.ResumeLayout(false);
             panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridViewAccounts).EndInit();
+            tabPageItems.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dtgItems).EndInit();
             panel1.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -521,7 +574,6 @@ namespace Autotech.Desktop.Main
         private TabPage tabPageAccounts;
         private TabPage tabPageAgents;
         private TabPage tabPageItems;
-        private TabPage tabPageSales;
         private TabPage tabPageReports;
         private MetroSetButton btnImportToExcel;
         private MetroSetButton btnEdit;
@@ -537,8 +589,10 @@ namespace Autotech.Desktop.Main
         private MetroSetLabel lblSearchAgent;
         private DataGridView dtgItems;
         private MetroSetTextBox txtSearchItems;
-        private Label label1;
         private MetroSetButton btnAdd;
+        private MetroSetLabel lblSearchItems;
+        private MetroSetButton metroSetButton2;
+        private MetroSetButton btnProfitPerMonth;
     }
 }
 

@@ -378,12 +378,12 @@ namespace Autotech.Desktop.Main.View
             y += 6;
             g.DrawLine(Pens.Black, x, y, right, y); y += lineHeight;
 
-            // Set up columns: Totals on right, Payment history on left
+            // Set up positions
             float colSplit = x + usableWidth * 0.70f;
             float leftY = y;
             float rightY = y;
 
-            // Totals (Right)
+            // Right Totals
             double subtotal = _invoice.PurchasedItems.Sum(i => i.TotalPrice);
             double tax = _invoice.Tax;
             double discount = _invoice.DiscountPeso;
@@ -394,35 +394,31 @@ namespace Autotech.Desktop.Main.View
             g.DrawString($"Discount: {discount:C}", bodyFont, Brushes.Black, colSplit, rightY); rightY += lineHeight;
             g.DrawString($"Total: {total:C}", headerFont, Brushes.Black, colSplit, rightY); rightY += lineHeight * 2;
 
-            // Payment History (Left)
-            g.DrawString("PAYMENT HISTORY", headerFont, Brushes.Black, x, leftY); leftY += lineHeight;
+            // Terms block (left side)
+            string termsText = "Terms: Payable in cash otherwise stated. An interest of 3% per month will be charged on all overdue accounts. In case of non-payment of overdue accounts, the courts of Balanga City, Bataan will have jurisdictions and the customer hereby agree to pay the attorney's fees and court cost resulting therefrom.";
+            RectangleF termsRect = new RectangleF(x, leftY, usableWidth * 0.65f, lineHeight * 5);
+            g.DrawString(termsText, bodyFont, Brushes.Black, termsRect);
+            leftY += (lineHeight * 5) + 4;
 
-            if (paymentHistoryDTOs != null && paymentHistoryDTOs.Any())
-            {
-                foreach (var p in paymentHistoryDTOs)
-                {
-                    string line = $"Paid: {p.PaymentAmount:C} on {p.DatePaid:g} ---- Balance history: {p.RemainingBalance:C}";
-                    g.DrawString(line, bodyFont, Brushes.Black, x, leftY);
-                    leftY += lineHeight;
-                }
-                g.DrawString($"Remaining Balance: {_invoice.RemainingBalance:C}", bodyFont, Brushes.Black, x, leftY);
-                leftY += lineHeight * 2;
-            }
-            else
-            {
-                g.DrawString("No payment history available.", bodyFont, Brushes.Black, x, leftY);
-                leftY += lineHeight * 2;
-            }
-
-            // Set Y to max of both columns
+            // Choose the lower Y to continue rendering
             y = Math.Max(leftY, rightY);
 
+            // Acknowledgment section
+            g.DrawString("ALL CHECKS MUST BE PAYABLE TO: AUTOTECH CAR CARE CENTER", new Font("Arial", 10, FontStyle.Bold), Brushes.Black, x, y);
+            y += lineHeight + 4;
+
+            string ackText = "Received the items in good order, condition and accepted under the terms and conditions stipulated herein and at the back thereof.";
+            RectangleF ackRect = new RectangleF(x, y, usableWidth, lineHeight * 3);
+            g.DrawString(ackText, bodyFont, Brushes.Black, ackRect);
+            y += lineHeight * 3 + 8;
+
             // Signature
-            g.DrawString("Received by: ___________________________", bodyFont, Brushes.Black, x, y); y += lineHeight + 5;
-            g.DrawString("SIGNATURE OVER PRINTED NAME", bodyFont, Brushes.Black, x + 150, y); y += lineHeight * 2;
-
-
-            
+            g.DrawString("Received by:", bodyFont, Brushes.Black, x, y);
+            y += lineHeight;
+            g.DrawString("______________________________", bodyFont, Brushes.Black, x + 80, y);
+            y += lineHeight;
+            g.DrawString("SIGNATURE OVER PRINTED NAME", bodyFont, Brushes.Black, x + 80, y);
         }
+
     }
 }

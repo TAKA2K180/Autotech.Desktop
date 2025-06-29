@@ -50,48 +50,57 @@ namespace Autotech.Desktop.Main.View
 
         private void btnImportExcel_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = "Excel Files|*.xlsx";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                var filePath = openFileDialog.FileName;
-                using var wb = new ClosedXML.Excel.XLWorkbook(filePath);
-                var ws = wb.Worksheet(1);
-                itemsToImport.Clear();
-
-                foreach (var row in ws.RowsUsed().Skip(1))
+                openFileDialog.Filter = "Excel Files|*.xlsx";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    var item = new Items
+                    var filePath = openFileDialog.FileName;
+                    using var wb = new ClosedXML.Excel.XLWorkbook(filePath);
+                    var ws = wb.Worksheet(1);
+                    itemsToImport.Clear();
+
+                    foreach (var row in ws.RowsUsed().Skip(1))
                     {
-                        ItemCode = row.Cell(1).GetString(),
-                        ItemName = row.Cell(2).GetString(),
-                        ItemDescription = row.Cell(3).GetString(),
-                        itemDetails = new ItemDetails
+                        var item = new Items
                         {
-                            OnHand = row.Cell(4).GetDouble(),
-                            BataanRetail = row.Cell(5).GetDouble(),
-                            BataanWholeSale = row.Cell(6).GetDouble(),
-                            PampangaRetail = row.Cell(7).GetDouble(),
-                            PampangaWholeSale = row.Cell(8).GetDouble(),
-                            ZambalesRetail = row.Cell(9).GetDouble(),
-                            ZambalesWholeSale = row.Cell(10).GetDouble()
-                        }
-                    };
-                    itemsToImport.Add(item);
-                }
+                            ItemCode = row.Cell(1).GetString(),
+                            ItemName = row.Cell(2).GetString(),
+                            ItemDescription = row.Cell(3).GetString(),
+                            itemDetails = new ItemDetails
+                            {
+                                ItemsSold = row.Cell(4).GetDouble(),
+                                Sales= row.Cell(6).GetDouble(),
+                                OnHand = row.Cell(5).GetDouble(),
+                                BataanRetail = row.Cell(7).GetDouble(),
+                                BataanWholeSale = row.Cell(8).GetDouble(),
+                                PampangaRetail = row.Cell(9).GetDouble(),
+                                PampangaWholeSale = row.Cell(10).GetDouble(),
+                                ZambalesRetail = row.Cell(11).GetDouble(),
+                                ZambalesWholeSale = row.Cell(12).GetDouble()
+                            }
+                        };
+                        itemsToImport.Add(item);
+                    }
 
-                dtgPreview.DataSource = itemsToImport.Select(i => new
-                {
-                    i.ItemCode,
-                    i.ItemName,
-                    i.ItemDescription,
-                    i.itemDetails.OnHand,
-                    i.itemDetails.BataanRetail,
-                    i.itemDetails.BataanWholeSale,
-                    i.itemDetails.PampangaRetail,
-                    i.itemDetails.PampangaWholeSale,
-                    i.itemDetails.ZambalesRetail,
-                    i.itemDetails.ZambalesWholeSale
-                }).ToList();
+                    dtgPreview.DataSource = itemsToImport.Select(i => new
+                    {
+                        i.ItemCode,
+                        i.ItemName,
+                        i.ItemDescription,
+                        i.itemDetails.OnHand,
+                        i.itemDetails.BataanRetail,
+                        i.itemDetails.BataanWholeSale,
+                        i.itemDetails.PampangaRetail,
+                        i.itemDetails.PampangaWholeSale,
+                        i.itemDetails.ZambalesRetail,
+                        i.itemDetails.ZambalesWholeSale
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 

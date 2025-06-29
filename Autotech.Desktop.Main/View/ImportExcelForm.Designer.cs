@@ -134,6 +134,7 @@
             Controls.Add(btnSubmit);
             Controls.Add(dtgPreview);
             Name = "ImportExcelForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Import/Export Excel";
             ((System.ComponentModel.ISupportInitialize)dtgPreview).EndInit();
             ResumeLayout(false);
