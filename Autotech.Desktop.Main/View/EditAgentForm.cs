@@ -19,100 +19,48 @@ namespace Autotech.Desktop.Main.View
     {
         private AgentDTO _agent;
         private List<Locations> _locations;
-        public EditAgentForm(AgentDTO agents)
+        private readonly bool _isEdit;
+
+        public EditAgentForm(AgentDTO agent)
         {
             InitializeComponent();
-            _agent = agents;
+            _agent = agent ?? new AgentDTO();
+            _isEdit = agent != null;
+            this.Load += EditAgentForm_Load;
 
-            PopulateLocationCombo();
-
-            PopulateFormFields();
         }
 
-        private async Task<List<Locations>> LoadLocationsAsync()
+        private async void EditAgentForm_Load(object sender, EventArgs e)
+        {
+            await LoadLocationsAsync();
+            
+            if (_agent != null)
+            {
+                PopulateFormFields();
+            }
+        }
+
+        private async Task LoadLocationsAsync()
         {
             try
             {
-                var service = new LocationServices(); // Assume you have a service
-                var locations = await service.GetAllLocationsAsync(); // Should return List<LocationDTO>
-                _locations = locations;
+                var service = new LocationServices();
+                _locations = await service.GetAllLocationsAsync();
 
-                cboLocation.DataSource = locations;
                 cboLocation.DisplayMember = "LocationName";
                 cboLocation.ValueMember = "Id";
-                return locations;
+                cboLocation.DataSource = _locations;
+
+                if (_agent != null && _agent.LocationId != Guid.Empty)
+                    cboLocation.SelectedValue = _agent.LocationId;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to load locations: " + ex.Message);
-                return new List<Locations> { };
+                _locations = new List<Locations>();
             }
         }
 
-        private void PopulateLocationCombo()
-        {
-            cboLocation.DisplayMember = "LocationName";
-            cboLocation.ValueMember = "Id";
-            cboLocation.DataSource = _locations;
-
-            // Select current agent's location
-            if (_agent.LocationId != Guid.Empty)
-                cboLocation.SelectedValue = _agent.LocationId;
-        }
-
-        private void PopulateFormFields()
-        {
-            txtUsername.Text = _agent.Username;
-            txtPassword.Text = _agent.Password; // Only if you're displaying passwords, otherwise hide this
-            txtAgentName.Text = _agent.AgentName;
-            txtContact.Text = _agent.AgentContactNumber;
-            txtAddress.Text = _agent.AgentAddress;
-            cboUserRole.Text = _agent.AgentRole;
-            cboLocation.Text = _agent.Location.LocationName;
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var updatedAgent = new Agents
-                {
-                    Id = _agent.Id,
-                    Username = txtUsername.Text,
-                    Password = txtPassword.Text,
-                    AgentName = txtAgentName.Text,
-                    AgentContactNumber = txtContact.Text,
-                    AgentAddress = txtAddress.Text,
-                    AgentRole = cboUserRole.Text,
-                    DateCreated = _agent.DateCreated,
-                    DateLastLogin = _agent.DateLastLogin,
-                    LocationId = _agent.LocationId,
-                    Location = cboLocation.SelectedValue is Guid selectedId
-                        ? _locations.FirstOrDefault(l => l.Id == selectedId)
-                        : null
-                };
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        private async void cboLocation_Click(object sender, EventArgs e)
-        {
-            await LoadLocationsAsync();
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void cboUserRole_Click(object sender, EventArgs e)
-        {
-            PopulateUserRoles();
-        }
         private void PopulateUserRoles()
         {
             var roles = Enum.GetValues(typeof(UserRoles))
@@ -131,6 +79,67 @@ namespace Autotech.Desktop.Main.View
             cboUserRole.DisplayMember = "Text";
             cboUserRole.ValueMember = "Value";
             cboUserRole.DataSource = roles;
+        }
+
+        private void PopulateFormFields()
+        {
+            txtUsername.Text = _agent.Username;
+            txtPassword.Text = _agent.Password;
+            txtAgentName.Text = _agent.AgentName;
+            txtContact.Text = _agent.AgentContactNumber;
+            txtAddress.Text = _agent.AgentAddress;
+            cboUserRole.Text = _agent.AgentRole;
+            cboLocation.Text = _agent.Location.LocationName;
+        }
+
+        private async void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var newAgent = new Agents
+                {
+                    Id = _isEdit ? _agent.Id : Guid.NewGuid(),
+                    Username = txtUsername.Text.Trim(),
+                    Password = txtPassword.Text.Trim(),
+                    AgentName = txtAgentName.Text.Trim(),
+                    AgentContactNumber = txtContact.Text.Trim(),
+                    AgentAddress = txtAddress.Text.Trim(),
+                    AgentRole = cboUserRole.Text,
+                    DateCreated = _isEdit ? _agent.DateCreated : DateTime.Now,
+                    DateLastLogin = _isEdit ? _agent.DateLastLogin : null,
+                    LocationId = cboLocation.SelectedValue is Guid locId ? locId : Guid.Empty
+                };
+
+                var service = new AgentsService();
+
+                if (_isEdit)
+                    await service.UpdateAgentAsync(newAgent);
+                else
+                    await service.AddAgentAsync(newAgent); // ❗ You must implement this if not yet
+
+                MessageBox.Show(_isEdit ? "Agent updated!" : "Agent added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to update agent: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private async void cboLocation_Click(object sender, EventArgs e)
+        {
+            await LoadLocationsAsync();
+        }
+
+        private void cboUserRole_Click(object sender, EventArgs e)
+        {
+            PopulateUserRoles();
         }
     }
 }

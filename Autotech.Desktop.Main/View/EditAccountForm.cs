@@ -21,8 +21,7 @@ namespace Autotech.Desktop.Main.View
         public EditAccountForm(Accounts account)
         {
             InitializeComponent();
-            _account = account;
-            PopulateFields();
+            _account = account ?? new Accounts();
         }
 
         private void PopulateFields()
@@ -35,7 +34,14 @@ namespace Autotech.Desktop.Main.View
             txtTerms.Value = _account.Terms;
             cboLocation.Text = _account.Cluster;
             chkIsActive.Checked = _account.isActive;
-            dtmDateRegistered.Value = _account.RegisterDate;
+            if (_account.RegisterDate > dtmDateRegistered.MinDate && _account.RegisterDate < dtmDateRegistered.MaxDate)
+            {
+                dtmDateRegistered.Value = _account.RegisterDate;
+            }
+            else
+            {
+                dtmDateRegistered.Value = DateTime.Today; // or another fallback default
+            }
             // Optional: populate Location if needed
 
         }
@@ -107,6 +113,12 @@ namespace Autotech.Desktop.Main.View
         private async void cboLocation_Click(object sender, EventArgs e)
         {
             await LoadLocationsAsync();
+        }
+
+        private async void EditAccountForm_Load(object sender, EventArgs e)
+        {
+            await LoadLocationsAsync();
+            PopulateFields();
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             {
                 using (var httpClient = new HttpClient())
                 {
-                    string apiUrl = "https://localhost:7106/api/v1/Auth/Agents/Login";
+                    string apiUrl = "https://api.autotechph.online/api/v1/Auth/Agents/Login";
 
                     var loginData = new AgentLoginDTO
                     {
@@ -36,6 +37,9 @@ namespace Autotech.Desktop.BusinessLayer.Services
                         string jwtToken = loginResponse.Token;
                         SessionManager.StoreToken(jwtToken);
                         await FetchAgentDetailsAsync(loginResponse.Agent.Id);
+                        //var agentService = new AgentsService();
+                        //loginResponse.Agent.DateLastLogin = DateTime.Now;
+                        //await agentService.UpdateAgentAsync(loginResponse.Agent);
                         return true;
                     }
                     else
@@ -56,7 +60,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
-                    var apiUrl = "https://localhost:7106/api/v1/Agents/";
+                    var apiUrl = "https://api.autotechph.online/api/v1/Agents/";
                     HttpResponseMessage response = await httpClient.GetAsync($"{apiUrl}{agentId}");
 
                     if (response.IsSuccessStatusCode)

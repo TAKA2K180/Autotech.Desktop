@@ -258,6 +258,7 @@
             Controls.Add(txtZambalesWholesale);
             Controls.Add(btnSave);
             Name = "EditItemForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Edit Item";
             Load += EditItemForm_Load;
             ResumeLayout(false);

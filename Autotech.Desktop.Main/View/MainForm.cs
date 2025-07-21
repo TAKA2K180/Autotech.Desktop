@@ -1087,9 +1087,11 @@ namespace Autotech.Desktop.Main.View
                 try
                 {
                     var salesService = new SalesService();
+                    var accountsService = new AccountService();
                     var invoice = await salesService.GetInvoiceByIdAsync(invoiceId);
+                    var accounts = await accountsService.GetAccountByIdAsync(invoice.AccountId);
 
-                    var detailsForm = new InvoiceDetailsForm(invoice, invoiceId, this);
+                    var detailsForm = new InvoiceDetailsForm(invoice, invoiceId, accounts, this);
                     detailsForm.ShowDialog(); // or .Show() if you prefer
                 }
                 catch (Exception ex)

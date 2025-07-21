@@ -222,6 +222,7 @@ namespace Autotech.Desktop.Main.View
             Name = "EditAccountForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Edit Account";
+            Load += EditAccountForm_Load;
             ((System.ComponentModel.ISupportInitialize)txtTerms).EndInit();
             ResumeLayout(false);
             PerformLayout();

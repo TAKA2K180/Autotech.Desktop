@@ -15,7 +15,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
 {
     public class ItemServices
     {
-        private readonly string apiUrl = "https://localhost:7106/api/v1/Items";
+        private readonly string apiUrl = "https://api.autotechph.online/api/v1/Items";
 
         public async Task<List<Items>> GetAllItemsAsync()
         {

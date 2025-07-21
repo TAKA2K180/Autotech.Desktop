@@ -1400,14 +1400,7 @@ namespace Autotech.Desktop.Main.View
             metroSetLabel2.Text = "Search Invoice";
             metroSetLabel2.ThemeAuthor = "Narwin";
             metroSetLabel2.ThemeName = "MetroLite";
-            // 
-            // tabPageUserDetails
-            // 
-            tabPageUserDetails.Location = new Point(4, 42);
-            tabPageUserDetails.Name = "tabPageUserDetails";
-            tabPageUserDetails.Size = new Size(1412, 721);
-            tabPageUserDetails.TabIndex = 3;
-            tabPageUserDetails.Text = "User Details";
+            
             // 
             // metroSetControlBox1
             // 

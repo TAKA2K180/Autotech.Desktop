@@ -12,7 +12,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
 {
     public class AccountService
     {
-        private readonly string apiUrl = "https://localhost:7106/api/v1/Accounts"; // Adjust if needed
+        private readonly string apiUrl = "https://api.autotechph.online/api/v1/Accounts"; // Adjust if needed
 
         public async Task<List<Accounts>> GetAllAccountsAsync()
         {
@@ -41,6 +41,21 @@ namespace Autotech.Desktop.BusinessLayer.Services
                 var error = await response.Content.ReadAsStringAsync();
                 throw new Exception($"Failed to update account: {response.StatusCode} - {error}");
             }
+        }
+
+        public async Task<Accounts> GetAccountByIdAsync(Guid id)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var response = await httpClient.GetAsync($"{apiUrl}/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<Accounts>();
+            }
+
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Failed to fetch account: {response.StatusCode} - {error}");
         }
     }
 }

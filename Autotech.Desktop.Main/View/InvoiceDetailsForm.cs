@@ -6,6 +6,8 @@ using Autotech.Desktop.BusinessLayer.DTO;
 using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.DTO; // Ensure this namespace contains InvoiceDTO and InvoiceItemDTO
+using Autotech.Desktop.Core.Models;
+
 //using Autotech.Desktop.Main.Reports;
 using MetroSet_UI.Forms;
 //using DevExpress.XtraReports.UI;
@@ -22,13 +24,15 @@ namespace Autotech.Desktop.Main.View
         private List<PaymentHistoryDTO> paymentHistoryDTOs;
         private PrintDocument printDoc = new PrintDocument();
         private PrintPreviewDialog previewDialog = new PrintPreviewDialog();
+        private Accounts _accounts;
 
-        public InvoiceDetailsForm(InvoiceDetailsDTO invoice, Guid invoiceId, MainForm mainForm)
+        public InvoiceDetailsForm(InvoiceDetailsDTO invoice, Guid invoiceId, Accounts accounts, MainForm mainForm)
         {
             InitializeComponent();
 
             _invoice = invoice;
             _mainForm = mainForm;
+            _accounts = accounts;
 
             lblInvoiceNumber.Text = $"Invoice #: {_invoice.strInvoiceNumber}";
             lblCustomer.Text = $"Customer: {_invoice.AccountName}";
@@ -337,10 +341,11 @@ namespace Autotech.Desktop.Main.View
             float lineHeight = bodyFont.GetHeight(g) + 2;
 
             float colDescription = x;
-            float colQty = x + usableWidth * 0.50f;
-            float colUnit = x + usableWidth * 0.65f;
-            float colDiscount = x + usableWidth * 0.75f;
-            float colTotal = x + usableWidth * 0.85f;
+            float colTotalWidth = 85; // Increase to fit ₱999,999.00 nicely
+            float colTotal = right - colTotalWidth;
+            float colDiscount = colTotal - 70;
+            float colUnit = colDiscount - 90;
+            float colQty = colUnit - 70;
 
             // Header
             g.DrawString("AUTOTECH CAR CARE CENTER", headerFont, Brushes.Black, x + usableWidth / 4, y); y += lineHeight;
@@ -351,15 +356,38 @@ namespace Autotech.Desktop.Main.View
             // Info
             g.DrawString($"Receipt #: {_invoice.strInvoiceNumber}", bodyFont, Brushes.Black, x, y);
             g.DrawString($"Date: {DateTime.Now:g}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y); y += lineHeight;
+            g.DrawString($"Terms: {_invoice.Terms} day(s)", new Font("Arial", 14, FontStyle.Bold), Brushes.Black, x + usableWidth * 0.55f, y);
+            g.DrawString($"Owner's Name: {_accounts.ContactPerson}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y + 22);
             g.DrawString($"Prepared by: {SessionManager.AgentDetails?.AgentName ?? "N/A"}", bodyFont, Brushes.Black, x, y); y += lineHeight;
             g.DrawString($"Customer: {_invoice.AccountName}", bodyFont, Brushes.Black, x, y); y += lineHeight;
+            string addressLabel = "Customer address:";
+            string fullAddress = $"{addressLabel} {_accounts.Address}";
+            float ownerColumnX = x + usableWidth * 0.55f; // same column as "Owner's Name:"
+            float fullWidth = g.MeasureString(fullAddress, bodyFont).Width;
+
+            if (x + fullWidth > ownerColumnX)
+            {
+                // Too long – split into two lines
+                g.DrawString(addressLabel, bodyFont, Brushes.Black, x, y);
+                y += lineHeight;
+                g.DrawString(_accounts.Address, bodyFont, Brushes.Black, x, y);
+            }
+            else
+            {
+                // Fits in one line
+                g.DrawString(fullAddress, bodyFont, Brushes.Black, x, y);
+            }
+            y += lineHeight;
+
+            StringFormat rightAlign = new StringFormat();
+            rightAlign.Alignment = StringAlignment.Far;
 
             // Table Header
             g.DrawString("Description", bodyFont, Brushes.Black, colDescription, y);
-            g.DrawString("Qty", bodyFont, Brushes.Black, colQty, y);
-            g.DrawString("Unit", bodyFont, Brushes.Black, colUnit, y);
-            g.DrawString("Disc", bodyFont, Brushes.Black, colDiscount, y);
-            g.DrawString("Total", bodyFont, Brushes.Black, colTotal, y);
+            g.DrawString("Qty", bodyFont, Brushes.Black, new RectangleF(colQty, y, colUnit - colQty, lineHeight), rightAlign);
+            g.DrawString("Unit", bodyFont, Brushes.Black, new RectangleF(colUnit-2, y, colDiscount - colUnit, lineHeight), rightAlign);
+            g.DrawString("Disc", bodyFont, Brushes.Black, new RectangleF(colDiscount-2, y, colTotal - colDiscount, lineHeight), rightAlign);
+            g.DrawString("Total", bodyFont, Brushes.Black, new RectangleF(colTotal-2, y, right - colTotal, lineHeight), rightAlign);
             y += lineHeight;
 
             g.DrawLine(Pens.Black, x, y, right, y); y += 4;
@@ -368,15 +396,16 @@ namespace Autotech.Desktop.Main.View
             foreach (var item in _invoice.PurchasedItems)
             {
                 g.DrawString(item.ItemName, bodyFont, Brushes.Black, colDescription, y);
-                g.DrawString(item.Quantity.ToString(), bodyFont, Brushes.Black, colQty, y);
-                g.DrawString(item.ItemPrice.ToString("C"), bodyFont, Brushes.Black, colUnit, y);
-                g.DrawString(item.Discount.ToString("C"), bodyFont, Brushes.Black, colDiscount, y);
-                g.DrawString(item.TotalPrice.ToString("C"), bodyFont, Brushes.Black, colTotal, y);
+                g.DrawString(item.Quantity.ToString(), bodyFont, Brushes.Black, new RectangleF(colQty, y, colUnit - colQty, lineHeight), rightAlign);
+                g.DrawString(item.ItemPrice.ToString("C"), bodyFont, Brushes.Black, new RectangleF(colUnit, y, colDiscount - colUnit, lineHeight), rightAlign);
+                g.DrawString(item.Discount.ToString("C"), bodyFont, Brushes.Black, new RectangleF(colDiscount, y, colTotal - colDiscount, lineHeight), rightAlign);
+                g.DrawString(item.TotalPrice.ToString("C"), bodyFont, Brushes.Black, new RectangleF(colTotal - 15, y, 100, lineHeight), rightAlign);
+
                 y += lineHeight;
             }
 
             y += 6;
-            g.DrawLine(Pens.Black, x, y, right, y); y += lineHeight;
+            g.DrawLine(Pens.Black, x, y, right, y); y += 2;
 
             // Set up positions
             float colSplit = x + usableWidth * 0.70f;
@@ -398,19 +427,18 @@ namespace Autotech.Desktop.Main.View
             string termsText = "Terms: Payable in cash otherwise stated. An interest of 3% per month will be charged on all overdue accounts. In case of non-payment of overdue accounts, the courts of Balanga City, Bataan will have jurisdictions and the customer hereby agree to pay the attorney's fees and court cost resulting therefrom.";
             RectangleF termsRect = new RectangleF(x, leftY, usableWidth * 0.65f, lineHeight * 5);
             g.DrawString(termsText, bodyFont, Brushes.Black, termsRect);
-            leftY += (lineHeight * 5) + 4;
-
-            // Choose the lower Y to continue rendering
-            y = Math.Max(leftY, rightY);
+            leftY += (lineHeight * 4); // optional +2 padding
+            rightY += lineHeight * 2;  // if you want
+            y = Math.Min(leftY, rightY); // <<< use Max, NOT Min
 
             // Acknowledgment section
             g.DrawString("ALL CHECKS MUST BE PAYABLE TO: AUTOTECH CAR CARE CENTER", new Font("Arial", 10, FontStyle.Bold), Brushes.Black, x, y);
-            y += lineHeight + 4;
+            y += lineHeight;
 
             string ackText = "Received the items in good order, condition and accepted under the terms and conditions stipulated herein and at the back thereof.";
             RectangleF ackRect = new RectangleF(x, y, usableWidth, lineHeight * 3);
             g.DrawString(ackText, bodyFont, Brushes.Black, ackRect);
-            y += lineHeight * 3 + 8;
+            y += lineHeight *2;
 
             // Signature
             g.DrawString("Received by:", bodyFont, Brushes.Black, x, y);

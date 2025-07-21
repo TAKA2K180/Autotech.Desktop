@@ -235,6 +235,8 @@ namespace Autotech.Desktop.Main.View
             else
             {
                 new ToastMessageForm("Invalid username or password. Please try again.").Show();
+                Thread.Sleep(2000);
+                Application.Restart();
             }
         }
     }

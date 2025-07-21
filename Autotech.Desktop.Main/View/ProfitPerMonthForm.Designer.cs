@@ -105,6 +105,8 @@
             dtgResult.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dtgResult.Location = new Point(26, 268);
             dtgResult.Name = "dtgResult";
+            dtgResult.ReadOnly = true;
+            dtgResult.RowHeadersVisible = false;
             dtgResult.RowTemplate.Height = 25;
             dtgResult.Size = new Size(572, 276);
             dtgResult.TabIndex = 8;
@@ -113,6 +115,8 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BorderColor = Color.Black;
+            BorderThickness = 5F;
             ClientSize = new Size(623, 621);
             Controls.Add(dtgResult);
             Controls.Add(button2);

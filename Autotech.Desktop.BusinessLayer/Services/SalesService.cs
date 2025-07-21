@@ -8,7 +8,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
 {
     public class SalesService
     {
-        private readonly string _apiUrl = "https://localhost:7106/api/v1/Sales";
+        private readonly string _apiUrl = "https://api.autotechph.online/api/v1/Sales";
 
         public async Task<(Guid saleId, string invoiceNumber)> CreateInvoiceAsync(InvoiceDTO invoice)
         {

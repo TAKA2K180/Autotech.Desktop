@@ -97,6 +97,7 @@ namespace Autotech.Desktop.Main.View
                 table.Rows.Add(rowLiters);
                 table.Rows.Add(rowGrossProfit);
                 table.Rows.Add(table.NewRow()["Metric"] = "Liters paid");
+                dtgResult.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
                 table.Rows.Add(table.NewRow()["Metric"] = "Paid DR");
                 table.Rows.Add(table.NewRow()["Metric"] = "Expenses");
                 table.Rows.Add(table.NewRow()["Metric"] = "Net Profit Claimed");
@@ -105,6 +106,11 @@ namespace Autotech.Desktop.Main.View
                 dtgResult.DataSource = null;
                 dtgResult.AutoGenerateColumns = true;
                 dtgResult.DataSource = table;
+
+                dtgResult.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                dtgResult.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                dtgResult.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+
             }
             catch (Exception ex)
             {
@@ -181,7 +187,7 @@ namespace Autotech.Desktop.Main.View
 
             // Fill years from 2020 to next year
             int currentYear = DateTime.Now.Year;
-            for (int year = 2020; year <= currentYear + 1; year++)
+            for (int year = 2025; year <= currentYear + 15; year++)
             {
                 cmbYear.Items.Add(year);
             }

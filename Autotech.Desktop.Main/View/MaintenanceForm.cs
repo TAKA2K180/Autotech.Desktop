@@ -25,7 +25,7 @@ namespace Autotech.Desktop.Main
             txtSearchItems.TextChanged += txtSearchItems_TextChanged;
             _ = LoadAsync();
             btnDelete.Visible = false;
-            btnAdd.Visible = false;
+            //btnAdd.Visible = false;
         }
         private async Task LoadAsync()
         {
@@ -219,7 +219,14 @@ namespace Autotech.Desktop.Main
                     Name = "IsActive"
                 });
 
-                dtgAgents.Columns.Add(new DataGridViewCheckBoxColumn
+                dtgAgents.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    HeaderText = "User role",
+                    DataPropertyName = "AgentRole",
+                    Name = "AgentRole"
+                });
+
+                dtgAgents.Columns.Add(new DataGridViewTextBoxColumn
                 {
                     HeaderText = "Last Login",
                     DataPropertyName = "DateLastLogin",
@@ -521,15 +528,27 @@ namespace Autotech.Desktop.Main
         {
             if (metroSetTabControl1.SelectedTab == tabPageAccounts)
             {
-
+                using (var form = new EditAccountForm(null))
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                        _ = LoadAccountsAsync();
+                }
             }
             else if (metroSetTabControl1.SelectedTab == tabPageAgents)
             {
-
+                using (var form = new EditAgentForm(null))
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                        _ = LoadAgentsAsync();
+                }
             }
             else if (metroSetTabControl1.SelectedTab == tabPageItems)
             {
-
+                using (var form = new EditItemForm(null))
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                        _ = LoadItemsAsync();
+                }
             }
         }
 
@@ -537,6 +556,12 @@ namespace Autotech.Desktop.Main
         {
             var showProfitForm = new ProfitPerMonthForm();
             showProfitForm.ShowDialog();
+        }
+
+        private void btnItemSalesReport_Click(object sender, EventArgs e)
+        {
+            var showItemSales = new ItemSalesReportForm();
+            showItemSales.ShowDialog();
         }
     }
 }
