@@ -9,12 +9,16 @@ namespace Autotech.Desktop.BusinessLayer.DTO
     public class ItemRequestDto
     {
         public Guid Id { get; set; }
-        public string ItemCode { get; set; }
-        public string ItemName { get; set; }
-        public string ItemDescription { get; set; }
+        public string? ItemCode { get; set; }
+        public string? ItemName { get; set; }
+        public string? ItemDescription { get; set; }
+        public string? WholePrice { get; set; }
+        public string? RetailPrice { get; set; }
+        public long? Quantity { get; set; }
         public double ItemsSold { get; set; }
         public double Sales { get; set; }
         public double OnHand { get; set; }
+        public double OriginalPrice { get; set; }
         public double BataanRetail { get; set; }
         public double BataanWholeSale { get; set; }
         public double PampangaRetail { get; set; }

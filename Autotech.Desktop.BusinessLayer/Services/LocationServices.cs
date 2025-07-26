@@ -34,6 +34,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 // Optional: Log exception
                 throw new ApplicationException("An error occurred while fetching locations.", ex);
             }

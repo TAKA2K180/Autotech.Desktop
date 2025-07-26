@@ -117,7 +117,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
-
+                LogHelper.Log("Error: ", ex);
                 throw;
             }
         }
@@ -225,6 +225,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Error confirming payment: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -263,6 +264,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Error loading payment history: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -296,6 +298,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Failed to record payment: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -316,6 +319,7 @@ namespace Autotech.Desktop.Main.View
                 }
                 catch (Exception ex)
                 {
+                    LogHelper.Log("Error: ", ex);
                     MessageBox.Show($"Failed to cancel invoice: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

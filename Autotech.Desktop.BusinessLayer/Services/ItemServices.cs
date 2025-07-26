@@ -4,6 +4,7 @@ using Autotech.Desktop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -42,6 +43,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             catch (Exception ex)
             {
                 // Handle any errors, for example, logging the exception
+                LogHelper.Log("Error: ", ex);
                 throw;
             }
         }
@@ -102,8 +104,9 @@ namespace Autotech.Desktop.BusinessLayer.Services
 
                 return response.IsSuccessStatusCode;
             }
-            catch
+            catch(Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 throw;
             }
         }

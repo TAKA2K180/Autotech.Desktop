@@ -212,6 +212,7 @@ namespace Autotech.Desktop.Main.View
         {
             if (loginSuccessful)
             {
+                await Task.Delay(1000);
                 new ToastMessageForm("Login successful!").Show();
                 // Hide login form
                 this.Hide();
@@ -231,12 +232,6 @@ namespace Autotech.Desktop.Main.View
                 mainForm.Show();
 
                 
-            }
-            else
-            {
-                new ToastMessageForm("Invalid username or password. Please try again.").Show();
-                Thread.Sleep(2000);
-                Application.Restart();
             }
         }
     }

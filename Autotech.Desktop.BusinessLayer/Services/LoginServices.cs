@@ -50,6 +50,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 return false;
             }
         }
@@ -77,6 +78,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 throw;
             }
         }

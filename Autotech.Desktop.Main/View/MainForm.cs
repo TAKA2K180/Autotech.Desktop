@@ -132,9 +132,9 @@ namespace Autotech.Desktop.Main.View
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                LogHelper.Log("Error: ", ex);
                 throw;
             }
         }
@@ -171,6 +171,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Error loading items: {ex.Message}", "Error");
             }
         }
@@ -184,7 +185,6 @@ namespace Autotech.Desktop.Main.View
                 RestoreCheckboxStates();
             }
         }
-
         private void btnNextPage_Click(object sender, EventArgs e)
         {
             currentPage++;
@@ -274,7 +274,6 @@ namespace Autotech.Desktop.Main.View
                 }
             }
         }
-
         private void dataGridViewItemList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dataGridViewItemList.Columns[e.ColumnIndex].Name == "selectColumn")
@@ -429,7 +428,6 @@ namespace Autotech.Desktop.Main.View
 
             dataGridViewOrderCart.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
-
         private void btnAddToCart_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridViewItemList.Rows)
@@ -461,7 +459,6 @@ namespace Autotech.Desktop.Main.View
 
             CalculateCartSubtotal();
         }
-
         private void dataGridViewOrderCart_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (dataGridViewOrderCart.Columns[e.ColumnIndex].Name == "cartPrice" &&
@@ -508,7 +505,6 @@ namespace Autotech.Desktop.Main.View
             txtSubtotal.Text = subtotal.ToString("C");
             CalculateTotal();
         }
-
         private void CalculateTotal()
         {
             try
@@ -524,17 +520,16 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show("Error calculating total: " + ex.Message);
             }
         }
-
         private decimal ParseCurrency(string text)
         {
             if (decimal.TryParse(text, System.Globalization.NumberStyles.Currency, null, out decimal value))
                 return value;
             return 0;
         }
-
         private void DataGridViewOrderCart_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 &&
@@ -556,7 +551,6 @@ namespace Autotech.Desktop.Main.View
                 CalculateCartSubtotal();
             }
         }
-
         private void UpdateSubtotalFromCart()
         {
             decimal total = 0;
@@ -571,7 +565,6 @@ namespace Autotech.Desktop.Main.View
 
             txtSubtotal.Text = total.ToString("0.00");
         }
-
         private void dataGridViewOrderCart_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             if (e.Control is TextBox textBox)
@@ -580,7 +573,6 @@ namespace Autotech.Desktop.Main.View
                 textBox.KeyPress += TextBox_KeyPress_NumericOnly;
             }
         }
-
         private void TextBox_KeyPress_NumericOnly(object sender, KeyPressEventArgs e)
         {
             // Allow only digits, one dot, and backspace
@@ -758,58 +750,60 @@ namespace Autotech.Desktop.Main.View
             decimal discount = ParseCurrency(txtDiscount.Text);
             decimal discountPercent = discount / (total + discount - tax) * 100;
 
-            // 3. Build Invoice DTO
-            var invoiceDto = new InvoiceDTO
-            {
-                DateSold = DateTime.Now,
-                Agent = SessionManager.AgentDetails.AgentName,
-                DiscountPercent = (double)discountPercent,
-                DiscountPeso = (double)discount,
-                Tax = (double)tax,
-                TotalSales = (double)total,
-                AccountName = accountName,
-                PaymentType = paymentMethod,
-                Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
-                DueDate = DateTime.Now.AddDays(int.TryParse(txtTerms.Text, out var dVal) ? dVal : 0),
-                RemainingBalance = Math.Round((double)remaining),
-                Status = "For approval",
-                TotalLiters = 0,
-                Cluster = "",
-                AccountId = accountId,
-                LocationId = SessionManager.AgentDetails.Location.Id,
-                strInvoiceNumber = "",
-                PurchasedItems = dataGridViewOrderCart.Rows
-                    .Cast<DataGridViewRow>()
-                    .Select(row =>
-                    {
-                        var itemCode = row.Cells["cartItemCode"].Value?.ToString();
-                        var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
-                        if (item == null) return null;
-
-                        double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
-                        double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
-                        double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
-                        double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
-                        double totalDiscount = price - subtotal;
-                        totalDiscount = Math.Round(totalDiscount, 2);
-
-                        return new InvoiceItemDTO
-                        {
-                            ItemId = item.Id,
-                            Quantity = quantity,
-                            ItemPrice = price,
-                            TotalPrice = subtotal,
-                            ItemName = "",
-                            Discount = totalDiscount
-                        };
-                    })
-                    .Where(i => i != null)
-                    .ToList()
-            };
-
-            // 4. Call backend
             try
             {
+                // 3. Build Invoice DTO
+                    var invoiceDto = new InvoiceDTO
+                    {
+                    DateSold = DateTime.Now,
+                    Agent = SessionManager.AgentDetails.AgentName,
+                    DiscountPercent = (double)discountPercent,
+                    DiscountPeso = (double)discount,
+                    Tax = (double)tax,
+                    TotalSales = (double)total,
+                    AccountName = accountName,
+                    PaymentType = paymentMethod,
+                    Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
+                    DueDate = DateTime.Now.AddDays(int.TryParse(txtTerms.Text, out var dVal) ? dVal : 0),
+                    RemainingBalance = Math.Round((double)remaining),
+                    Status = "For approval",
+                    TotalLiters = 0,
+                    Cluster = "",
+                    AccountId = accountId,
+                    LocationId = SessionManager.AgentDetails.Location.Id,
+                    strInvoiceNumber = "",
+                    PurchasedItems = dataGridViewOrderCart.Rows
+                        .Cast<DataGridViewRow>()
+                        .Select(row =>
+                        {
+                            var itemCode = row.Cells["cartItemCode"].Value?.ToString();
+                            var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
+                            if (item == null) return null;
+
+                            double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
+                            double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
+                            double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
+                            double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
+                            double totalDiscount = price - subtotal;
+                            totalDiscount = Math.Round(totalDiscount, 2);
+
+                            return new InvoiceItemDTO
+                            {
+                                ItemId = item.Id,
+                                Quantity = quantity,
+                                ItemPrice = price,
+                                TotalPrice = subtotal,
+                                ItemName = "",
+                                Discount = totalDiscount,
+                                AgentId = SessionManager.AgentDetails.Id
+                            };
+                        })
+                        .Where(i => i != null)
+                        .ToList()
+                };
+
+            // 4. Call backend
+            
                 var service = new SalesService();
                 var invoiceId = await service.CreateInvoiceAsync(invoiceDto);
 
@@ -844,6 +838,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show("Failed to create invoice: " + ex.Message);
             }
         }
@@ -915,6 +910,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Failed to load accounts: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -993,6 +989,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show("Error loading invoices: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -1042,7 +1039,7 @@ namespace Autotech.Desktop.Main.View
             var dgv = sender as DataGridView;
             var row = dgv.Rows[e.RowIndex];
 
-            if (row.Cells["Status"].Value?.ToString() == "Fully paid")
+            if (row.Cells["Status"].Value?.ToString().ToLower() == "fully paid")
             {
                 row.DefaultCellStyle.BackColor = Color.LightGreen;
             }
@@ -1050,7 +1047,7 @@ namespace Autotech.Desktop.Main.View
             {
                 row.DefaultCellStyle.BackColor = Color.DarkRed;
             }
-            else if (row.Cells["Status"].Value?.ToString() == "For approval")
+            else if (row.Cells["Status"].Value?.ToString().ToLower() == "for approval")
             {
                 row.DefaultCellStyle.BackColor = Color.Yellow;
             }
@@ -1096,6 +1093,7 @@ namespace Autotech.Desktop.Main.View
                 }
                 catch (Exception ex)
                 {
+                    LogHelper.Log("Error: ", ex);
                     MessageBox.Show("Error loading invoice: " + ex.Message);
                 }
             }
@@ -1159,6 +1157,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show("Error exporting data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

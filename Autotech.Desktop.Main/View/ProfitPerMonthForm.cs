@@ -1,4 +1,5 @@
-﻿using Autotech.Desktop.BusinessLayer.Services;
+﻿using Autotech.Desktop.BusinessLayer.Helpers;
+using Autotech.Desktop.BusinessLayer.Services;
 using ClosedXML.Excel;
 using MetroSet_UI.Extensions;
 using MetroSet_UI.Forms;
@@ -114,6 +115,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Failed to calculate profit.\r\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -173,6 +175,7 @@ namespace Autotech.Desktop.Main.View
                     }
                     catch (Exception ex)
                     {
+                        LogHelper.Log("Error: ", ex);
                         MessageBox.Show($"Failed to export:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }

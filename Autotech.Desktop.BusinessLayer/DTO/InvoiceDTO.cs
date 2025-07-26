@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autotech.Desktop.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,7 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public string ItemName { get; set; } = string.Empty; // dummy
         public double QuantyPerBox { get; set; }
         public double Discount { get; set; }
+        public Guid AgentId { get; set; }
     }
 
 }

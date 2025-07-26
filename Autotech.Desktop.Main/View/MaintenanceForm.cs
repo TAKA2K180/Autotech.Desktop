@@ -1,4 +1,5 @@
 ﻿using Autotech.Desktop.BusinessLayer.DTO;
+using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.Models;
 using Autotech.Desktop.Main.View;
@@ -45,6 +46,7 @@ namespace Autotech.Desktop.Main
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Failed to load data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -143,6 +145,7 @@ namespace Autotech.Desktop.Main
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Failed to load accounts: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -243,6 +246,7 @@ namespace Autotech.Desktop.Main
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Failed to load agents: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -378,6 +382,7 @@ namespace Autotech.Desktop.Main
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Failed to load items: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally

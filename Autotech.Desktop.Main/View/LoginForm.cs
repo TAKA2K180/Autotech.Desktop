@@ -45,9 +45,19 @@ namespace Autotech.Desktop.Main.View
             bool loginSuccessful = await loginService.LoginAsync(username, password);
             LoginHelper.isLoggedIn = loginSuccessful;
             ValidateLogin(loginSuccessful);
-            txtUsername.Text = "";
-            txtPassword.Text = "";
-            this.Hide();
+            
+            if (loginSuccessful)
+            {
+                txtUsername.Text = "";
+                txtPassword.Text = "";
+                this.Hide();
+            } else
+            {
+                var toastForm = new ToastMessageForm("Invalid username or password. Please try again.");
+                toastForm.Show();
+                Thread.Sleep(2000);
+                toastForm.Close();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Autotech.Desktop.BusinessLayer.Services;
+﻿using Autotech.Desktop.BusinessLayer.Helpers;
+using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.Models;
 using MetroSet_UI.Forms;
 using System;
@@ -82,6 +83,7 @@ namespace Autotech.Desktop.Main.View
             }
             catch (Exception ex)
             {
+                LogHelper.Log("Error: ", ex);
                 MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

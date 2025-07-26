@@ -1,4 +1,5 @@
 ﻿using Autotech.Desktop.BusinessLayer.DTO;
+using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.Models;
 using MetroSet_UI.Forms;
@@ -62,6 +63,7 @@ namespace Autotech.Desktop.Main.View
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to load locations: " + ex.Message);
+                LogHelper.Log("Failed to load locations: ", ex);
                 return new List<Locations> { };
             }
         }
@@ -102,6 +104,7 @@ namespace Autotech.Desktop.Main.View
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to update account: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                LogHelper.Log("Failed to load account: ", ex);
             }
         }
 
