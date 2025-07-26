@@ -14,5 +14,6 @@ namespace Autotech.Desktop.Core.Models
         public long Quantity { get; set; }
         public DateTime DateAdded { get; set; }
         public ItemDetails itemDetails { get; set; }
+        public PurchasedItems? purchaseItem { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Autotech.Desktop.Main.View
         {
             _item = item;
             InitializeComponent();
-            _item = item ?? throw new ArgumentNullException(nameof(item));
+            _item = item ?? new Items();
         }
         private void EditItemForm_Load(object sender, EventArgs e)
         {

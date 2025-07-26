@@ -9,9 +9,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.Mail;
 
 namespace Autotech.Desktop.Main.View
 {
@@ -72,6 +74,13 @@ namespace Autotech.Desktop.Main.View
         {
             try
             {
+                string email = txtEmail.Text.Trim();
+                if (!IsValidEmail(email))
+                {
+                    MessageBox.Show("Please enter a valid email address.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtEmail.Focus();
+                    return;
+                }
 
                 var updatedAccount = new Accounts
                 {
@@ -122,6 +131,19 @@ namespace Autotech.Desktop.Main.View
         {
             await LoadLocationsAsync();
             PopulateFields();
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var mail = new MailAddress(email);
+                return mail.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -77,7 +77,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", SessionManager.Token);
 
-            var url = $"https://localhost:7106/api/v1/Items/paginated?pageNumber={pageNumber}&pageSize={pageSize}";
+            var url = $"https://api.autotechph.online/api/v1/Items/desktop/paginated?pageNumber={pageNumber}&pageSize={pageSize}";
             var response = await httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)

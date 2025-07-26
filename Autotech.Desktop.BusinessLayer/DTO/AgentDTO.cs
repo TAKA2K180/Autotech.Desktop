@@ -20,6 +20,6 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public DateTime? DateLastLogin { get; set; }
         // Foreign key to Location
         public Guid LocationId { get; set; }
-        public Locations Location { get; set; }
+        public Locations? Location { get; set; }
     }
 }

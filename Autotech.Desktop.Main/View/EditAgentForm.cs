@@ -91,7 +91,14 @@ namespace Autotech.Desktop.Main.View
             txtContact.Text = _agent.AgentContactNumber;
             txtAddress.Text = _agent.AgentAddress;
             cboUserRole.Text = _agent.AgentRole;
-            cboLocation.Text = _agent.Location.LocationName;
+            if (_agent.Location != null)
+            {
+                cboLocation.Text = _agent.Location.LocationName ?? "";
+            }
+            else
+            {
+                cboLocation.Text = "";
+            }
         }
 
         private async void btnSave_Click(object sender, EventArgs e)

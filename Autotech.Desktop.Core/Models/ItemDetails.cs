@@ -18,5 +18,6 @@ namespace Autotech.Desktop.Core.Models
         public double PampangaWholeSale { get; set; }
         public double ZambalesRetail { get; set; }
         public double ZambalesWholeSale { get; set; }
+        public Items? Item { get; set; }
     }
 }
