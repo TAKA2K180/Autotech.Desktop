@@ -43,6 +43,7 @@ namespace Autotech.Desktop.Main.View
             lblPassword = new MetroSetLabel();
             txtPassword = new MetroSetTextBox();
             btnLogin = new MetroSetButton();
+            metroSetControlBox1 = new MetroSetControlBox();
             SuspendLayout();
             // 
             // lblUsername
@@ -159,9 +160,37 @@ namespace Autotech.Desktop.Main.View
             btnLogin.ThemeName = "MetroLite";
             btnLogin.Click += btnLogin_Click;
             // 
+            // metroSetControlBox1
+            // 
+            metroSetControlBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            metroSetControlBox1.CloseHoverBackColor = Color.FromArgb(183, 40, 40);
+            metroSetControlBox1.CloseHoverForeColor = Color.White;
+            metroSetControlBox1.CloseNormalForeColor = Color.Gray;
+            metroSetControlBox1.DisabledForeColor = Color.DimGray;
+            metroSetControlBox1.IsDerivedStyle = true;
+            metroSetControlBox1.Location = new Point(343, 7);
+            metroSetControlBox1.MaximizeBox = false;
+            metroSetControlBox1.MaximizeHoverBackColor = Color.FromArgb(238, 238, 238);
+            metroSetControlBox1.MaximizeHoverForeColor = Color.Gray;
+            metroSetControlBox1.MaximizeNormalForeColor = Color.Gray;
+            metroSetControlBox1.MinimizeBox = false;
+            metroSetControlBox1.MinimizeHoverBackColor = Color.FromArgb(238, 238, 238);
+            metroSetControlBox1.MinimizeHoverForeColor = Color.Gray;
+            metroSetControlBox1.MinimizeNormalForeColor = Color.Gray;
+            metroSetControlBox1.Name = "metroSetControlBox1";
+            metroSetControlBox1.Size = new Size(100, 25);
+            metroSetControlBox1.Style = MetroSet_UI.Enums.Style.Light;
+            metroSetControlBox1.StyleManager = null;
+            metroSetControlBox1.TabIndex = 6;
+            metroSetControlBox1.Text = "metroSetControlBox1";
+            metroSetControlBox1.ThemeAuthor = "Narwin";
+            metroSetControlBox1.ThemeName = "MetroLite";
+            metroSetControlBox1.Click += metroSetControlBox1_Click;
+            // 
             // LoginForm
             // 
             ClientSize = new Size(445, 300);
+            Controls.Add(metroSetControlBox1);
             Controls.Add(lblUsername);
             Controls.Add(txtUsername);
             Controls.Add(lblPassword);
@@ -234,6 +263,7 @@ namespace Autotech.Desktop.Main.View
                 
             }
         }
+        private MetroSetControlBox metroSetControlBox1;
     }
 
     #endregion

@@ -46,7 +46,33 @@ namespace Autotech.Desktop.Main.View
             logoPictureBox.Size = new Size(100, 100);
             logoPictureBox.Location = new Point(150, 50);
             logoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-            logoPictureBox.Image = Image.FromFile("logo.jpg"); // Change to your logo path
+            // Set up the logo picture box (optional)
+            logoPictureBox = new PictureBox
+            {
+                Size = new Size(100, 100),
+                Location = new Point(150, 50),
+                SizeMode = PictureBoxSizeMode.StretchImage
+            };
+
+            try
+            {
+                string logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo.jpg");
+                if (File.Exists(logoPath))
+                {
+                    logoPictureBox.Image = Image.FromFile(logoPath);
+                }
+                else
+                {
+                    // Optionally set a default placeholder image or leave blank
+                    Console.WriteLine("Warning: logo.jpg not found at " + logoPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error or show a message
+                Console.WriteLine("Error loading logo.jpg: " + ex.Message);
+            }
+
             this.Controls.Add(logoPictureBox);
 
             // Set up the Welcome Label

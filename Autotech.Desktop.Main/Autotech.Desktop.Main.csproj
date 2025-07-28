@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -17,5 +17,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Autotech.Desktop.BusinessLayer\Autotech.Desktop.BusinessLayer.csproj" />
   </ItemGroup>
+
+	<PropertyGroup>
+		<Version>24.1.2707.183</Version>
+		<AssemblyVersion>24.1.2707.183</AssemblyVersion>
+		<FileVersion>24.1.2707.183</FileVersion>
+		<InformationalVersion>24.1.2707.183</InformationalVersion>
+	</PropertyGroup>
 
 </Project>

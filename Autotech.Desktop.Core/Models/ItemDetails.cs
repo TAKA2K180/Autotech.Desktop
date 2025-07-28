@@ -12,6 +12,7 @@ namespace Autotech.Desktop.Core.Models
         public double ItemsSold { get; set; }
         public double Sales { get; set; }
         public double OnHand { get; set; }
+        public double QuantityPerBox { get; set; }
         public double BataanRetail { get; set; }
         public double BataanWholeSale { get; set; }
         public double PampangaRetail { get; set; }

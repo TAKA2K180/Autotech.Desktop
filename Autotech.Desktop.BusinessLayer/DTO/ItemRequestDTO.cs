@@ -15,6 +15,7 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public string? WholePrice { get; set; }
         public string? RetailPrice { get; set; }
         public long? Quantity { get; set; }
+        public double QuantityPerBox { get; set; }
         public double ItemsSold { get; set; }
         public double Sales { get; set; }
         public double OnHand { get; set; }

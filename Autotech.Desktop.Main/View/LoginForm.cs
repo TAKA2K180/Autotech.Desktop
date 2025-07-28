@@ -45,19 +45,25 @@ namespace Autotech.Desktop.Main.View
             bool loginSuccessful = await loginService.LoginAsync(username, password);
             LoginHelper.isLoggedIn = loginSuccessful;
             ValidateLogin(loginSuccessful);
-            
+
             if (loginSuccessful)
             {
                 txtUsername.Text = "";
                 txtPassword.Text = "";
                 this.Hide();
-            } else
+            }
+            else
             {
                 var toastForm = new ToastMessageForm("Invalid username or password. Please try again.");
                 toastForm.Show();
                 Thread.Sleep(2000);
                 toastForm.Close();
             }
+        }
+
+        private void metroSetControlBox1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

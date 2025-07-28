@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*"
+			 Name="Autotech Desktop"
+			 Language="1033"
+			 Version="$(var.ProductVersion)"
+			 Manufacturer="RCST Software Solutions"
+			 UpgradeCode="e2bf5af5-d94a-437f-af88-d75495c02f71">
+
+		<Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<!-- Reference ProductComponents from ProductFiles.wxs -->
+		<Feature Id="ProductFeature" Title="Autotech Desktop" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentRef Id="DesktopShortcut" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Autotech Desktop" />
+			</Directory>
+			<Directory Id="DesktopFolder" />
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="*">
+			<Shortcut Id="DesktopShortcut"
+					  Name="Autotech Desktop"
+					  Description="Launch Autotech Desktop"
+					  Target="[INSTALLFOLDER]Autotech.Desktop.Main.exe"
+					  Icon="app.ico"
+					  WorkingDirectory="INSTALLFOLDER"/>
+			<RemoveFile Id="RemoveDesktopShortcut" Name="Autotech Desktop.lnk" On="uninstall"/>
+			<RegistryValue Root="HKCU" Key="Software\RCST\AutotechDesktop" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+		</Component>
+	</Fragment>
+
+	<!-- Icon in its own fragment -->
+	<Fragment>
+		<Icon Id="app.ico" SourceFile="app.ico" />
+	</Fragment>
+</Wix>

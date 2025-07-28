@@ -35,6 +35,7 @@ namespace Autotech.Desktop.Main.View
             dt.Columns.Add("ItemName");
             dt.Columns.Add("ItemDescription");
             dt.Columns.Add("OnHand");
+            dt.Columns.Add("QuantityPerBox");
             dt.Columns.Add("BataanRetail");
             dt.Columns.Add("BataanWholeSale");
             dt.Columns.Add("PampangaRetail");
@@ -71,14 +72,15 @@ namespace Autotech.Desktop.Main.View
                             itemDetails = new ItemDetails
                             {
                                 ItemsSold = row.Cell(4).GetDouble(),
-                                Sales= row.Cell(6).GetDouble(),
                                 OnHand = row.Cell(5).GetDouble(),
-                                BataanRetail = row.Cell(7).GetDouble(),
-                                BataanWholeSale = row.Cell(8).GetDouble(),
-                                PampangaRetail = row.Cell(9).GetDouble(),
-                                PampangaWholeSale = row.Cell(10).GetDouble(),
-                                ZambalesRetail = row.Cell(11).GetDouble(),
-                                ZambalesWholeSale = row.Cell(12).GetDouble()
+                                QuantityPerBox = row.Cell(6).GetDouble(),
+                                Sales = row.Cell(7).GetDouble(),
+                                BataanRetail = row.Cell(8).GetDouble(),
+                                BataanWholeSale = row.Cell(9).GetDouble(),
+                                PampangaRetail = row.Cell(10).GetDouble(),
+                                PampangaWholeSale = row.Cell(11).GetDouble(),
+                                ZambalesRetail = row.Cell(12).GetDouble(),
+                                ZambalesWholeSale = row.Cell(13).GetDouble()
                             }
                         };
                         itemsToImport.Add(item);
@@ -90,6 +92,7 @@ namespace Autotech.Desktop.Main.View
                         i.ItemName,
                         i.ItemDescription,
                         i.itemDetails.OnHand,
+                        i.itemDetails.QuantityPerBox,
                         i.itemDetails.BataanRetail,
                         i.itemDetails.BataanWholeSale,
                         i.itemDetails.PampangaRetail,
@@ -116,6 +119,7 @@ namespace Autotech.Desktop.Main.View
                 ItemName = i.ItemName,
                 ItemDescription = i.ItemDescription,
                 OnHand = i.itemDetails?.OnHand ?? 0,
+                QuantityPerBox = i.itemDetails?.QuantityPerBox ?? 0,
                 ItemsSold = i.itemDetails?.ItemsSold ?? 0,
                 Sales = i.itemDetails?.Sales ?? 0,
                 BataanRetail = i.itemDetails?.BataanRetail ?? 0,

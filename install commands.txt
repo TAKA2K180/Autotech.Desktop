@@ -1,0 +1,3 @@
+ cd F:\Autotech\Autotech.Desktop
+ powershell -ExecutionPolicy Bypass -File version.ps1
+ sautotechph12@gmail.com

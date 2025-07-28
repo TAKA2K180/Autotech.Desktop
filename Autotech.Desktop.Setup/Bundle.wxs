@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+	<Bundle Name="Autotech Desktop Installer"
+			Version="$(var.ProductVersion)"
+			Manufacturer="RCST Software Solutions"
+			UpgradeCode="e2bf5af5-d94a-437f-af88-d75495c02f71">
+
+		<BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.HyperlinkLicense" />
+
+		<Chain>
+			<!-- Install .NET 6 Desktop Runtime if missing -->
+			<PackageGroupRef Id="Net6DesktopRuntime" />
+
+			<!-- Your MSI package -->
+			<MsiPackage SourceFile="Autotech.Desktop.msi"
+						DisplayName="Autotech Desktop" />
+		</Chain>
+	</Bundle>
+
+	<!-- Detect .NET 6 Desktop Runtime -->
+	<Fragment>
+		<util:RegistrySearch Id="NET6_DESKTOP_RUNTIME_INSTALLED"
+							 Root="HKLM"
+							 Key="SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedhost"
+							 Value="Version"
+							 Variable="Net6DesktopRuntimeInstalled" />
+
+		<PackageGroup Id="Net6DesktopRuntime">
+			<ExePackage Id="Net6DesktopRuntimeInstaller"
+						DisplayName=".NET 6.0 Desktop Runtime (x64)"
+						SourceFile="https://download.visualstudio.microsoft.com/download/pr/3a91190c-4d69-4d3a-9ac6-d2e841c2a60e/9b9c9d5b94a5a13a4d15fce4c568ba3f/windowsdesktop-runtime-6.0.36-win-x64.exe"
+						Compressed="no"
+						InstallCommand="/quiet /norestart"
+						DetectCondition="Net6DesktopRuntimeInstalled" />
+		</PackageGroup>
+	</Fragment>
+</Wix>
