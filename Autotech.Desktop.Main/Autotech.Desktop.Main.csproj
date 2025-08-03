@@ -18,11 +18,33 @@
     <ProjectReference Include="..\Autotech.Desktop.BusinessLayer\Autotech.Desktop.BusinessLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 	<PropertyGroup>
-		<Version>24.1.2707.183</Version>
-		<AssemblyVersion>24.1.2707.183</AssemblyVersion>
-		<FileVersion>24.1.2707.183</FileVersion>
-		<InformationalVersion>24.1.2707.183</InformationalVersion>
+		<Version>24.1.2907.188</Version>
+		<AssemblyVersion>24.1.2907.188</AssemblyVersion>
+		<FileVersion>24.1.2907.188</FileVersion>
+		<InformationalVersion>24.1.2907.188</InformationalVersion>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="..\version.txt">
+			<Link>version.txt</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>

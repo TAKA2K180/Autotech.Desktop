@@ -72,7 +72,6 @@ namespace Autotech.Desktop.Main.View
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             metroSetTabControl1 = new MetroSetTabControl();
-            tabPageMaintenance = new TabPage();
             tabPageSales = new TabPage();
             pnlPricing = new Panel();
             radioWholesale = new MetroSetRadioButton();
@@ -101,6 +100,7 @@ namespace Autotech.Desktop.Main.View
             lblOrderCart = new MetroSetLabel();
             txtSearchItem = new MetroSetTextBox();
             panelPayment = new MetroSetPanel();
+            lblVersion = new MetroSetLabel();
             metroSetLabel1 = new MetroSetLabel();
             txtRemaining = new MetroSetTextBox();
             lblPaymentMethod = new MetroSetLabel();
@@ -132,6 +132,7 @@ namespace Autotech.Desktop.Main.View
             btnOpenInvoice = new MetroSetButton();
             dataGridViewInvoice = new DataGridView();
             metroSetLabel2 = new MetroSetLabel();
+            tabPageMaintenance = new TabPage();
             tabPageUserDetails = new TabPage();
             metroSetControlBox1 = new MetroSetControlBox();
             btnLogout = new MetroSetButton();
@@ -175,14 +176,6 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.UnselectedTextColor = Color.Gray;
             metroSetTabControl1.UseAnimation = false;
             metroSetTabControl1.SelectedIndexChanged += metroSetTabControl1_SelectedIndexChanged;
-            // 
-            // tabPageMaintenance
-            // 
-            tabPageMaintenance.Location = new Point(4, 42);
-            tabPageMaintenance.Name = "tabPageMaintenance";
-            tabPageMaintenance.Size = new Size(1412, 721);
-            tabPageMaintenance.TabIndex = 2;
-            tabPageMaintenance.Text = "Maintenance";
             // 
             // tabPageSales
             // 
@@ -431,6 +424,7 @@ namespace Autotech.Desktop.Main.View
             // 
             // logoPictureBox
             // 
+            logoPictureBox.Image = Properties.Resources.logo;
             logoPictureBox.Location = new Point(10, 10);
             logoPictureBox.Name = "logoPictureBox";
             logoPictureBox.Size = new Size(80, 80);
@@ -760,6 +754,7 @@ namespace Autotech.Desktop.Main.View
             panelPayment.BackgroundColor = Color.White;
             panelPayment.BorderColor = Color.FromArgb(150, 150, 150);
             panelPayment.BorderThickness = 1;
+            panelPayment.Controls.Add(lblVersion);
             panelPayment.Controls.Add(metroSetLabel1);
             panelPayment.Controls.Add(txtRemaining);
             panelPayment.Controls.Add(lblPaymentMethod);
@@ -786,6 +781,20 @@ namespace Autotech.Desktop.Main.View
             panelPayment.TabIndex = 23;
             panelPayment.ThemeAuthor = "Narwin";
             panelPayment.ThemeName = "MetroLite";
+            // 
+            // lblVersion
+            // 
+            lblVersion.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Regular, GraphicsUnit.Point);
+            lblVersion.IsDerivedStyle = true;
+            lblVersion.Location = new Point(1111, 133);
+            lblVersion.Name = "lblVersion";
+            lblVersion.Size = new Size(278, 23);
+            lblVersion.Style = Style.Light;
+            lblVersion.StyleManager = null;
+            lblVersion.TabIndex = 19;
+            lblVersion.TextAlign = ContentAlignment.MiddleRight;
+            lblVersion.ThemeAuthor = "Narwin";
+            lblVersion.ThemeName = "MetroLite";
             // 
             // metroSetLabel1
             // 
@@ -1400,7 +1409,21 @@ namespace Autotech.Desktop.Main.View
             metroSetLabel2.Text = "Search Invoice";
             metroSetLabel2.ThemeAuthor = "Narwin";
             metroSetLabel2.ThemeName = "MetroLite";
-            
+            // 
+            // tabPageMaintenance
+            // 
+            tabPageMaintenance.Location = new Point(4, 42);
+            tabPageMaintenance.Name = "tabPageMaintenance";
+            tabPageMaintenance.Size = new Size(1412, 721);
+            tabPageMaintenance.TabIndex = 2;
+            tabPageMaintenance.Text = "Maintenance";
+            // 
+            // tabPageUserDetails
+            // 
+            tabPageUserDetails.Location = new Point(4, 42);
+            tabPageUserDetails.Name = "tabPageUserDetails";
+            tabPageUserDetails.Size = new Size(1412, 721);
+            tabPageUserDetails.TabIndex = 3;
             // 
             // metroSetControlBox1
             // 
@@ -1518,6 +1541,7 @@ namespace Autotech.Desktop.Main.View
         private DateTimePicker dtmDateTo;
         private MetroSetLabel lblDateFrom;
         private DateTimePicker dtmDateFrom;
+        private MetroSetLabel lblVersion;
     }
 }
 

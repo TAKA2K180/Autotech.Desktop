@@ -6,6 +6,7 @@ using Autotech.Desktop.Core.Models;
 using MetroSet_UI.Controls;
 using MetroSet_UI.Forms;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
@@ -502,7 +503,7 @@ namespace Autotech.Desktop.Main.View
                 }
             }
 
-            txtSubtotal.Text = subtotal.ToString("C");
+            txtSubtotal.Text = subtotal.ToString("₱#,##0.00");
             CalculateTotal();
         }
         private void CalculateTotal()
@@ -515,7 +516,7 @@ namespace Autotech.Desktop.Main.View
                 decimal discount = ParseCurrency(txtDiscount.Text);
 
                 decimal total = subtotal + tax - discount;
-                txtTotal.Text = total.ToString("C");
+                txtTotal.Text = total.ToString("₱#,##0.00");
                 UpdateRemainingBalance();
             }
             catch (Exception ex)
@@ -698,7 +699,7 @@ namespace Autotech.Desktop.Main.View
             if (paidAmount >= totalAmount)
             {
                 decimal change = paidAmount - totalAmount;
-                txtChange.Text = change.ToString("C"); // format as currency
+                txtChange.Text = change.ToString("₱#,##0.00"); // format as currency
             }
             else
             {
@@ -869,8 +870,8 @@ namespace Autotech.Desktop.Main.View
                 decimal paidAmount = ParseCurrency(txtPaidAmount.Text);
 
                 decimal remaining = total - paidAmount;
-                txtChange.Text = (paidAmount > total) ? (paidAmount - total).ToString("C") : "₱0.00";
-                txtRemaining.Text = (remaining > 0 ? remaining : 0).ToString("C");
+                txtChange.Text = (paidAmount > total) ? (paidAmount - total).ToString("₱#,##0.00") : "₱0.00";
+                txtRemaining.Text = (remaining > 0 ? remaining : 0).ToString("₱#,##0.00");
             }
             catch
             {
@@ -879,9 +880,36 @@ namespace Autotech.Desktop.Main.View
         }
         #endregion
 
+        #region Version
+        private void LoadVersion()
+        {
+            try
+            {
+                // Try to read version from version.txt file in the application directory
+                string versionFilePath = Path.Combine(Application.StartupPath, "version.txt");
+                
+                if (File.Exists(versionFilePath))
+                {
+                    string version = File.ReadAllText(versionFilePath).Trim();
+                    lblVersion.Text = $"v{version}";
+                }
+                else
+                {
+                    lblVersion.Text = "v1.0.0.0";
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log("Error loading version: ", ex);
+                lblVersion.Text = "v1.0.0.0";
+            }
+        }
+        #endregion
+
         #region Accounts
         private async void MainForm_Load(object sender, EventArgs e)
         {
+            LoadVersion();
             await InitializeAccountsAsync();
         }
         private async Task InitializeAccountsAsync()

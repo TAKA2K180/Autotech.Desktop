@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		GenerateFiles.ps1 = GenerateFiles.ps1
 		install commands.txt = install commands.txt
 		version.ps1 = version.ps1
+		version.txt = version.txt
 	EndProjectSection
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Autotech.Desktop.Setup", "Autotech.Desktop.Setup\Autotech.Desktop.Setup.wixproj", "{9567C3F8-0CC1-477D-AEB5-365690825D69}"

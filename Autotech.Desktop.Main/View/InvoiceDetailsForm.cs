@@ -157,14 +157,14 @@ namespace Autotech.Desktop.Main.View
                 subtotal += item.TotalPrice;
             }
 
-            txtSubtotal.Text = subtotal.ToString("C");
+            txtSubtotal.Text = subtotal.ToString("₱#,##0.00");
             double tax = subtotal * 0.12;
             double discount = _invoice.DiscountPeso;
             double total = subtotal + tax - discount;
 
-            txtTax.Text = _invoice.Tax.ToString("C");
-            txtDiscount.Text = discount.ToString("C");
-            txtTotal.Text = total.ToString("C");
+            txtTax.Text = _invoice.Tax.ToString("₱#,##0.00");
+            txtDiscount.Text = discount.ToString("₱#,##0.00");
+            txtTotal.Text = total.ToString("₱#,##0.00");
         }
 
         private void btnPrint_Click(object sender, EventArgs e)
@@ -247,7 +247,7 @@ namespace Autotech.Desktop.Main.View
                     AmountPaid = p.PaymentAmount,
                     DatePaid = p.DatePaid.ToString("g"),
                     PaymentMethod = paymentMethod,
-                    RemainingBalance = p.RemainingBalance.ToString("C")
+                    RemainingBalance = p.RemainingBalance.ToString("₱#,##0.00")
                 }).ToList();
 
                 dvgPaymentHistory.DataSource = null;
@@ -401,9 +401,9 @@ namespace Autotech.Desktop.Main.View
             {
                 g.DrawString(item.ItemName, bodyFont, Brushes.Black, colDescription, y);
                 g.DrawString(item.Quantity.ToString(), bodyFont, Brushes.Black, new RectangleF(colQty, y, colUnit - colQty, lineHeight), rightAlign);
-                g.DrawString(item.ItemPrice.ToString("C"), bodyFont, Brushes.Black, new RectangleF(colUnit, y, colDiscount - colUnit, lineHeight), rightAlign);
-                g.DrawString(item.Discount.ToString("C"), bodyFont, Brushes.Black, new RectangleF(colDiscount, y, colTotal - colDiscount, lineHeight), rightAlign);
-                g.DrawString(item.TotalPrice.ToString("C"), bodyFont, Brushes.Black, new RectangleF(colTotal - 15, y, 100, lineHeight), rightAlign);
+                g.DrawString(item.ItemPrice.ToString("₱#,##0.00"), bodyFont, Brushes.Black, new RectangleF(colUnit, y, colDiscount - colUnit, lineHeight), rightAlign);
+                g.DrawString(item.Discount.ToString("₱#,##0.00"), bodyFont, Brushes.Black, new RectangleF(colDiscount, y, colTotal - colDiscount, lineHeight), rightAlign);
+                g.DrawString(item.TotalPrice.ToString("₱#,##0.00"), bodyFont, Brushes.Black, new RectangleF(colTotal - 15, y, 100, lineHeight), rightAlign);
 
                 y += lineHeight;
             }

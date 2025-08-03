@@ -920,6 +920,9 @@
           <Component Id='Comp_wpfgfx_cor3_dll' Guid='{b842f45f-e5f4-4f0c-87e5-7da3e0388c38}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)wpfgfx_cor3.dll' KeyPath='yes' />
     </Component>
+          <Component Id='Comp_version_txt' Guid='{a1b2c3d4-e5f6-7890-abcd-ef1234567890}'>
+        <File Source='$(var.Autotech.Desktop.Main.TargetDir)version.txt' KeyPath='yes' />
+    </Component>
     </DirectoryRef>
 
     <ComponentGroup Id="ProductComponents">
@@ -1229,6 +1232,7 @@
             <ComponentRef Id='Comp_WindowsBase_dll' />
             <ComponentRef Id='Comp_WindowsFormsIntegration_dll' />
             <ComponentRef Id='Comp_wpfgfx_cor3_dll' />
+            <ComponentRef Id='Comp_version_txt' />
     </ComponentGroup>
   </Fragment>
 </Wix>
