@@ -1438,7 +1438,7 @@ namespace Autotech.Desktop.Main.View
             metroSetControlBox1.MaximizeHoverBackColor = Color.FromArgb(238, 238, 238);
             metroSetControlBox1.MaximizeHoverForeColor = Color.Gray;
             metroSetControlBox1.MaximizeNormalForeColor = Color.Gray;
-            metroSetControlBox1.MinimizeBox = true;
+            metroSetControlBox1.MinimizeBox = false;
             metroSetControlBox1.MinimizeHoverBackColor = Color.FromArgb(238, 238, 238);
             metroSetControlBox1.MinimizeHoverForeColor = Color.Gray;
             metroSetControlBox1.MinimizeNormalForeColor = Color.Gray;
@@ -1450,6 +1450,7 @@ namespace Autotech.Desktop.Main.View
             metroSetControlBox1.Text = "metroSetControlBox1";
             metroSetControlBox1.ThemeAuthor = "Narwin";
             metroSetControlBox1.ThemeName = "MetroLite";
+            metroSetControlBox1.Click += metroSetControlBox1_Click;
             // 
             // btnLogout
             // 

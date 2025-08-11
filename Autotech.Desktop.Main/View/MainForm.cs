@@ -19,28 +19,97 @@ namespace Autotech.Desktop.Main.View
         public MainForm()
         {
             InitializeComponent();
+            this.Shown += MainForm_Shown;
+
+        }
+        private async Task PerformInitializationAsync()
+        {
             if (LoginHelper.isLoggedIn == true)
             {
+                LogHelper.Log($"Logged in user {SessionManager.AgentDetails.Username}, at {DateTime.Now}");
                 this.Enabled = true;
+
                 if (SessionManager.AgentDetails.AgentRole != "Admin")
                 {
                     metroSetTabControl1.TabPages.Remove(tabPageMaintenance);
                 }
+
                 InitializeTimer();
                 GetUser();
                 SetLocation();
                 InitializeDataGridView();
-                LoadItemsIntoGrid();
                 InitializeOrderCartGrid();
+
+
+                InitializePaymentMethods();
+                PopulateFilterCombo();
+
+                // Load version and accounts
+                LoadVersion();
+                await InitializeAccountsAsync();
+
+                // Load paginated items
+                await LoadItemsIntoGrid();
+
+
                 dataGridViewItemList.CellFormatting += DataGridViewItemList_CellFormatting;
                 txtPaidAmount.TextChanged += txtPaidAmount_TextChanged;
                 comboAccount.SelectedIndexChanged += comboAccount_SelectedIndexChanged;
-                InitializePaymentMethods();
-                this.Load += MainForm_Load;
-                PopulateFilterCombo();
-                
+                // Final UI tweaks (optional)
+            }
+            else
+            {
+                LogHelper.Log("Error logging in");
+                var toastMessage = new ToastMessageForm("Login failed");
             }
         }
+
+        private async void MainForm_Shown(object sender, EventArgs e)
+        {
+            this.Shown -= MainForm_Shown; // run only once
+
+            try
+            {
+                LoadingMessageForm loadingForm = null;
+
+                if (LoginHelper.isLoggedIn)
+                {
+                    loadingForm = new LoadingMessageForm("Loading, please wait...");
+                    loadingForm.StartPosition = FormStartPosition.CenterScreen;
+                    loadingForm.TopMost = true;
+                    loadingForm.Show();
+                    bool isShown = false;
+
+                    // Ensure the loading form is drawn
+                    Application.DoEvents();
+
+                    //
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    while (!cts.Token.IsCancellationRequested)
+                    {
+                        await Task.Delay(2000);
+                        if (isShown == false)
+                        {
+                            await PerformInitializationAsync(); // Assume it returns bool
+                            isShown = true;
+                        }
+                    }
+
+                    if (loadingForm != null && !loadingForm.IsDisposed)
+                    {
+                        loadingForm.Close();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(ex.Message);
+                MessageBox.Show("An error occurred during initialization.");
+                this.Close();
+            }
+        }
+
         #endregion
 
         #region Variables
@@ -142,7 +211,7 @@ namespace Autotech.Desktop.Main.View
         #endregion
 
         #region Paging
-        private async void LoadItemsIntoGrid(int page = 1)
+        private async Task LoadItemsIntoGrid(int page = 1)
         {
             try
             {
@@ -754,8 +823,8 @@ namespace Autotech.Desktop.Main.View
             try
             {
                 // 3. Build Invoice DTO
-                    var invoiceDto = new InvoiceDTO
-                    {
+                var invoiceDto = new InvoiceDTO
+                {
                     DateSold = DateTime.Now,
                     Agent = SessionManager.AgentDetails.AgentName,
                     DiscountPercent = (double)discountPercent,
@@ -774,37 +843,37 @@ namespace Autotech.Desktop.Main.View
                     LocationId = SessionManager.AgentDetails.Location.Id,
                     strInvoiceNumber = "",
                     PurchasedItems = dataGridViewOrderCart.Rows
-                        .Cast<DataGridViewRow>()
-                        .Select(row =>
+                    .Cast<DataGridViewRow>()
+                    .Select(row =>
+                    {
+                        var itemCode = row.Cells["cartItemCode"].Value?.ToString();
+                        var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
+                        if (item == null) return null;
+
+                        double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
+                        double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
+                        double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
+                        double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
+                        double totalDiscount = price - subtotal;
+                        totalDiscount = Math.Round(totalDiscount, 2);
+
+                        return new InvoiceItemDTO
                         {
-                            var itemCode = row.Cells["cartItemCode"].Value?.ToString();
-                            var item = orderCartItems.FirstOrDefault(i => i.ItemCode == itemCode);
-                            if (item == null) return null;
-
-                            double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
-                            double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
-                            double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
-                            double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
-                            double totalDiscount = price - subtotal;
-                            totalDiscount = Math.Round(totalDiscount, 2);
-
-                            return new InvoiceItemDTO
-                            {
-                                ItemId = item.Id,
-                                Quantity = quantity,
-                                ItemPrice = price,
-                                TotalPrice = subtotal,
-                                ItemName = "",
-                                Discount = totalDiscount,
-                                AgentId = SessionManager.AgentDetails.Id
-                            };
-                        })
-                        .Where(i => i != null)
-                        .ToList()
+                            ItemId = item.Id,
+                            Quantity = quantity,
+                            ItemPrice = price,
+                            TotalPrice = subtotal,
+                            ItemName = "",
+                            Discount = totalDiscount,
+                            AgentId = SessionManager.AgentDetails.Id
+                        };
+                    })
+                    .Where(i => i != null)
+                    .ToList()
                 };
 
-            // 4. Call backend
-            
+                // 4. Call backend
+
                 var service = new SalesService();
                 var invoiceId = await service.CreateInvoiceAsync(invoiceDto);
 
@@ -887,7 +956,7 @@ namespace Autotech.Desktop.Main.View
             {
                 // Try to read version from version.txt file in the application directory
                 string versionFilePath = Path.Combine(Application.StartupPath, "version.txt");
-                
+
                 if (File.Exists(versionFilePath))
                 {
                     string version = File.ReadAllText(versionFilePath).Trim();
@@ -907,11 +976,7 @@ namespace Autotech.Desktop.Main.View
         #endregion
 
         #region Accounts
-        private async void MainForm_Load(object sender, EventArgs e)
-        {
-            LoadVersion();
-            await InitializeAccountsAsync();
-        }
+
         private async Task InitializeAccountsAsync()
         {
             try
@@ -978,7 +1043,7 @@ namespace Autotech.Desktop.Main.View
                     // Switch back to UI thread to update UI controls
                     Invoke(new Action(() =>
                     {
-                        
+
                         dataGridViewInvoice.DataSource = null;
                         dataGridViewInvoice.DataSource = invoices;
 
@@ -1022,11 +1087,11 @@ namespace Autotech.Desktop.Main.View
             }
             finally
             {
-                
+
                 // ✅ Close loading toast
                 if (loadingToast != null && !loadingToast.IsDisposed)
                 {
-                    
+
                     loadingToast.Close();
                 }
             }
@@ -1214,7 +1279,7 @@ namespace Autotech.Desktop.Main.View
 
         private void FilterComboVisibility(bool value)
         {
-            if (value == false) 
+            if (value == false)
             {
                 cboAddedOption.Visible = value;
                 dtmDateFrom.Visible = value;
@@ -1366,5 +1431,10 @@ namespace Autotech.Desktop.Main.View
             await Task.CompletedTask; // Optional, just to preserve async signature
         }
         #endregion
+
+        private void metroSetControlBox1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

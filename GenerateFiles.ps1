@@ -1,4 +1,4 @@
-$publishPath = "F:\Autotech\Autotech.Desktop\Autotech.Desktop.Main\bin\Release\net6.0-windows\publish\win-x64"
+﻿$publishPath = "F:\Autotech\Autotech.Desktop\Autotech.Desktop.Main\bin\Release\net6.0-windows\win-x64"
 $outputWxs = "F:\Autotech\Autotech.Desktop\Autotech.Desktop.Setup\ProductFiles.wxs"
 
 $componentList = @()

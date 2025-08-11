@@ -2,12 +2,14 @@
 using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.Models;
+using ClosedXML.Excel;
 using MetroSet_UI.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,16 +73,14 @@ namespace Autotech.Desktop.Main.View
                             ItemDescription = row.Cell(3).GetString(),
                             itemDetails = new ItemDetails
                             {
-                                ItemsSold = row.Cell(4).GetDouble(),
-                                OnHand = row.Cell(5).GetDouble(),
-                                QuantityPerBox = row.Cell(6).GetDouble(),
-                                Sales = row.Cell(7).GetDouble(),
-                                BataanRetail = row.Cell(8).GetDouble(),
-                                BataanWholeSale = row.Cell(9).GetDouble(),
-                                PampangaRetail = row.Cell(10).GetDouble(),
-                                PampangaWholeSale = row.Cell(11).GetDouble(),
-                                ZambalesRetail = row.Cell(12).GetDouble(),
-                                ZambalesWholeSale = row.Cell(13).GetDouble()
+                                OnHand = ReadDouble(row.Cell(4)),
+                                QuantityPerBox = ReadDouble(row.Cell(5)),
+                                BataanRetail = ReadDouble(row.Cell(6)),
+                                BataanWholeSale = ReadDouble(row.Cell(7)),
+                                PampangaRetail = ReadDouble(row.Cell(8)),
+                                PampangaWholeSale = ReadDouble(row.Cell(9)),
+                                ZambalesRetail = ReadDouble(row.Cell(10)),
+                                ZambalesWholeSale = ReadDouble(row.Cell(11))
                             }
                         };
                         itemsToImport.Add(item);
@@ -105,8 +105,22 @@ namespace Autotech.Desktop.Main.View
             catch (Exception ex)
             {
                 LogHelper.Log("Error: ", ex);
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show("Error loading excel file");
             }
+        }
+
+        private static double ReadDouble(IXLCell cell)
+        {
+            if (cell == null || cell.IsEmpty()) return 0d;
+
+            // Fast path: native numeric
+            if (cell.TryGetValue<double>(out var v)) return v;
+
+            // Fallback: parse whatever is displayed (handles things like "1,234.50", "  12 ", etc.)
+            var s = cell.GetString()?.Trim();
+            return double.TryParse(s, NumberStyles.Any, CultureInfo.CurrentCulture, out var parsed)
+                ? parsed
+                : 0d; // default if truly not numeric
         }
 
         private async void btnSubmit_Click(object sender, EventArgs e)

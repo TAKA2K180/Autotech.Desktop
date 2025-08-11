@@ -34,10 +34,12 @@
   </ItemGroup>
 
 	<PropertyGroup>
-		<Version>24.1.2907.188</Version>
-		<AssemblyVersion>24.1.2907.188</AssemblyVersion>
-		<FileVersion>24.1.2907.188</FileVersion>
-		<InformationalVersion>24.1.2907.188</InformationalVersion>
+		<Version>24.1.0408.197</Version>
+		<AssemblyVersion>24.1.0408.197</AssemblyVersion>
+		<FileVersion>24.1.0408.197</FileVersion>
+		<InformationalVersion>24.1.0408.197</InformationalVersion>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<ApplicationIcon>app.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -45,6 +47,7 @@
 			<Link>version.txt</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+		<Content Include="app.ico" />
 	</ItemGroup>
 
 </Project>

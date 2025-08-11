@@ -2,926 +2,926 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <DirectoryRef Id="INSTALLFOLDER">
-          <Component Id='Comp_Accessibility_dll' Guid='{b63c696e-6e6d-4415-a184-3fd56184d541}'>
+          <Component Id='Comp_Accessibility_dll' Guid='{4b895a01-7e77-4ca6-b459-87d993254585}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Accessibility.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_console_l1_1_0_dll' Guid='{653ecb09-05d5-40e9-b4f5-d7df9a25c61f}'>
+          <Component Id='Comp_api_ms_win_core_console_l1_1_0_dll' Guid='{7b219a65-fc30-4f1a-bf6f-62cf6dd8a16d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-console-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_console_l1_2_0_dll' Guid='{40d255c6-c0fe-4e1e-96c5-9dc840c43372}'>
+          <Component Id='Comp_api_ms_win_core_console_l1_2_0_dll' Guid='{54f83cc8-874d-41c3-bfaa-182e959cc2b9}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-console-l1-2-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_datetime_l1_1_0_dll' Guid='{5749b60e-deb7-4535-ab72-a22f566c6553}'>
+          <Component Id='Comp_api_ms_win_core_datetime_l1_1_0_dll' Guid='{b995b659-7527-4ebd-a73f-b80fa5e8b325}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-datetime-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_debug_l1_1_0_dll' Guid='{f9490f1d-9b6a-41cb-ba11-9994c0708742}'>
+          <Component Id='Comp_api_ms_win_core_debug_l1_1_0_dll' Guid='{74555725-859b-420d-9a81-f850d34358b2}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-debug-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_errorhandling_l1_1_0_dll' Guid='{1629ccc9-1f21-4a98-83a2-055f2c33638a}'>
+          <Component Id='Comp_api_ms_win_core_errorhandling_l1_1_0_dll' Guid='{445f2020-1b88-4ac5-9b9b-bb563b4c4539}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-errorhandling-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_fibers_l1_1_0_dll' Guid='{2ed8a20f-1666-401b-a083-18981ce4eb28}'>
+          <Component Id='Comp_api_ms_win_core_fibers_l1_1_0_dll' Guid='{5ee7e0a5-3496-45c2-8bd7-da70986bbfeb}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-fibers-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_file_l1_1_0_dll' Guid='{309b35ea-2b53-48a4-a935-9b79f20620d2}'>
+          <Component Id='Comp_api_ms_win_core_file_l1_1_0_dll' Guid='{a95a2528-e00a-496f-abb5-b5377e0b0d94}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-file-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_file_l1_2_0_dll' Guid='{780adb07-ae87-4dff-aad7-c79992e62082}'>
+          <Component Id='Comp_api_ms_win_core_file_l1_2_0_dll' Guid='{73def401-bf9a-487e-b1b5-4d306e5e6d11}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-file-l1-2-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_file_l2_1_0_dll' Guid='{cdad6672-2c08-4f70-9d17-7d15f8a73837}'>
+          <Component Id='Comp_api_ms_win_core_file_l2_1_0_dll' Guid='{e2cbd42d-1fad-4ce9-9c98-b52457130c89}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-file-l2-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_handle_l1_1_0_dll' Guid='{ceb109bb-3132-4cb9-b049-807f086b0edc}'>
+          <Component Id='Comp_api_ms_win_core_handle_l1_1_0_dll' Guid='{457bbea2-320f-4121-9fe0-5d53ecabe9af}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-handle-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_heap_l1_1_0_dll' Guid='{eaadf59f-cdfb-4cd8-96b8-a263d818b123}'>
+          <Component Id='Comp_api_ms_win_core_heap_l1_1_0_dll' Guid='{540ec538-f1f5-490d-99cb-5a383ea173e1}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-heap-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_interlocked_l1_1_0_dll' Guid='{c98b5a44-8578-4af7-a00a-8e486de2bf23}'>
+          <Component Id='Comp_api_ms_win_core_interlocked_l1_1_0_dll' Guid='{090519e3-7f6f-4153-90b8-6f154dff28e5}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-interlocked-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_libraryloader_l1_1_0_dll' Guid='{56a4f46c-e4fa-4785-ba4c-b2519bb82f1c}'>
+          <Component Id='Comp_api_ms_win_core_libraryloader_l1_1_0_dll' Guid='{19eeb8be-e541-4a18-a6be-89734297cc2d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-libraryloader-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_localization_l1_2_0_dll' Guid='{177db01a-e807-4151-832f-a64da4156ae7}'>
+          <Component Id='Comp_api_ms_win_core_localization_l1_2_0_dll' Guid='{7a298030-849b-4edf-a8c3-df8ff2923b81}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-localization-l1-2-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_memory_l1_1_0_dll' Guid='{7f0bcd07-1b04-4a7a-8651-73dc37e402d2}'>
+          <Component Id='Comp_api_ms_win_core_memory_l1_1_0_dll' Guid='{8c2e19df-c3c2-4748-9a6e-8481c9765841}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-memory-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_namedpipe_l1_1_0_dll' Guid='{8fd0ffa9-0eab-4ed1-830b-1cce9dee7adc}'>
+          <Component Id='Comp_api_ms_win_core_namedpipe_l1_1_0_dll' Guid='{8aa5878c-5295-4a8c-852e-f332ac0b6c2e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-namedpipe-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_processenvironment_l1_1_0_dll' Guid='{64c9532b-2278-4072-be88-c7b09c1af2c5}'>
+          <Component Id='Comp_api_ms_win_core_processenvironment_l1_1_0_dll' Guid='{692809b9-70d7-4c2b-a68c-16a210a8de71}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-processenvironment-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_processthreads_l1_1_0_dll' Guid='{d186a129-a4fc-4165-a64c-351cca115403}'>
+          <Component Id='Comp_api_ms_win_core_processthreads_l1_1_0_dll' Guid='{e67341ac-80fd-40b9-8a2e-513ea13a6ba7}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-processthreads-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_processthreads_l1_1_1_dll' Guid='{999fd6fa-1748-42a1-9880-0d503d8337e3}'>
+          <Component Id='Comp_api_ms_win_core_processthreads_l1_1_1_dll' Guid='{be63031b-29cf-4df2-9511-67ac53e980fa}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-processthreads-l1-1-1.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_profile_l1_1_0_dll' Guid='{cc9f433b-7f16-4231-b4d1-bd6d8b04e809}'>
+          <Component Id='Comp_api_ms_win_core_profile_l1_1_0_dll' Guid='{fd88114b-04ab-4bdf-9e51-ed1ae12c4f9e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-profile-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_rtlsupport_l1_1_0_dll' Guid='{562d52ee-656e-4c09-b76d-e20e84c98e40}'>
+          <Component Id='Comp_api_ms_win_core_rtlsupport_l1_1_0_dll' Guid='{5119e707-099b-48bc-a5a4-3a17e2a7a7e3}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-rtlsupport-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_string_l1_1_0_dll' Guid='{36eaabd2-d6a9-4152-9d02-7b90851ff953}'>
+          <Component Id='Comp_api_ms_win_core_string_l1_1_0_dll' Guid='{0c9ea1a4-6f09-4c01-9a9a-2bc72f8393ae}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-string-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_synch_l1_1_0_dll' Guid='{6dcbbd95-bd0f-43da-9adf-37445ec05a1c}'>
+          <Component Id='Comp_api_ms_win_core_synch_l1_1_0_dll' Guid='{d61b341d-236c-425f-9f6b-5932c8ed1811}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-synch-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_synch_l1_2_0_dll' Guid='{45f3ff78-8478-4d18-be36-1847de1da0c0}'>
+          <Component Id='Comp_api_ms_win_core_synch_l1_2_0_dll' Guid='{7921f693-c751-4d88-bbe4-118b2c2feda6}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-synch-l1-2-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_sysinfo_l1_1_0_dll' Guid='{6394d4b4-bdc4-4099-91ed-7aac509e4458}'>
+          <Component Id='Comp_api_ms_win_core_sysinfo_l1_1_0_dll' Guid='{eb52447d-96bb-4ad8-9682-13863d16c277}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-sysinfo-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_timezone_l1_1_0_dll' Guid='{8df83881-4122-45d7-a7af-a5979185e213}'>
+          <Component Id='Comp_api_ms_win_core_timezone_l1_1_0_dll' Guid='{06fd7c2a-a98c-4d59-b76a-16bc732a594b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-timezone-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_core_util_l1_1_0_dll' Guid='{37643f03-2ebe-4919-86eb-1dbe564c8e05}'>
+          <Component Id='Comp_api_ms_win_core_util_l1_1_0_dll' Guid='{f7a2ccc0-133a-4573-9163-cdeb443f5256}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-core-util-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_conio_l1_1_0_dll' Guid='{652d80de-113c-4539-b8b9-5a04a4405874}'>
+          <Component Id='Comp_api_ms_win_crt_conio_l1_1_0_dll' Guid='{677ba9cd-a41f-416b-ad71-99db7ef8963d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-conio-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_convert_l1_1_0_dll' Guid='{01405f08-d4a9-4fc9-af84-7b5d02da4805}'>
+          <Component Id='Comp_api_ms_win_crt_convert_l1_1_0_dll' Guid='{f7a0fa8c-a584-4bc2-8eeb-9d8a2bbc49fd}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-convert-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_environment_l1_1_0_dll' Guid='{759307ae-5162-41ad-9b68-625a255eb459}'>
+          <Component Id='Comp_api_ms_win_crt_environment_l1_1_0_dll' Guid='{b8f00dc9-7a29-4e96-a16e-6c16980f72e5}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-environment-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_filesystem_l1_1_0_dll' Guid='{d1e4e885-0c8b-44f2-970d-79b086934ecd}'>
+          <Component Id='Comp_api_ms_win_crt_filesystem_l1_1_0_dll' Guid='{2fb38b93-eb4c-4d1c-9c6c-d0385c8574fd}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-filesystem-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_heap_l1_1_0_dll' Guid='{c797c882-b3d2-4912-a3be-360ca8b449da}'>
+          <Component Id='Comp_api_ms_win_crt_heap_l1_1_0_dll' Guid='{089d9699-fd32-4213-a1e2-1ff544f37480}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-heap-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_locale_l1_1_0_dll' Guid='{58d4043f-ec72-44ba-8737-3af50d4fe4cd}'>
+          <Component Id='Comp_api_ms_win_crt_locale_l1_1_0_dll' Guid='{ce8d0225-18f2-4ded-8ff2-e63fbf2f698b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-locale-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_math_l1_1_0_dll' Guid='{0754d582-52e1-485c-bcdc-ff164ee3b3d6}'>
+          <Component Id='Comp_api_ms_win_crt_math_l1_1_0_dll' Guid='{f6c53eed-8ef9-4250-be78-e43082e3fe67}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-math-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_multibyte_l1_1_0_dll' Guid='{63f9dd19-f19b-41f4-a70f-addbf8f50a57}'>
+          <Component Id='Comp_api_ms_win_crt_multibyte_l1_1_0_dll' Guid='{a34129a6-95ab-4b7a-bdff-ea93bf408506}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-multibyte-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_private_l1_1_0_dll' Guid='{3ee2cee2-765f-48d6-a0e9-6ee05dbdbcb9}'>
+          <Component Id='Comp_api_ms_win_crt_private_l1_1_0_dll' Guid='{7a6fb033-1064-4a10-9817-afdf958a14e0}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-private-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_process_l1_1_0_dll' Guid='{f93c6ff7-fa22-4c93-8452-bbe020f3e9e1}'>
+          <Component Id='Comp_api_ms_win_crt_process_l1_1_0_dll' Guid='{439af3da-a908-4981-a5fe-05aaf3cf0337}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-process-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_runtime_l1_1_0_dll' Guid='{7a616648-25e8-4115-ae09-e98d628da5cc}'>
+          <Component Id='Comp_api_ms_win_crt_runtime_l1_1_0_dll' Guid='{ed9ed02c-8eb3-477d-97dc-1d81c7e3581b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-runtime-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_stdio_l1_1_0_dll' Guid='{56fa91e5-ea5b-4bc4-b0cc-c4138c58fa01}'>
+          <Component Id='Comp_api_ms_win_crt_stdio_l1_1_0_dll' Guid='{de2d9ae4-ed75-4809-84e7-c3f35c3a4167}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-stdio-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_string_l1_1_0_dll' Guid='{38cbc633-9fbb-4ba1-a5fb-381bab525eff}'>
+          <Component Id='Comp_api_ms_win_crt_string_l1_1_0_dll' Guid='{294867dd-3aad-445f-897c-8975064d9387}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-string-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_time_l1_1_0_dll' Guid='{2cd96404-7c3a-4498-8fa4-c7a95f6f3b35}'>
+          <Component Id='Comp_api_ms_win_crt_time_l1_1_0_dll' Guid='{e12e7c5b-27cc-4e03-9a7e-192538b8cd2b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-time-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_api_ms_win_crt_utility_l1_1_0_dll' Guid='{87c6cec5-3f4c-437d-9289-b9061672f033}'>
+          <Component Id='Comp_api_ms_win_crt_utility_l1_1_0_dll' Guid='{5ac55d4b-ad3a-4168-9a66-5539d5f2d6ee}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)api-ms-win-crt-utility-l1-1-0.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_BusinessLayer_dll' Guid='{548ef1c5-1e47-45ec-a61c-0644f82c3198}'>
+          <Component Id='Comp_Autotech_Desktop_BusinessLayer_dll' Guid='{75cc9f96-09ce-418f-a318-c31930651d23}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.BusinessLayer.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_BusinessLayer_pdb' Guid='{1240698f-d746-4b0a-b7fb-c70e55c45430}'>
+          <Component Id='Comp_Autotech_Desktop_BusinessLayer_pdb' Guid='{f49fd5c3-30d8-4214-9aec-2bce9c6b2560}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.BusinessLayer.pdb' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_Core_dll' Guid='{31031c1e-23df-4370-b58c-bfeef3a4b979}'>
+          <Component Id='Comp_Autotech_Desktop_Core_dll' Guid='{c4f5533d-76fe-4c91-bc3a-65d77960e337}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.Core.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_Core_pdb' Guid='{4f08f3c7-3ed4-4022-b0eb-760e6afe13fe}'>
+          <Component Id='Comp_Autotech_Desktop_Core_pdb' Guid='{853e2ac6-3fe8-4f3c-8e64-cdf8f8bd95e7}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.Core.pdb' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_Main_deps_json' Guid='{58b8036c-ba11-493e-a07a-db3a757f4d9d}'>
+          <Component Id='Comp_Autotech_Desktop_Main_deps_json' Guid='{4e97dedc-6987-49fe-8082-f447ef4658b4}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.Main.deps.json' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_Main_dll' Guid='{5a9b44d5-86bb-4292-9915-c065e58738c7}'>
+          <Component Id='Comp_Autotech_Desktop_Main_dll' Guid='{649afd8d-f432-487c-92b1-6418edd14c1f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.Main.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_Main_exe' Guid='{fbf38628-5b0b-4809-af1e-55af0eaa4d4e}'>
+          <Component Id='Comp_Autotech_Desktop_Main_exe' Guid='{19f57251-5b35-4d39-bddb-c5f7705f68af}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.Main.exe' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_Main_pdb' Guid='{91c401f5-9989-4798-9af2-8ca8a066315d}'>
+          <Component Id='Comp_Autotech_Desktop_Main_pdb' Guid='{c7134cc7-92da-46be-8be6-3968bcd7f16d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.Main.pdb' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Autotech_Desktop_Main_runtimeconfig_json' Guid='{c35b6cf7-4f9e-40e8-b3ff-f0a7a695d26a}'>
+          <Component Id='Comp_Autotech_Desktop_Main_runtimeconfig_json' Guid='{bc475500-8575-4f25-ae0f-7e3a4fe05221}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Autotech.Desktop.Main.runtimeconfig.json' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_ClosedXML_dll' Guid='{b0d6cfae-f654-4b35-aeda-968458fd7523}'>
+          <Component Id='Comp_ClosedXML_dll' Guid='{90e5c33c-a7ae-4619-a58b-4e095e57f7fb}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)ClosedXML.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_ClosedXML_Parser_dll' Guid='{8b36b130-3385-49c0-83d6-fbb33ff8b96c}'>
+          <Component Id='Comp_ClosedXML_Parser_dll' Guid='{7ed10008-49c4-49e2-ad06-82a33df2b313}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)ClosedXML.Parser.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_clretwrc_dll' Guid='{76dacfe3-52fc-4521-8aae-5b7f804c47c5}'>
+          <Component Id='Comp_clretwrc_dll' Guid='{ede4534c-1521-4b11-822b-1e50b512d56a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)clretwrc.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_clrjit_dll' Guid='{a361d9ec-837f-4645-80b5-f002546142a0}'>
+          <Component Id='Comp_clrjit_dll' Guid='{e42a10b6-ebdb-409c-b887-3253bb495e63}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)clrjit.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_coreclr_dll' Guid='{a5eebbe3-2cf6-46fa-a8de-d10fc5d8e24a}'>
+          <Component Id='Comp_coreclr_dll' Guid='{3c0f7f4a-0594-40f7-bc5a-dd612be291f9}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)coreclr.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_createdump_exe' Guid='{22fc5ca6-af48-4dff-b6e8-6a62d3225259}'>
+          <Component Id='Comp_createdump_exe' Guid='{16e2fe98-8913-4d42-935c-1f7a5bcaf6b3}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)createdump.exe' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_D3DCompiler_47_cor3_dll' Guid='{5f7de48f-ea4a-4f4d-ad53-4ee982533617}'>
+          <Component Id='Comp_D3DCompiler_47_cor3_dll' Guid='{e8a46b77-25df-4905-9d4a-4c9d3bbdc832}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)D3DCompiler_47_cor3.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_dbgshim_dll' Guid='{0af62f2c-59c2-4943-87b8-d5fda2090016}'>
+          <Component Id='Comp_dbgshim_dll' Guid='{e3f7401d-9dc9-4fe4-916d-ac25e445c27a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)dbgshim.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_DirectWriteForwarder_dll' Guid='{21c6a54b-8763-465c-9abb-8d674541a872}'>
+          <Component Id='Comp_DirectWriteForwarder_dll' Guid='{302b72b5-f10c-46dd-aa21-eb750333e0cc}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)DirectWriteForwarder.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_DocumentFormat_OpenXml_dll' Guid='{a7b21b26-8854-45c8-84bf-9f90b089f9dd}'>
+          <Component Id='Comp_DocumentFormat_OpenXml_dll' Guid='{7edce3b4-8dda-42d6-bbe2-3da0dd07f291}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)DocumentFormat.OpenXml.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_DocumentFormat_OpenXml_Framework_dll' Guid='{b4ce75c4-5d9d-401a-8456-6870c8296083}'>
+          <Component Id='Comp_DocumentFormat_OpenXml_Framework_dll' Guid='{bc7ad44b-9c71-48de-b9f3-14a450178629}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)DocumentFormat.OpenXml.Framework.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_EPPlus_dll' Guid='{48b51a09-dfb7-40bc-a667-87f0f227d8a1}'>
+          <Component Id='Comp_EPPlus_dll' Guid='{3739550e-7071-4451-b086-9267cc382e2a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)EPPlus.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_ExcelNumberFormat_dll' Guid='{4453fe83-9525-45d0-9da0-3ce3db6e95ae}'>
+          <Component Id='Comp_ExcelNumberFormat_dll' Guid='{4cf187e9-c234-4b7a-9dae-b260575dd5f9}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)ExcelNumberFormat.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_hostfxr_dll' Guid='{5decad84-88e9-4873-9971-fd20bfb144c7}'>
+          <Component Id='Comp_hostfxr_dll' Guid='{48d64c2a-663c-4715-b6a0-6e70445e3b8c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)hostfxr.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_hostpolicy_dll' Guid='{e31b90d9-eb33-46e8-bdf6-4a04295e6d25}'>
+          <Component Id='Comp_hostpolicy_dll' Guid='{c705d0c1-ee7b-4022-84d1-3119edc94286}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)hostpolicy.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_logo_jpg' Guid='{e26d622f-e3a6-4c48-8c8b-89e65d4c3ece}'>
+          <Component Id='Comp_logo_jpg' Guid='{1e1586a5-426e-4523-b0ca-734d077c84d4}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)logo.jpg' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_MetroSet_UI_dll' Guid='{bd1482e9-0f20-4b83-b56a-ee5f0dfaa8b5}'>
+          <Component Id='Comp_MetroSet_UI_dll' Guid='{038dc51c-bdda-451a-bc86-81d492a36293}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)MetroSet UI.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_CSharp_dll' Guid='{4873d86d-9c36-4076-946a-0379a6ca617e}'>
+          <Component Id='Comp_Microsoft_CSharp_dll' Guid='{ba41575f-af46-47a0-bd6f-746411dc9956}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.CSharp.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_DiaSymReader_Native_amd64_dll' Guid='{b242a107-368d-4148-8f61-6e0e1bdc6ec9}'>
+          <Component Id='Comp_Microsoft_DiaSymReader_Native_amd64_dll' Guid='{30cd7a55-dc63-4bd4-8754-47cac188a447}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.DiaSymReader.Native.amd64.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Extensions_Configuration_Abstractions_dll' Guid='{c72ef430-220e-4c34-880b-1c1e07102867}'>
+          <Component Id='Comp_Microsoft_Extensions_Configuration_Abstractions_dll' Guid='{01124233-3e20-46cf-85fd-8dfb0bce8723}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Extensions.Configuration.Abstractions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Extensions_Configuration_dll' Guid='{5f1cc078-59d5-40aa-9b9e-251984661d6b}'>
+          <Component Id='Comp_Microsoft_Extensions_Configuration_dll' Guid='{c8858546-9b0e-4e8f-8cf0-5ddcb16a0722}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Extensions.Configuration.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Extensions_Configuration_FileExtensions_dll' Guid='{d61b92c9-24aa-4687-a750-69160bc805a7}'>
+          <Component Id='Comp_Microsoft_Extensions_Configuration_FileExtensions_dll' Guid='{700a17a5-f360-4b98-8a1d-84433b18feff}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Extensions.Configuration.FileExtensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Extensions_Configuration_Json_dll' Guid='{a416955c-c9e7-4634-ba72-46c71f1118e4}'>
+          <Component Id='Comp_Microsoft_Extensions_Configuration_Json_dll' Guid='{5ad13d32-0ca7-4a63-a534-52891c307837}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Extensions.Configuration.Json.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Extensions_FileProviders_Abstractions_dll' Guid='{6c60adb0-d21d-4445-90cd-083cdb47e572}'>
+          <Component Id='Comp_Microsoft_Extensions_FileProviders_Abstractions_dll' Guid='{036b1384-02c2-40c0-8719-9406a9a64bfc}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Extensions.FileProviders.Abstractions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Extensions_FileProviders_Physical_dll' Guid='{644c9414-db4a-4a1c-93d0-b02fd1ae50f2}'>
+          <Component Id='Comp_Microsoft_Extensions_FileProviders_Physical_dll' Guid='{5b0a2f34-c256-431e-ac1d-42cd824e30e9}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Extensions.FileProviders.Physical.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Extensions_FileSystemGlobbing_dll' Guid='{f38e6563-a4e1-4c3f-ae2c-95c5c53f1fd1}'>
+          <Component Id='Comp_Microsoft_Extensions_FileSystemGlobbing_dll' Guid='{2811c8d4-d767-4295-bd63-f664e8acbb17}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Extensions.FileSystemGlobbing.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Extensions_Primitives_dll' Guid='{f168a51e-d642-4199-b4e8-b29f5a56761d}'>
+          <Component Id='Comp_Microsoft_Extensions_Primitives_dll' Guid='{99b1b782-5f3f-41e6-8a45-0270ca963db9}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Extensions.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_VisualBasic_Core_dll' Guid='{ed6fffc7-b8f1-4087-a63a-9089f52f1b0a}'>
+          <Component Id='Comp_Microsoft_VisualBasic_Core_dll' Guid='{74771f9a-878e-42c1-aaa5-3cd7189aa53b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.VisualBasic.Core.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_VisualBasic_dll' Guid='{617b4706-7e64-4eea-8c0e-f25f92cd3703}'>
+          <Component Id='Comp_Microsoft_VisualBasic_dll' Guid='{005b1c03-28d1-42eb-8547-07fed7cb24fb}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.VisualBasic.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_VisualBasic_Forms_dll' Guid='{fee92647-d103-4cc8-a702-61a279104e9f}'>
+          <Component Id='Comp_Microsoft_VisualBasic_Forms_dll' Guid='{48e17ebc-823e-4b32-8975-e6c962421c93}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.VisualBasic.Forms.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Win32_Primitives_dll' Guid='{eb2ac0ed-6f3e-4181-8f33-8d40c7316dd0}'>
+          <Component Id='Comp_Microsoft_Win32_Primitives_dll' Guid='{609c6089-180c-4837-8fea-b27542a2e47d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Win32.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Win32_Registry_AccessControl_dll' Guid='{03617264-3458-4bfc-8359-cfa2e2f13053}'>
+          <Component Id='Comp_Microsoft_Win32_Registry_AccessControl_dll' Guid='{39133b86-1057-4ff1-9976-ee35b52a6e45}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Win32.Registry.AccessControl.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Win32_Registry_dll' Guid='{2687dd00-6e72-4758-af0d-959c94cf2c39}'>
+          <Component Id='Comp_Microsoft_Win32_Registry_dll' Guid='{2ead5adb-2402-420e-8cec-fa5b74d3a352}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Win32.Registry.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_Microsoft_Win32_SystemEvents_dll' Guid='{abb01574-650a-43bc-8e45-5f7787247554}'>
+          <Component Id='Comp_Microsoft_Win32_SystemEvents_dll' Guid='{77e8883e-21ba-4b48-a2ec-9f478321164c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)Microsoft.Win32.SystemEvents.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_mscordaccore_dll' Guid='{26643df5-1e75-4ed2-8af4-bad23883be01}'>
+          <Component Id='Comp_mscordaccore_dll' Guid='{34cb18a5-c95a-47c1-bb4c-def6aae229c9}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)mscordaccore.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_mscordaccore_amd64_amd64_6_0_3624_51421_dll' Guid='{eff6635d-8356-40ea-a451-d9afee48aa53}'>
+          <Component Id='Comp_mscordaccore_amd64_amd64_6_0_3624_51421_dll' Guid='{9603c61e-d4c5-4b6c-920a-cfd5d36b6f5c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)mscordaccore_amd64_amd64_6.0.3624.51421.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_mscordbi_dll' Guid='{cf00b7fb-a052-4532-88f9-441c524cdd4e}'>
+          <Component Id='Comp_mscordbi_dll' Guid='{4b1fd583-8d31-48b4-a8e7-708bf15a8523}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)mscordbi.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_mscorlib_dll' Guid='{dab153c3-d0b9-40f9-8cbf-65d281e67d31}'>
+          <Component Id='Comp_mscorlib_dll' Guid='{2741115c-6a9c-4f9f-8f52-9924ab5eb0d0}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)mscorlib.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_mscorrc_dll' Guid='{e4c3e0bd-697e-4527-8266-521b08c0d287}'>
+          <Component Id='Comp_mscorrc_dll' Guid='{aa1ec334-f86d-4f19-a18f-32f76ca28dd6}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)mscorrc.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_msquic_dll' Guid='{5068a3ec-0446-4dfa-a12a-786c60cec8e2}'>
+          <Component Id='Comp_msquic_dll' Guid='{0615803b-6141-4d7a-9860-fcaee18b0979}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)msquic.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_netstandard_dll' Guid='{a5926aa4-a4a7-4cdc-852e-c6132b36f3f2}'>
+          <Component Id='Comp_netstandard_dll' Guid='{041b9d2c-da5b-4e04-ac2d-a03ac5dd7679}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)netstandard.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PenImc_cor3_dll' Guid='{cb0e613f-3a05-4769-a256-9b0cbbc492a0}'>
+          <Component Id='Comp_PenImc_cor3_dll' Guid='{7722a449-4036-4bf1-994b-b2bc20df6f8b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PenImc_cor3.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationCore_dll' Guid='{7db4c28d-86a2-46df-8b83-b5607170851c}'>
+          <Component Id='Comp_PresentationCore_dll' Guid='{df3afe4a-b1f5-4bce-8397-f2defd528c0a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationCore.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_SystemCore_dll' Guid='{e316858f-f69c-4918-852c-9933374fb7c4}'>
+          <Component Id='Comp_PresentationFramework_SystemCore_dll' Guid='{c61a81ba-e29e-4177-9467-b1b74a09c0d7}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework-SystemCore.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_SystemData_dll' Guid='{557c0dc4-f9fc-482f-854a-2a9a39da936d}'>
+          <Component Id='Comp_PresentationFramework_SystemData_dll' Guid='{ac136426-ac3d-4b0d-883b-b67522cacf59}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework-SystemData.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_SystemDrawing_dll' Guid='{b917d30a-0535-4640-b995-0266289fefba}'>
+          <Component Id='Comp_PresentationFramework_SystemDrawing_dll' Guid='{656c9aa8-94a7-49f5-8fc7-f1fccd703134}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework-SystemDrawing.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_SystemXml_dll' Guid='{d4d4169b-a526-448e-9c65-13ec42e0d82c}'>
+          <Component Id='Comp_PresentationFramework_SystemXml_dll' Guid='{cadbdef3-d049-4f52-96cc-e5f3e9db579d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework-SystemXml.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_SystemXmlLinq_dll' Guid='{46e0e40b-60e6-424f-96c3-0206bc939754}'>
+          <Component Id='Comp_PresentationFramework_SystemXmlLinq_dll' Guid='{76a9a0ba-f0c0-4113-99bc-1ec80f917766}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework-SystemXmlLinq.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_Aero_dll' Guid='{8b931700-43bc-48fd-aa66-335344cc3aa8}'>
+          <Component Id='Comp_PresentationFramework_Aero_dll' Guid='{3b096d6a-191c-4926-ae77-06c9f391fb83}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework.Aero.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_Aero2_dll' Guid='{b73cbd6b-0782-47e4-9073-f6c3f4c6fa67}'>
+          <Component Id='Comp_PresentationFramework_Aero2_dll' Guid='{1650970a-35aa-42be-b0f5-d8aa9360e2af}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework.Aero2.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_AeroLite_dll' Guid='{6abbc1c7-9a26-4a79-a425-0a90e7a6b1a6}'>
+          <Component Id='Comp_PresentationFramework_AeroLite_dll' Guid='{2a393c60-44d0-4bd2-92d4-38187ef5f73f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework.AeroLite.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_Classic_dll' Guid='{02846697-2b4f-4756-a6ad-9e800128c10d}'>
+          <Component Id='Comp_PresentationFramework_Classic_dll' Guid='{5001c7d3-97d9-4409-8308-616079b90425}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework.Classic.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_dll' Guid='{cfcf4876-d697-46f6-9bab-59d4d4bc2a08}'>
+          <Component Id='Comp_PresentationFramework_dll' Guid='{2d8b50fc-4bb5-4973-85b2-de462dd48e43}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_Luna_dll' Guid='{56c3ff55-fbed-495d-8d9f-d3118ec528c2}'>
+          <Component Id='Comp_PresentationFramework_Luna_dll' Guid='{ccb9bb48-b12a-4569-b9e9-a4d74002f730}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework.Luna.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationFramework_Royale_dll' Guid='{f2f0816a-ce32-44eb-ba71-837d2de7ecd5}'>
+          <Component Id='Comp_PresentationFramework_Royale_dll' Guid='{8b034a67-db72-46a8-8b21-b8351b912d25}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationFramework.Royale.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationNative_cor3_dll' Guid='{1e000b3a-ea93-4a26-9cb5-338a3e97a47c}'>
+          <Component Id='Comp_PresentationNative_cor3_dll' Guid='{603889cc-879b-48a1-bab3-56ca1dc5884c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationNative_cor3.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_PresentationUI_dll' Guid='{66217015-058b-4c44-83e6-d19fecc7b27f}'>
+          <Component Id='Comp_PresentationUI_dll' Guid='{e0f3d106-e590-425c-b1b9-92b52bde2a79}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)PresentationUI.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_RBush_dll' Guid='{838255be-ce7a-402b-b6aa-0331a3340cc8}'>
+          <Component Id='Comp_RBush_dll' Guid='{095605b0-1cdb-4aaf-8054-77abccf90478}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)RBush.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_ReachFramework_dll' Guid='{c0c81942-cd21-4594-b892-cae670feca8f}'>
+          <Component Id='Comp_ReachFramework_dll' Guid='{26930a7a-4ef7-4bda-9c90-4c341b5391f5}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)ReachFramework.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_SixLabors_Fonts_dll' Guid='{b7ffa046-8186-42e0-94b2-e1ed3a420c36}'>
+          <Component Id='Comp_SixLabors_Fonts_dll' Guid='{e663629b-b0cb-49fd-acbe-8fb833db1eec}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)SixLabors.Fonts.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_AppContext_dll' Guid='{16b82dff-d6af-4781-be75-0891393960b2}'>
+          <Component Id='Comp_System_AppContext_dll' Guid='{341c152e-0530-4e79-800c-e438c4c9df86}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.AppContext.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Buffers_dll' Guid='{01afba97-38ba-45cd-b968-7f80b2b0ec44}'>
+          <Component Id='Comp_System_Buffers_dll' Guid='{892ac942-e106-4a5e-8b3d-fc95b41401ba}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Buffers.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_CodeDom_dll' Guid='{0dc4c9c2-3634-4648-8679-378ed606c021}'>
+          <Component Id='Comp_System_CodeDom_dll' Guid='{d06a2934-9c51-4c54-b3f5-5ac4b673e904}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.CodeDom.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Collections_Concurrent_dll' Guid='{09973820-22ae-4415-b8fa-44e01b7b63e7}'>
+          <Component Id='Comp_System_Collections_Concurrent_dll' Guid='{8c85a48c-7fe2-4169-aa61-070afc54d9fb}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Collections.Concurrent.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Collections_dll' Guid='{c3046640-b5fa-4a1b-a190-75bca3c58fea}'>
+          <Component Id='Comp_System_Collections_dll' Guid='{fc7af71d-d438-4576-a11e-fbccae504947}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Collections.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Collections_Immutable_dll' Guid='{b7aed7dd-cbf2-4a6c-9ecb-86f1939155f5}'>
+          <Component Id='Comp_System_Collections_Immutable_dll' Guid='{d6554d80-8c29-42bc-90e9-732a9c364e9e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Collections.Immutable.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Collections_NonGeneric_dll' Guid='{08f73086-6ee0-4e74-b17b-0ed5fe6a1838}'>
+          <Component Id='Comp_System_Collections_NonGeneric_dll' Guid='{bba9cd70-b8e9-4042-9e0c-68b5ccaf1cba}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Collections.NonGeneric.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Collections_Specialized_dll' Guid='{e72fa00c-1fbe-484a-9814-96624ba487dd}'>
+          <Component Id='Comp_System_Collections_Specialized_dll' Guid='{32549fbb-f31c-4013-89e0-81e1196e744a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Collections.Specialized.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ComponentModel_Annotations_dll' Guid='{0db984c9-ff80-4124-8392-05da59383d25}'>
+          <Component Id='Comp_System_ComponentModel_Annotations_dll' Guid='{ef279610-a733-48ef-89cb-bf1ed14764ff}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ComponentModel.Annotations.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ComponentModel_DataAnnotations_dll' Guid='{a27905ad-abaf-40cc-8f9e-9c15b70bb64f}'>
+          <Component Id='Comp_System_ComponentModel_DataAnnotations_dll' Guid='{28609891-d545-4412-a20a-de29b728823f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ComponentModel.DataAnnotations.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ComponentModel_dll' Guid='{80f54551-5af2-4247-8e1f-9963fcae75d3}'>
+          <Component Id='Comp_System_ComponentModel_dll' Guid='{80aaca26-5287-4b13-bad5-28249c56b979}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ComponentModel.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ComponentModel_EventBasedAsync_dll' Guid='{97ce8f0f-9312-4996-95ef-3d8f0003a711}'>
+          <Component Id='Comp_System_ComponentModel_EventBasedAsync_dll' Guid='{cef6f265-5bd4-4562-bc36-c36e4a34784d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ComponentModel.EventBasedAsync.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ComponentModel_Primitives_dll' Guid='{65bc4c27-aaa0-4f49-9583-f4f143c69c12}'>
+          <Component Id='Comp_System_ComponentModel_Primitives_dll' Guid='{b64626c2-53cb-408b-9fd1-460829afb382}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ComponentModel.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ComponentModel_TypeConverter_dll' Guid='{988eaabc-548a-42f6-b79b-8fae6352277a}'>
+          <Component Id='Comp_System_ComponentModel_TypeConverter_dll' Guid='{8afb9451-0f76-464e-99d2-0d518c445a07}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ComponentModel.TypeConverter.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Configuration_ConfigurationManager_dll' Guid='{79172b34-e0cc-4f4a-8de1-ef5bf33beb78}'>
+          <Component Id='Comp_System_Configuration_ConfigurationManager_dll' Guid='{b3b4669d-1f42-4b09-a1be-b60b499dbfb5}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Configuration.ConfigurationManager.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Configuration_dll' Guid='{5355b129-fe21-4ba4-87b1-ac7413cb4131}'>
+          <Component Id='Comp_System_Configuration_dll' Guid='{3b4acb97-4a66-45e4-9849-3a9cb9de97bf}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Configuration.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Console_dll' Guid='{aec821ab-3515-4b7f-aa82-3ea6c7e23905}'>
+          <Component Id='Comp_System_Console_dll' Guid='{581cd6ba-bb62-43f6-b323-73316d85e801}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Console.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Core_dll' Guid='{6e528bdf-d66a-4a67-82cd-bfd90975178c}'>
+          <Component Id='Comp_System_Core_dll' Guid='{eee1260f-898f-4069-a86b-b4f030c17bbf}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Core.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Data_Common_dll' Guid='{5f6e4cdf-3a4d-458a-9684-2770034b9705}'>
+          <Component Id='Comp_System_Data_Common_dll' Guid='{ebe76bb4-b5ed-4800-bdca-d51421fe4ce4}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Data.Common.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Data_DataSetExtensions_dll' Guid='{cb2073a3-d502-47d7-a5d4-5d94fdf70574}'>
+          <Component Id='Comp_System_Data_DataSetExtensions_dll' Guid='{423748ba-6b9f-46f8-ae90-f2dd2be5e03e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Data.DataSetExtensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Data_dll' Guid='{cb727bb5-820a-4a94-b61a-bd786e8cd946}'>
+          <Component Id='Comp_System_Data_dll' Guid='{3e044395-534a-4355-91d4-9e6512126c1b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Data.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Design_dll' Guid='{41cfb7c7-9512-4ac7-93c7-2c9a8487fd88}'>
+          <Component Id='Comp_System_Design_dll' Guid='{af803d20-5a10-4aad-858f-3e9f0e8bde8a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Design.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_Contracts_dll' Guid='{91150a8e-a360-4511-887d-6b4e70cab1c3}'>
+          <Component Id='Comp_System_Diagnostics_Contracts_dll' Guid='{6d4c62a3-9fe7-422b-a45a-165e5e8f7c14}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.Contracts.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_Debug_dll' Guid='{3f08cd2f-8f1f-426a-93fe-bc8ff16d6379}'>
+          <Component Id='Comp_System_Diagnostics_Debug_dll' Guid='{cc30ec2a-c9a3-4302-a128-d5dc6cedc83d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.Debug.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_DiagnosticSource_dll' Guid='{7ddc208e-f46e-4f47-be91-c485fc96e06d}'>
+          <Component Id='Comp_System_Diagnostics_DiagnosticSource_dll' Guid='{037c6091-4425-421e-ade7-114dce15a4a5}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.DiagnosticSource.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_EventLog_dll' Guid='{09153a9c-30fe-4690-a0b9-51d669c65a9f}'>
+          <Component Id='Comp_System_Diagnostics_EventLog_dll' Guid='{15c44e44-b7ef-486d-9995-97a757087830}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.EventLog.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_EventLog_Messages_dll' Guid='{f15e96f3-16d1-440f-950b-9235beab9f3b}'>
+          <Component Id='Comp_System_Diagnostics_EventLog_Messages_dll' Guid='{04e51d86-6fab-4e5d-b9f5-040f6880a626}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.EventLog.Messages.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_FileVersionInfo_dll' Guid='{f250e102-6eb1-48eb-a6b9-c216234c56c4}'>
+          <Component Id='Comp_System_Diagnostics_FileVersionInfo_dll' Guid='{e8558a5b-01fc-47d0-bc65-8b846c08d3e1}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.FileVersionInfo.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_PerformanceCounter_dll' Guid='{d51bab04-3a5a-4a5c-a7ea-6fdad4411e82}'>
+          <Component Id='Comp_System_Diagnostics_PerformanceCounter_dll' Guid='{507749eb-69e0-45ce-8dc9-c22a4b8401af}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.PerformanceCounter.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_Process_dll' Guid='{aec2e53c-855e-406b-9db7-ab1ce0827f02}'>
+          <Component Id='Comp_System_Diagnostics_Process_dll' Guid='{bebaaab3-5a3d-43cc-8fa2-b476b799ed41}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.Process.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_StackTrace_dll' Guid='{501e87ba-b743-44aa-a617-4f14c5a04b3d}'>
+          <Component Id='Comp_System_Diagnostics_StackTrace_dll' Guid='{ae87f6a0-7f7b-468d-b743-54e809dcbdd6}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.StackTrace.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_TextWriterTraceListener_dll' Guid='{2807ba57-f95e-4e4d-8faa-e1b97cbf7a21}'>
+          <Component Id='Comp_System_Diagnostics_TextWriterTraceListener_dll' Guid='{68ccb4ac-1660-4d69-a61e-f3f641f7a0fe}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.TextWriterTraceListener.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_Tools_dll' Guid='{3877a6c1-546c-4f69-9462-01cbf7990538}'>
+          <Component Id='Comp_System_Diagnostics_Tools_dll' Guid='{7a1e214d-7403-4c26-a38d-36fe799ae6c4}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.Tools.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_TraceSource_dll' Guid='{128cb13e-cddb-4e9d-9320-c85fb003578b}'>
+          <Component Id='Comp_System_Diagnostics_TraceSource_dll' Guid='{c5b63a40-858a-49c5-a0fe-b936966ef750}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.TraceSource.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Diagnostics_Tracing_dll' Guid='{e64ddf71-45c3-445a-b677-66d50115f59c}'>
+          <Component Id='Comp_System_Diagnostics_Tracing_dll' Guid='{d931d290-95d5-4b75-814a-798a4ce1feca}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Diagnostics.Tracing.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_DirectoryServices_dll' Guid='{8141c499-fe0c-4630-8bc4-58f20002a48a}'>
+          <Component Id='Comp_System_DirectoryServices_dll' Guid='{97262f47-b5c0-4ad4-8c7b-9710560a04c1}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.DirectoryServices.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_dll' Guid='{7d5389ea-df30-4fcd-bbf2-75f27bc4c50b}'>
+          <Component Id='Comp_System_dll' Guid='{1ee9573b-75f1-443c-9ff4-56940640e140}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Drawing_Common_dll' Guid='{810cf3a7-d04a-4bb1-8ad5-d0c43ce2ba9b}'>
+          <Component Id='Comp_System_Drawing_Common_dll' Guid='{25c847b5-7b07-4b08-b6da-b0c787e8aeec}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Drawing.Common.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Drawing_Design_dll' Guid='{865b3033-64ee-4d3f-9a85-a3479ffbdc88}'>
+          <Component Id='Comp_System_Drawing_Design_dll' Guid='{ee4613f4-9178-4a3d-9328-3b287f416779}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Drawing.Design.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Drawing_dll' Guid='{b500d6d5-5065-4fd4-ba67-877e95825c9e}'>
+          <Component Id='Comp_System_Drawing_dll' Guid='{7e97f3c8-74fc-4231-bd11-16e1b908316d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Drawing.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Drawing_Primitives_dll' Guid='{46e6c64e-e8ff-421d-bfc4-a9dcea5d1383}'>
+          <Component Id='Comp_System_Drawing_Primitives_dll' Guid='{b4e23944-1086-4f33-a690-6f65aa91cbd2}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Drawing.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Dynamic_Runtime_dll' Guid='{7305c2c2-1888-4eb6-9173-2e380761d8d2}'>
+          <Component Id='Comp_System_Dynamic_Runtime_dll' Guid='{ba59a90b-7bae-4f97-aaf8-f660770d8ec2}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Dynamic.Runtime.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Formats_Asn1_dll' Guid='{861db139-7d0c-415c-9643-899ef50aaead}'>
+          <Component Id='Comp_System_Formats_Asn1_dll' Guid='{0abc98fa-7e23-4d80-ba12-027dbc68aa3f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Formats.Asn1.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Globalization_Calendars_dll' Guid='{6d839456-6723-48cf-8622-23f3ef0f7e19}'>
+          <Component Id='Comp_System_Globalization_Calendars_dll' Guid='{b7e0a4d0-8a90-4cd9-899b-5ebe1b5f856b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Globalization.Calendars.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Globalization_dll' Guid='{82a3b9af-f585-4bc6-836c-957125343b76}'>
+          <Component Id='Comp_System_Globalization_dll' Guid='{7753c70d-fcfb-4b9c-96d2-b3c38379cd8a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Globalization.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Globalization_Extensions_dll' Guid='{0d083117-2224-441b-8e0c-a51c85425b73}'>
+          <Component Id='Comp_System_Globalization_Extensions_dll' Guid='{d783b0a9-5cce-47e0-bca8-15db8716c01f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Globalization.Extensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_Compression_Brotli_dll' Guid='{04f7668c-93a4-4502-b58e-13383d247c01}'>
+          <Component Id='Comp_System_IO_Compression_Brotli_dll' Guid='{b6e130c8-9c31-4d0b-a5e4-38afe5a4259a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.Compression.Brotli.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_Compression_dll' Guid='{f6a47335-1212-4ce4-ad1a-4f0b516a2ec4}'>
+          <Component Id='Comp_System_IO_Compression_dll' Guid='{e2b91893-05bc-4e73-a563-27bc77fc11c8}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.Compression.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_Compression_FileSystem_dll' Guid='{4c547dee-7060-4630-a69b-6ca70462511c}'>
+          <Component Id='Comp_System_IO_Compression_FileSystem_dll' Guid='{97b6a989-7a5f-4358-be10-b8f91afaf430}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.Compression.FileSystem.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_Compression_Native_dll' Guid='{3261ded7-d090-4583-aed0-6747436949f4}'>
+          <Component Id='Comp_System_IO_Compression_Native_dll' Guid='{a2c92731-73dd-4815-b480-75ef6a0c8c68}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.Compression.Native.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_Compression_ZipFile_dll' Guid='{f34eb530-3f42-4a03-b4b6-b9195471b019}'>
+          <Component Id='Comp_System_IO_Compression_ZipFile_dll' Guid='{0d6cef46-4748-4e67-aee0-3e061c89fa2d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.Compression.ZipFile.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_dll' Guid='{bfadad32-c832-4c05-8422-6cc4909b3af2}'>
+          <Component Id='Comp_System_IO_dll' Guid='{2c1e746c-e463-430a-ab78-e89e2956ce84}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_FileSystem_AccessControl_dll' Guid='{1ac64f30-0ae9-4588-9298-92589db5388b}'>
+          <Component Id='Comp_System_IO_FileSystem_AccessControl_dll' Guid='{94882487-76ea-4725-b53e-4a55e65b67a3}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.FileSystem.AccessControl.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_FileSystem_dll' Guid='{d0aeda6a-f103-4947-b2a7-48154d28e73f}'>
+          <Component Id='Comp_System_IO_FileSystem_dll' Guid='{32c5940b-0e48-4050-85ac-6f03bb4c97b8}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.FileSystem.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_FileSystem_DriveInfo_dll' Guid='{ed7a0b75-ab19-4ee3-8f1c-41134ffd462d}'>
+          <Component Id='Comp_System_IO_FileSystem_DriveInfo_dll' Guid='{c4a8ec27-fe53-4f20-a09e-8ef2a2c1c936}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.FileSystem.DriveInfo.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_FileSystem_Primitives_dll' Guid='{fc6664e9-57d0-4e4b-8e8f-e1d88daa4bce}'>
+          <Component Id='Comp_System_IO_FileSystem_Primitives_dll' Guid='{6e47bc73-f918-4edc-bf99-1a6397de1f71}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.FileSystem.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_FileSystem_Watcher_dll' Guid='{966cc64d-57f4-43da-bbfc-d59127224292}'>
+          <Component Id='Comp_System_IO_FileSystem_Watcher_dll' Guid='{dc272be1-c3e1-41dd-8613-f687bae581ca}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.FileSystem.Watcher.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_IsolatedStorage_dll' Guid='{168027fc-27a5-4b7e-9ba4-776f5e22db4d}'>
+          <Component Id='Comp_System_IO_IsolatedStorage_dll' Guid='{25aa2356-2be7-4dfa-9faa-c20e243e83be}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.IsolatedStorage.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_MemoryMappedFiles_dll' Guid='{7185419b-41dd-4179-b52f-51eac88d6f95}'>
+          <Component Id='Comp_System_IO_MemoryMappedFiles_dll' Guid='{2099287f-42f5-4a2e-8f1d-7c82964ae8e1}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.MemoryMappedFiles.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_Packaging_dll' Guid='{a5ddaa0a-25bd-4a11-bde3-eb9711a429af}'>
+          <Component Id='Comp_System_IO_Packaging_dll' Guid='{4cc19711-d785-4c3d-81ea-a3c954843b95}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.Packaging.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_Pipes_AccessControl_dll' Guid='{a152f2cf-875f-4542-80ae-72464fb6ecfc}'>
+          <Component Id='Comp_System_IO_Pipes_AccessControl_dll' Guid='{09b9dbbb-10b4-4922-93d1-2f40eeabba25}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.Pipes.AccessControl.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_Pipes_dll' Guid='{9065702a-ae34-4b67-b474-58de00ccc5c9}'>
+          <Component Id='Comp_System_IO_Pipes_dll' Guid='{784e6c8a-b193-4a25-bbb2-2b3461753b94}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.Pipes.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_IO_UnmanagedMemoryStream_dll' Guid='{ded018c4-2ad8-414d-b5f3-172586cc839c}'>
+          <Component Id='Comp_System_IO_UnmanagedMemoryStream_dll' Guid='{1a7dffc5-b17c-47a5-837c-40f38ddc4f90}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.IO.UnmanagedMemoryStream.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Linq_dll' Guid='{d3447f97-367f-4da3-8299-a07275d08d2a}'>
+          <Component Id='Comp_System_Linq_dll' Guid='{ad46cd5b-6fce-4461-a19b-dd30c3d32487}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Linq.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Linq_Expressions_dll' Guid='{a2dfacde-5514-48e0-b836-2dccb3981c11}'>
+          <Component Id='Comp_System_Linq_Expressions_dll' Guid='{00c4e8a3-7444-4bcd-b5e0-d47627cea6cc}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Linq.Expressions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Linq_Parallel_dll' Guid='{308c885d-c074-4e70-9bfd-efa6f6257d96}'>
+          <Component Id='Comp_System_Linq_Parallel_dll' Guid='{72924618-9831-4b7a-a7b1-390a667eec66}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Linq.Parallel.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Linq_Queryable_dll' Guid='{7e1a0ea4-ce72-4ad6-9f06-9cff4848cbf1}'>
+          <Component Id='Comp_System_Linq_Queryable_dll' Guid='{c792e329-1146-4996-a2d1-f8842da7580e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Linq.Queryable.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Memory_dll' Guid='{234511b6-d79e-4fcb-826b-a9fe1851f077}'>
+          <Component Id='Comp_System_Memory_dll' Guid='{ebf39e27-84ad-4598-8b9e-0c260d085433}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Memory.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_dll' Guid='{a86cf290-ecb4-4cd8-937d-d196bc58592f}'>
+          <Component Id='Comp_System_Net_dll' Guid='{83da38e4-587c-4e82-a4c5-c2cd0dc296e3}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Http_dll' Guid='{c279efb0-f014-4e22-b325-7b5972c38b0b}'>
+          <Component Id='Comp_System_Net_Http_dll' Guid='{08feb866-ba80-4732-9dc3-589976f643e1}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Http.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Http_Json_dll' Guid='{914a08a3-0f77-4f3d-997f-0ed2dd0ba61d}'>
+          <Component Id='Comp_System_Net_Http_Json_dll' Guid='{d86974d8-2f7d-45e8-84de-5f59fc3d81aa}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Http.Json.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_HttpListener_dll' Guid='{e8fe76ea-a7aa-4de9-a5da-84cf63bd0967}'>
+          <Component Id='Comp_System_Net_HttpListener_dll' Guid='{ea89b0d8-4787-431e-814c-b9dc255d60b4}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.HttpListener.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Mail_dll' Guid='{6f129c90-90dc-48da-90c7-1650a5881142}'>
+          <Component Id='Comp_System_Net_Mail_dll' Guid='{784fbf42-747d-4ed8-b4e6-ebd76de8fcb8}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Mail.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_NameResolution_dll' Guid='{6fcc3050-f30d-44f1-930f-ddd74ceac2c4}'>
+          <Component Id='Comp_System_Net_NameResolution_dll' Guid='{07e5c68e-08ac-4b0c-9fd6-a6a1205dd458}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.NameResolution.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_NetworkInformation_dll' Guid='{b67d4462-4d2c-4820-9cda-002b5ccf3636}'>
+          <Component Id='Comp_System_Net_NetworkInformation_dll' Guid='{1ecc88e5-1c7e-491b-aaa5-f17c6b6eca34}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.NetworkInformation.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Ping_dll' Guid='{5ea8ba5c-7348-4179-9e27-f2348c70d7e3}'>
+          <Component Id='Comp_System_Net_Ping_dll' Guid='{0395998e-6da4-452a-a0cc-08166cada779}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Ping.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Primitives_dll' Guid='{800496c2-dfd0-4e50-acdf-6b91f3bbdd27}'>
+          <Component Id='Comp_System_Net_Primitives_dll' Guid='{1c53dccc-332f-4ed9-a9db-ccb47c4b6931}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Quic_dll' Guid='{b695fa22-e75b-47fa-9ebc-77543d5014eb}'>
+          <Component Id='Comp_System_Net_Quic_dll' Guid='{a094e962-1424-4474-b9cc-42461c94c217}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Quic.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Requests_dll' Guid='{45ebc143-6a4d-4146-9aa1-e68fac89431c}'>
+          <Component Id='Comp_System_Net_Requests_dll' Guid='{9e93adec-becf-4411-b847-c810485e911c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Requests.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Security_dll' Guid='{892dd2ac-0208-45c4-8755-06686e5585fd}'>
+          <Component Id='Comp_System_Net_Security_dll' Guid='{81e2840f-6e05-4496-8783-3662d7f6f7f2}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Security.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_ServicePoint_dll' Guid='{c0e44930-9a11-4a51-8f36-e51c9c5b9dc3}'>
+          <Component Id='Comp_System_Net_ServicePoint_dll' Guid='{4fd7ce92-8885-4bb3-9ff8-0b2d9269a0e5}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.ServicePoint.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_Sockets_dll' Guid='{d6ccbeb7-c122-4041-ba17-3737496371fe}'>
+          <Component Id='Comp_System_Net_Sockets_dll' Guid='{3228bbed-f86f-4fdd-b6d4-1e4a525d18d6}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.Sockets.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_WebClient_dll' Guid='{c10bdab6-c603-422c-a082-deb49227efba}'>
+          <Component Id='Comp_System_Net_WebClient_dll' Guid='{a0272bcf-aec2-43d3-a5a5-cc0271025f92}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.WebClient.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_WebHeaderCollection_dll' Guid='{b17b9dc8-f189-4b88-8fc7-32e04c1a8b1c}'>
+          <Component Id='Comp_System_Net_WebHeaderCollection_dll' Guid='{1d3abc40-4fcf-4f2f-b7b2-7b65d743525c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.WebHeaderCollection.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_WebProxy_dll' Guid='{802b1096-2dc8-43e9-b3ca-f4d6c888f162}'>
+          <Component Id='Comp_System_Net_WebProxy_dll' Guid='{1d2d62ca-4b29-40a2-b15f-cf30a011f965}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.WebProxy.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_WebSockets_Client_dll' Guid='{62174622-1211-40c5-8b85-538d0c017509}'>
+          <Component Id='Comp_System_Net_WebSockets_Client_dll' Guid='{aedcc23b-5333-4f89-8883-c40d8cec34c0}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.WebSockets.Client.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Net_WebSockets_dll' Guid='{97c89dca-b243-4f12-bdd5-1d8f73b7252a}'>
+          <Component Id='Comp_System_Net_WebSockets_dll' Guid='{9dbc4833-24e5-4a2c-a2da-ad8f17e36319}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Net.WebSockets.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Numerics_dll' Guid='{bc71c51b-02e5-4219-9267-ca66bacd64b7}'>
+          <Component Id='Comp_System_Numerics_dll' Guid='{69a7c03a-7f11-402e-92f1-320bbbcafb8d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Numerics.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Numerics_Vectors_dll' Guid='{eca2ba76-21ad-498f-9960-90c30beadc1f}'>
+          <Component Id='Comp_System_Numerics_Vectors_dll' Guid='{edfb1175-15e4-4c56-853f-43502e86e739}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Numerics.Vectors.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ObjectModel_dll' Guid='{2e16e7a8-b08b-401d-a861-7b627ddb573a}'>
+          <Component Id='Comp_System_ObjectModel_dll' Guid='{6b0d3815-7882-488f-8d44-75396db63b6b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ObjectModel.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Printing_dll' Guid='{cb90c4fe-4582-450f-800a-7a2edf014873}'>
+          <Component Id='Comp_System_Printing_dll' Guid='{46d80280-1cbc-458a-9c7b-972f21c00871}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Printing.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Private_CoreLib_dll' Guid='{0824634a-16a8-4ebf-9df3-59f9f3774f64}'>
+          <Component Id='Comp_System_Private_CoreLib_dll' Guid='{dfa34d69-81d0-4b10-82c8-ff257458a481}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Private.CoreLib.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Private_DataContractSerialization_dll' Guid='{b68149f7-56ad-47d1-80f8-015f9adbb591}'>
+          <Component Id='Comp_System_Private_DataContractSerialization_dll' Guid='{a82a368f-94fa-4de9-a889-61954c8e57c3}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Private.DataContractSerialization.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Private_Uri_dll' Guid='{41221990-c142-4e19-9622-f8c6ea17f117}'>
+          <Component Id='Comp_System_Private_Uri_dll' Guid='{f19ef586-5c03-46d5-baf9-58d78494735a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Private.Uri.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Private_Xml_dll' Guid='{9899ad5c-7ceb-40f2-870c-3e3ad70b2c61}'>
+          <Component Id='Comp_System_Private_Xml_dll' Guid='{b75e492f-10ee-4162-a329-432d255393ab}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Private.Xml.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Private_Xml_Linq_dll' Guid='{50e3784e-28d6-4f2f-9a23-9914c2da4239}'>
+          <Component Id='Comp_System_Private_Xml_Linq_dll' Guid='{3013ad77-5443-4715-9f96-f6357c99eb8f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Private.Xml.Linq.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_DispatchProxy_dll' Guid='{cb6fd2f7-16db-4566-9ad3-dd6c1e48fce7}'>
+          <Component Id='Comp_System_Reflection_DispatchProxy_dll' Guid='{49888d3c-889a-4221-9f92-b3afd0f45378}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.DispatchProxy.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_dll' Guid='{ed3aba5d-70f7-4a25-8fc7-7f7592e5a16f}'>
+          <Component Id='Comp_System_Reflection_dll' Guid='{99f538a5-766b-4b01-9514-d6acc457be44}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_Emit_dll' Guid='{b3459862-f1a9-440e-bfc1-938c11e511b5}'>
+          <Component Id='Comp_System_Reflection_Emit_dll' Guid='{7cf71dce-a158-4f7d-b622-d2361d4966b0}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.Emit.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_Emit_ILGeneration_dll' Guid='{4ff9c0d0-6b76-4830-8572-74641b51a55a}'>
+          <Component Id='Comp_System_Reflection_Emit_ILGeneration_dll' Guid='{c38cfa46-3ab8-4ae7-83ae-1389f44bf4cf}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.Emit.ILGeneration.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_Emit_Lightweight_dll' Guid='{5931e3e9-e450-4afa-b3b3-58f72d5e79c8}'>
+          <Component Id='Comp_System_Reflection_Emit_Lightweight_dll' Guid='{74db40be-ae5e-4c0d-8956-32ba80772638}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.Emit.Lightweight.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_Extensions_dll' Guid='{f7e4d318-5b6f-485d-b1f9-e10694b99fce}'>
+          <Component Id='Comp_System_Reflection_Extensions_dll' Guid='{a0fcb8d6-a2b1-4741-bd71-a5e99001df43}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.Extensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_Metadata_dll' Guid='{7a058d7c-ea1a-45b1-a2e0-d47f9991d59d}'>
+          <Component Id='Comp_System_Reflection_Metadata_dll' Guid='{079a84e6-6a07-4a46-8534-e6f3c739d84b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.Metadata.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_Primitives_dll' Guid='{61fc4d31-94fe-48c7-821b-e63a55e6bee9}'>
+          <Component Id='Comp_System_Reflection_Primitives_dll' Guid='{0acb54ca-8667-4461-8a2f-f04c381c2a3d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Reflection_TypeExtensions_dll' Guid='{336486b0-0885-406a-80af-ec82a8e8d390}'>
+          <Component Id='Comp_System_Reflection_TypeExtensions_dll' Guid='{9abc8eec-d850-42f2-b664-e40037a2fcf9}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Reflection.TypeExtensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Resources_Extensions_dll' Guid='{2b9981c5-eb25-4cf8-b1a2-772b54c4f633}'>
+          <Component Id='Comp_System_Resources_Extensions_dll' Guid='{c0c34727-fa86-4394-ac3b-a76b437c248f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Resources.Extensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Resources_Reader_dll' Guid='{7e00ca23-aaef-4d83-8872-b8433d21119a}'>
+          <Component Id='Comp_System_Resources_Reader_dll' Guid='{cbc4f67f-34bf-480a-a747-cc8b3b77fae8}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Resources.Reader.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Resources_ResourceManager_dll' Guid='{b9df3d53-385f-444e-8669-886dee6e0c0b}'>
+          <Component Id='Comp_System_Resources_ResourceManager_dll' Guid='{5dc79cf9-39bc-4097-bc90-badc7fbf1c90}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Resources.ResourceManager.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Resources_Writer_dll' Guid='{37937a2e-a276-4ff6-a6d6-6657d51a837a}'>
+          <Component Id='Comp_System_Resources_Writer_dll' Guid='{a742aa78-aefc-43c7-8ef4-bc222c2115b6}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Resources.Writer.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_CompilerServices_Unsafe_dll' Guid='{f0ca0e65-cda0-4276-84ad-f24407201162}'>
+          <Component Id='Comp_System_Runtime_CompilerServices_Unsafe_dll' Guid='{a2cb3a7d-d9af-4561-9ae8-16f380dfd8ab}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.CompilerServices.Unsafe.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_CompilerServices_VisualC_dll' Guid='{43001d97-8fc1-4f38-bdcd-34b9b20e4a42}'>
+          <Component Id='Comp_System_Runtime_CompilerServices_VisualC_dll' Guid='{0fb25367-90ec-4097-bc1d-28f0841bf15d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.CompilerServices.VisualC.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_dll' Guid='{9ea5f333-fa99-405e-ba05-c35d63ee4390}'>
+          <Component Id='Comp_System_Runtime_dll' Guid='{78367522-5536-437d-b0b1-99e507353d1b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Extensions_dll' Guid='{ce8bbe51-62d3-4fc9-938c-164b36a09f0f}'>
+          <Component Id='Comp_System_Runtime_Extensions_dll' Guid='{61935f63-d667-4ec4-9467-57c2f3b2ee1a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Extensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Handles_dll' Guid='{74ac3e9f-60be-4e59-a353-a7ad096a9d1b}'>
+          <Component Id='Comp_System_Runtime_Handles_dll' Guid='{dd3e3825-59a0-4b3a-8744-b637d8f801fd}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Handles.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_InteropServices_dll' Guid='{9cf0cc2d-a33a-4ff2-a561-0ce3c4390ed1}'>
+          <Component Id='Comp_System_Runtime_InteropServices_dll' Guid='{01bab2f5-ebd7-4807-8be5-6baf7168d03c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.InteropServices.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_InteropServices_RuntimeInformation_dll' Guid='{82d14914-c155-4404-a38c-c0b16d311c3d}'>
+          <Component Id='Comp_System_Runtime_InteropServices_RuntimeInformation_dll' Guid='{ffb1d7c0-1bae-4076-9f96-cc398f1d6e3f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.InteropServices.RuntimeInformation.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Intrinsics_dll' Guid='{7c1fd936-b40c-4698-9bae-66d9115a949c}'>
+          <Component Id='Comp_System_Runtime_Intrinsics_dll' Guid='{84bcd8cd-25fc-4e86-9597-fe940a482035}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Intrinsics.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Loader_dll' Guid='{c7250262-663e-45b9-8fc3-998b90452143}'>
+          <Component Id='Comp_System_Runtime_Loader_dll' Guid='{904b572c-bc13-4a06-a677-763bdb111d0e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Loader.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Numerics_dll' Guid='{54bab558-dea8-4537-953a-17d9dbca241e}'>
+          <Component Id='Comp_System_Runtime_Numerics_dll' Guid='{37fae0d2-06a4-49f4-983e-a805f8a6eb73}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Numerics.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Serialization_dll' Guid='{9ecdf7e1-1b83-4ce4-90e8-b2b3f80993ac}'>
+          <Component Id='Comp_System_Runtime_Serialization_dll' Guid='{72ec6c52-31ce-41eb-b547-17d8d895474a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Serialization.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Serialization_Formatters_dll' Guid='{b9a3c7fa-a4c3-43cb-b8f6-0f9f2403c31b}'>
+          <Component Id='Comp_System_Runtime_Serialization_Formatters_dll' Guid='{e381c92b-7e5a-4660-8ec8-5160a72c634c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Serialization.Formatters.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Serialization_Json_dll' Guid='{27b4eddf-de8d-4576-816c-7acd66792475}'>
+          <Component Id='Comp_System_Runtime_Serialization_Json_dll' Guid='{538df390-8550-4613-894b-b8a4cc64360d}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Serialization.Json.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Serialization_Primitives_dll' Guid='{2aa864f7-97bb-4d8b-8d34-48251a970b11}'>
+          <Component Id='Comp_System_Runtime_Serialization_Primitives_dll' Guid='{4053f576-50f0-482d-9701-1a91711694f5}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Serialization.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Runtime_Serialization_Xml_dll' Guid='{c973eb21-f4ad-4244-adb1-370a366f83dc}'>
+          <Component Id='Comp_System_Runtime_Serialization_Xml_dll' Guid='{ac31f4ab-9d95-478e-ae07-732e9a2417f4}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Runtime.Serialization.Xml.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_AccessControl_dll' Guid='{d7eb88aa-4d55-4952-aaed-b3e11c277bef}'>
+          <Component Id='Comp_System_Security_AccessControl_dll' Guid='{60c3335b-19f9-4984-a90f-6a03d903dbb3}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.AccessControl.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Claims_dll' Guid='{e8546dd4-4b3e-4f7d-aca2-425422d7fc45}'>
+          <Component Id='Comp_System_Security_Claims_dll' Guid='{2e7e54f6-6b27-4d32-ade1-a32ca9497f29}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Claims.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_Algorithms_dll' Guid='{5c1e549d-c957-490c-8aa7-ab0a1c221990}'>
+          <Component Id='Comp_System_Security_Cryptography_Algorithms_dll' Guid='{6bfa3e41-98ce-4cde-9e52-c0e9dac760de}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.Algorithms.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_Cng_dll' Guid='{8ff8d2b3-ae93-4cf6-8c33-8150d4fbf923}'>
+          <Component Id='Comp_System_Security_Cryptography_Cng_dll' Guid='{ff4876f2-d3e1-4c33-8009-d950577c983b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.Cng.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_Csp_dll' Guid='{77b313a4-435f-409f-bb5f-0142261d50ca}'>
+          <Component Id='Comp_System_Security_Cryptography_Csp_dll' Guid='{8e5461b4-8761-4613-a1cc-2913e668e089}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.Csp.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_Encoding_dll' Guid='{45094b51-c4d5-4c6f-9dcb-b1d5ac65a74c}'>
+          <Component Id='Comp_System_Security_Cryptography_Encoding_dll' Guid='{71ce0409-e68c-4f1c-bdb1-fb49aabb1f54}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.Encoding.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_OpenSsl_dll' Guid='{75178981-1745-4099-a4f5-72f7a43171bd}'>
+          <Component Id='Comp_System_Security_Cryptography_OpenSsl_dll' Guid='{0f269b47-3db6-4a51-a87f-bdb3d3d8fd50}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.OpenSsl.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_Pkcs_dll' Guid='{ddd8fb7a-ec7d-4698-8057-b673505adca8}'>
+          <Component Id='Comp_System_Security_Cryptography_Pkcs_dll' Guid='{e95ffc18-69e7-44a3-bd29-8e829d745984}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.Pkcs.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_Primitives_dll' Guid='{2d7f5e46-28a6-4200-802d-790ad7095ea6}'>
+          <Component Id='Comp_System_Security_Cryptography_Primitives_dll' Guid='{7ab078b5-a9b8-4270-b58d-66482e1a3d5b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_ProtectedData_dll' Guid='{972356c2-3d03-4790-ba7b-7135d433b1f7}'>
+          <Component Id='Comp_System_Security_Cryptography_ProtectedData_dll' Guid='{77c51417-f89c-442d-ab46-d15497dbd609}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.ProtectedData.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_X509Certificates_dll' Guid='{c1774b1c-dd5a-4069-bf3b-1eaed73afb6d}'>
+          <Component Id='Comp_System_Security_Cryptography_X509Certificates_dll' Guid='{3fa113ab-0862-46e2-a46a-52f77328bea0}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.X509Certificates.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Cryptography_Xml_dll' Guid='{9d8fe186-0eec-40a4-b8ac-90578fc4f0a7}'>
+          <Component Id='Comp_System_Security_Cryptography_Xml_dll' Guid='{2274d0ec-9a89-474c-997f-4c85132aa7a4}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Cryptography.Xml.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_dll' Guid='{615726fd-8590-4c2f-9327-0954d0c5968c}'>
+          <Component Id='Comp_System_Security_dll' Guid='{f1226b4c-55d7-4903-a137-5c26980bfc3c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Permissions_dll' Guid='{60bb2928-6524-41da-8ee6-3203fdd2b72d}'>
+          <Component Id='Comp_System_Security_Permissions_dll' Guid='{da3e888a-8a0f-4cf2-81d1-43b52fd48fac}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Permissions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Principal_dll' Guid='{7ea95997-376a-4ba6-8072-810cb96ede8d}'>
+          <Component Id='Comp_System_Security_Principal_dll' Guid='{bece32a3-58d6-4cd9-a778-b8a46cbc7aee}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Principal.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_Principal_Windows_dll' Guid='{0910a0bb-817d-4886-9f60-4a87ed7c6e05}'>
+          <Component Id='Comp_System_Security_Principal_Windows_dll' Guid='{4524656e-082f-4512-a62c-181cd21da231}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.Principal.Windows.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Security_SecureString_dll' Guid='{152ff86a-0fca-4ad8-9eba-67dc6fd1b1a4}'>
+          <Component Id='Comp_System_Security_SecureString_dll' Guid='{2da0d52c-3355-461b-a29b-103f3a80337a}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Security.SecureString.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ServiceModel_Web_dll' Guid='{c5d9ea82-96b5-4ee9-b4f9-77cadf5dab65}'>
+          <Component Id='Comp_System_ServiceModel_Web_dll' Guid='{9e8c5568-b6ae-4890-a370-3ad8338b7624}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ServiceModel.Web.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ServiceProcess_dll' Guid='{4124fd17-99ae-4f98-9545-d52c731bacd6}'>
+          <Component Id='Comp_System_ServiceProcess_dll' Guid='{621b061c-02a3-4468-a5b4-abf5f2b3c4f1}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ServiceProcess.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Text_Encoding_CodePages_dll' Guid='{f381830e-1667-41e6-b4e0-46395733c6dd}'>
+          <Component Id='Comp_System_Text_Encoding_CodePages_dll' Guid='{97260be7-6503-42f6-b079-1316d265592e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Text.Encoding.CodePages.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Text_Encoding_dll' Guid='{f64fa5f8-a511-4995-afba-0c2f1b8f6d06}'>
+          <Component Id='Comp_System_Text_Encoding_dll' Guid='{8a0d0644-6ded-4faf-9e09-ffdbb03985ee}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Text.Encoding.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Text_Encoding_Extensions_dll' Guid='{f44b6b83-217e-4d55-95db-fc4d61e8a5d8}'>
+          <Component Id='Comp_System_Text_Encoding_Extensions_dll' Guid='{dd060fef-6b5b-44c3-bf00-6e77c94e2751}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Text.Encoding.Extensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Text_Encodings_Web_dll' Guid='{8d57a05d-8307-48ee-b569-b1f21657b410}'>
+          <Component Id='Comp_System_Text_Encodings_Web_dll' Guid='{c47db062-267c-4c74-a3c3-95454da4e470}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Text.Encodings.Web.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Text_Json_dll' Guid='{f18f0326-3c8f-41b6-9067-791b278ebb09}'>
+          <Component Id='Comp_System_Text_Json_dll' Guid='{0a8f918f-cb22-4fcc-a9ef-acc147c270f4}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Text.Json.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Text_RegularExpressions_dll' Guid='{1af265c2-0aa2-4090-8e1e-40cae241db8e}'>
+          <Component Id='Comp_System_Text_RegularExpressions_dll' Guid='{a6e0eae3-127d-497d-bc89-4c9106380880}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Text.RegularExpressions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_AccessControl_dll' Guid='{b2df081f-8be1-446c-8336-baff14609b5a}'>
+          <Component Id='Comp_System_Threading_AccessControl_dll' Guid='{41f4d17b-155b-4914-9d05-dc5d798db6b8}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.AccessControl.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_Channels_dll' Guid='{d54e4d9f-d1b7-44ba-b2f8-8e888cc5eeab}'>
+          <Component Id='Comp_System_Threading_Channels_dll' Guid='{1f4ec4c6-5a16-439c-8c1e-fcf943c1a6ca}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.Channels.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_dll' Guid='{d520a0df-deae-452f-a11e-4a6e0047122d}'>
+          <Component Id='Comp_System_Threading_dll' Guid='{5e30aa00-c152-4218-ab88-ae035837b273}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_Overlapped_dll' Guid='{e5f566f0-ea07-40cd-9266-f0224c227692}'>
+          <Component Id='Comp_System_Threading_Overlapped_dll' Guid='{d8497c45-5ecb-4b73-8cc3-f80ee6b5adff}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.Overlapped.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_Tasks_Dataflow_dll' Guid='{26230825-c6f6-4cb1-9a12-dac7a8276205}'>
+          <Component Id='Comp_System_Threading_Tasks_Dataflow_dll' Guid='{983eaddc-f064-4bf2-b016-e50be2c9fdc8}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.Tasks.Dataflow.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_Tasks_dll' Guid='{5bc98b48-e483-411c-9f06-857105d446cd}'>
+          <Component Id='Comp_System_Threading_Tasks_dll' Guid='{0ed207fa-4914-4ca3-bfd7-ce63ea839616}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.Tasks.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_Tasks_Extensions_dll' Guid='{96351fcb-015a-4d58-9036-6dcf037b4409}'>
+          <Component Id='Comp_System_Threading_Tasks_Extensions_dll' Guid='{e3388f9a-fcc7-4e25-81dd-f8e7eaa44ad1}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.Tasks.Extensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_Tasks_Parallel_dll' Guid='{ca2b8a2c-efb6-404a-a9e8-5b71b1b3661b}'>
+          <Component Id='Comp_System_Threading_Tasks_Parallel_dll' Guid='{35ce3412-b161-455b-97be-cf2dbba1889e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.Tasks.Parallel.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_Thread_dll' Guid='{299d45cc-44cf-4617-8d1a-81505817fd45}'>
+          <Component Id='Comp_System_Threading_Thread_dll' Guid='{78d7d8d3-3600-48c6-9c26-ad67cfe6d8ef}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.Thread.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_ThreadPool_dll' Guid='{174df6e5-22de-4272-920b-f833ed071627}'>
+          <Component Id='Comp_System_Threading_ThreadPool_dll' Guid='{68676340-54f1-4261-8834-4c65b8270cac}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.ThreadPool.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Threading_Timer_dll' Guid='{e045e3e7-6e8a-42d4-a73a-ecb5cb47200d}'>
+          <Component Id='Comp_System_Threading_Timer_dll' Guid='{f5cc4cac-e607-4362-a938-ececb209b802}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Threading.Timer.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Transactions_dll' Guid='{deebdf6d-a724-458d-bac6-b7e83bbf4305}'>
+          <Component Id='Comp_System_Transactions_dll' Guid='{ad403f8e-7f27-4d7a-aeb4-745065ee1644}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Transactions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Transactions_Local_dll' Guid='{ae96c5d0-9309-4370-a341-f2ba2425282e}'>
+          <Component Id='Comp_System_Transactions_Local_dll' Guid='{4e3d1421-13e9-4b59-a0c4-fc3e7e0106d2}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Transactions.Local.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_ValueTuple_dll' Guid='{b107a960-c068-4956-b6c5-313b3eff908d}'>
+          <Component Id='Comp_System_ValueTuple_dll' Guid='{8b477b92-7492-47b0-88e8-0f41474e4de6}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.ValueTuple.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Web_dll' Guid='{d4fe172b-3829-4a46-9ee6-95306c7b4d55}'>
+          <Component Id='Comp_System_Web_dll' Guid='{6c9b87a2-ee03-4634-bed8-d1e10b087865}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Web.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Web_HttpUtility_dll' Guid='{6a08ec1e-0357-40b9-b2d6-aba9025562b3}'>
+          <Component Id='Comp_System_Web_HttpUtility_dll' Guid='{10a513ff-f696-48f2-b79b-d0cd5e1b114c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Web.HttpUtility.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_Controls_Ribbon_dll' Guid='{eaceec17-7bfd-4797-af4b-6d96f87eecd1}'>
+          <Component Id='Comp_System_Windows_Controls_Ribbon_dll' Guid='{318cdcea-8a95-4986-9d0b-7c316236a606}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.Controls.Ribbon.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_dll' Guid='{637c8c6a-95f3-4de5-ad69-9bdcc39035f9}'>
+          <Component Id='Comp_System_Windows_dll' Guid='{b343f086-f7c5-438a-ad3b-dd63ea11c38f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_Extensions_dll' Guid='{0f4a6810-5b5a-4315-bbd5-8ec536e1a43b}'>
+          <Component Id='Comp_System_Windows_Extensions_dll' Guid='{98679c03-617b-45e8-814f-de70cb6ba440}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.Extensions.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_Forms_Design_dll' Guid='{b72d4134-86f5-41a2-988d-9191f4532784}'>
+          <Component Id='Comp_System_Windows_Forms_Design_dll' Guid='{6a3dd92a-eb16-485f-a227-44b615bf21a3}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.Forms.Design.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_Forms_Design_Editors_dll' Guid='{cfb818f5-d313-4774-8339-920b4577f4ff}'>
+          <Component Id='Comp_System_Windows_Forms_Design_Editors_dll' Guid='{4cb0e844-3fd0-41dd-9b11-57a9d43d5d80}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.Forms.Design.Editors.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_Forms_dll' Guid='{a4b37bf7-a81d-450c-8a10-8996761d02eb}'>
+          <Component Id='Comp_System_Windows_Forms_dll' Guid='{26a9e286-873b-4326-8423-ab7b1c5b3355}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.Forms.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_Forms_Primitives_dll' Guid='{411b9af4-ae68-4240-808d-5ea44c079d92}'>
+          <Component Id='Comp_System_Windows_Forms_Primitives_dll' Guid='{426aa8f5-9c59-48f8-a615-ad06b35cb79b}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.Forms.Primitives.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_Input_Manipulations_dll' Guid='{b06b2f37-ea01-4173-91e8-743bd9072ef0}'>
+          <Component Id='Comp_System_Windows_Input_Manipulations_dll' Guid='{81951a5e-e8f9-48fe-8b05-d6bba1bd9f2c}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.Input.Manipulations.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Windows_Presentation_dll' Guid='{ea7375c1-0441-40af-b92e-dd0b7f83fab0}'>
+          <Component Id='Comp_System_Windows_Presentation_dll' Guid='{96e49790-bb40-4ec0-89f1-64e14cec0032}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Windows.Presentation.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xaml_dll' Guid='{021977bb-3dda-421f-9d21-7eafc23b51cc}'>
+          <Component Id='Comp_System_Xaml_dll' Guid='{1847fea5-f345-4e27-ad9d-e5434ec59d2e}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xaml.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_dll' Guid='{853ca4eb-9523-4de6-bcd6-366016745fc5}'>
+          <Component Id='Comp_System_Xml_dll' Guid='{5d93f08f-3436-43a7-b15e-560195fb84eb}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_Linq_dll' Guid='{b20402e9-00f6-4635-8bfb-16b44a232302}'>
+          <Component Id='Comp_System_Xml_Linq_dll' Guid='{e46eeee4-7d40-4dda-9301-d4bed2016427}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.Linq.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_ReaderWriter_dll' Guid='{8a94c538-ea42-4d29-b29e-f7630d2543d7}'>
+          <Component Id='Comp_System_Xml_ReaderWriter_dll' Guid='{a98706df-de27-4103-a01d-30472f84db63}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.ReaderWriter.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_Serialization_dll' Guid='{4e48b132-d063-4cec-813d-e70d41204083}'>
+          <Component Id='Comp_System_Xml_Serialization_dll' Guid='{cca9856a-6570-47eb-a9cf-ba1400be00b3}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.Serialization.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_XDocument_dll' Guid='{e4085642-405e-47a1-9c2c-6e064c8f39b5}'>
+          <Component Id='Comp_System_Xml_XDocument_dll' Guid='{be110ba6-ed44-4d21-a6a6-68c57715d759}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.XDocument.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_XmlDocument_dll' Guid='{2240b6d5-b719-4712-b975-dba771a0c4d8}'>
+          <Component Id='Comp_System_Xml_XmlDocument_dll' Guid='{cd8abe49-fbea-4394-9c7b-025ebc3c2cff}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.XmlDocument.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_XmlSerializer_dll' Guid='{c209b617-661b-4c10-8aff-1acc0f107990}'>
+          <Component Id='Comp_System_Xml_XmlSerializer_dll' Guid='{36d3b3ad-0153-4a8d-8c88-006cbd07889f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.XmlSerializer.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_XPath_dll' Guid='{94f62674-3741-4da1-89f9-af535d925d59}'>
+          <Component Id='Comp_System_Xml_XPath_dll' Guid='{750b4630-c0ec-49ac-b5bf-51427f0fb554}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.XPath.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_XPath_XDocument_dll' Guid='{26325a76-57e3-4cd5-8d4a-b20e118a05e7}'>
+          <Component Id='Comp_System_Xml_XPath_XDocument_dll' Guid='{66d3e26a-b29d-4d71-89e0-76c2d0a0a4c6}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.XPath.XDocument.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_System_Xml_XPath_XmlDocument_dll' Guid='{763a0336-a00d-47bf-b267-af3c0811505c}'>
+          <Component Id='Comp_System_Xml_XPath_XmlDocument_dll' Guid='{db41570e-86c1-4963-8e16-2dc72c43e913}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)System.Xml.XPath.XmlDocument.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_ucrtbase_dll' Guid='{0ff063a2-4227-419a-af83-1966e364fd40}'>
+          <Component Id='Comp_ucrtbase_dll' Guid='{476aecff-7d41-4ace-9823-58555fcab1cf}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)ucrtbase.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_UIAutomationClient_dll' Guid='{b7ea6712-81c7-4f7f-9469-1e0fcc4eb26d}'>
+          <Component Id='Comp_UIAutomationClient_dll' Guid='{4fbf3201-6dcb-4b16-a615-a12b237b5811}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)UIAutomationClient.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_UIAutomationClientSideProviders_dll' Guid='{91e05362-e33d-4da6-96ce-9f8c4d58758d}'>
+          <Component Id='Comp_UIAutomationClientSideProviders_dll' Guid='{c42ad206-9927-489d-8cf0-527984d79618}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)UIAutomationClientSideProviders.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_UIAutomationProvider_dll' Guid='{6345b071-de77-4340-b8e9-0a3de65a7db6}'>
+          <Component Id='Comp_UIAutomationProvider_dll' Guid='{4fa01bc4-e986-45e4-81a6-dbf0531bedc1}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)UIAutomationProvider.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_UIAutomationTypes_dll' Guid='{1584363d-72d0-4690-99f6-002100d7c870}'>
+          <Component Id='Comp_UIAutomationTypes_dll' Guid='{cd0be954-2098-4023-932e-47d9125d7716}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)UIAutomationTypes.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_vcruntime140_cor3_dll' Guid='{d01dabef-6c2e-4a38-a178-194210fa872c}'>
+          <Component Id='Comp_vcruntime140_cor3_dll' Guid='{0a6a7a47-b0aa-4221-823b-0460420377ab}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)vcruntime140_cor3.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_WindowsBase_dll' Guid='{8fb85ffa-89ce-4f86-9b41-0f02c158b989}'>
+          <Component Id='Comp_version_txt' Guid='{6471e2a8-2b86-4388-a7ee-9aafaab6b8a7}'>
+        <File Source='$(var.Autotech.Desktop.Main.TargetDir)version.txt' KeyPath='yes' />
+    </Component>
+          <Component Id='Comp_WindowsBase_dll' Guid='{05366b52-7baf-45c4-8656-7f4ea416b5c0}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)WindowsBase.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_WindowsFormsIntegration_dll' Guid='{bc81a721-c0ea-4516-ae92-e5907ca47aee}'>
+          <Component Id='Comp_WindowsFormsIntegration_dll' Guid='{a4e22f8b-62be-4db7-ad43-12764457e23f}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)WindowsFormsIntegration.dll' KeyPath='yes' />
     </Component>
-          <Component Id='Comp_wpfgfx_cor3_dll' Guid='{b842f45f-e5f4-4f0c-87e5-7da3e0388c38}'>
+          <Component Id='Comp_wpfgfx_cor3_dll' Guid='{5a838e6d-8a3b-4be7-8bad-8024090397dc}'>
         <File Source='$(var.Autotech.Desktop.Main.TargetDir)wpfgfx_cor3.dll' KeyPath='yes' />
-    </Component>
-          <Component Id='Comp_version_txt' Guid='{a1b2c3d4-e5f6-7890-abcd-ef1234567890}'>
-        <File Source='$(var.Autotech.Desktop.Main.TargetDir)version.txt' KeyPath='yes' />
     </Component>
     </DirectoryRef>
 
@@ -1229,10 +1229,10 @@
             <ComponentRef Id='Comp_UIAutomationProvider_dll' />
             <ComponentRef Id='Comp_UIAutomationTypes_dll' />
             <ComponentRef Id='Comp_vcruntime140_cor3_dll' />
+            <ComponentRef Id='Comp_version_txt' />
             <ComponentRef Id='Comp_WindowsBase_dll' />
             <ComponentRef Id='Comp_WindowsFormsIntegration_dll' />
             <ComponentRef Id='Comp_wpfgfx_cor3_dll' />
-            <ComponentRef Id='Comp_version_txt' />
     </ComponentGroup>
   </Fragment>
 </Wix>

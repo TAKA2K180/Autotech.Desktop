@@ -5,15 +5,8 @@ using System.Windows.Forms;
 using Autotech.Desktop.BusinessLayer.DTO;
 using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.BusinessLayer.Services;
-using Autotech.Desktop.Core.DTO; // Ensure this namespace contains InvoiceDTO and InvoiceItemDTO
 using Autotech.Desktop.Core.Models;
-
-//using Autotech.Desktop.Main.Reports;
 using MetroSet_UI.Forms;
-//using DevExpress.XtraReports.UI;
-//using DevExpress.XtraReports.UserDesigner;
-//using DevExpress.XtraPrinting;
-//using DevExpress.XtraReports;
 
 namespace Autotech.Desktop.Main.View
 {
@@ -171,21 +164,76 @@ namespace Autotech.Desktop.Main.View
         {
             if (_invoice != null)
             {
-                var settings = new PageSettings
+                try
                 {
-                    Margins = new Margins(10, 10, 10, 10),
-                    PaperSize = new PaperSize("A4", 827, 1169)
-                };
-                printDoc.DefaultPageSettings = settings;
-                printDoc.PrintPage += PrintDoc_PrintPage;
-                previewDialog.Document = printDoc;
-                previewDialog.ShowDialog();
+                    // Create sanitized file name
+                    string invoiceNumber = SanitizeFileName(_invoice.strInvoiceNumber);
+                    string customerName = SanitizeFileName(_invoice.AccountName);
+                    string date = _invoice.DateSold.ToString("yyyy-MM-dd");
+                    string fileName = $"{invoiceNumber}_{customerName}_{date}.pdf";
+
+                    // Get Reports folder under app root
+                    string appRoot = AppDomain.CurrentDomain.BaseDirectory;
+                    string reportsFolder = Path.Combine(appRoot, "Reports");
+                    if (!Directory.Exists(reportsFolder))
+                        Directory.CreateDirectory(reportsFolder);
+
+                    string savePath = Path.Combine(reportsFolder, fileName);
+
+                    // Configure for print preview
+                    var settings = new PageSettings
+                    {
+                        Margins = new Margins(10, 10, 10, 10),
+                        PaperSize = new PaperSize("A4", 827, 1169)
+                    };
+
+                    // Clean print events first
+                    printDoc.PrintPage -= PrintDoc_PrintPage;
+                    printDoc.PrintPage += PrintDoc_PrintPage;
+
+                    // ---- 1. Show preview dialog ----
+                    printDoc.DefaultPageSettings = settings;
+                    previewDialog.Document = printDoc;
+                    previewDialog.ShowDialog();
+
+                    // ---- 2. Auto-save to PDF ----
+                    var pdfDoc = new PrintDocument
+                    {
+                        DefaultPageSettings = settings,
+                        PrinterSettings = new PrinterSettings
+                        {
+                            PrinterName = "Microsoft Print to PDF",
+                            PrintToFile = true,
+                            PrintFileName = savePath
+                        }
+                    };
+
+                    pdfDoc.PrintPage += PrintDoc_PrintPage;
+                    pdfDoc.Print();
+
+                    MessageBox.Show($"PDF also saved to:\n{savePath}", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    LogHelper.Log("PDF export error", ex);
+                    MessageBox.Show("Failed to save PDF:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
                 MessageBox.Show("Invoice data is not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private string SanitizeFileName(string input)
+        {
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                input = input.Replace(c, '_');
+            }
+            return input.Trim();
+        }
+
 
         private async void btnCloseInvoiceDetail_Click(object sender, EventArgs e)
         {
