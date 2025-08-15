@@ -287,7 +287,7 @@ namespace Autotech.Desktop.Main.View
             dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Quantity Per Box",
-                DataPropertyName = "QuantityPerBox",
+                DataPropertyName = "itemDetails.QuantityPerBox",
                 Name = "itemQuantityColumn"
             });
 
@@ -337,6 +337,16 @@ namespace Autotech.Desktop.Main.View
                 if (item.itemDetails != null)
                 {
                     e.Value = item.itemDetails.OnHand;
+                }
+                else
+                {
+                    e.Value = "N/A";
+                }
+            } else if (dataGridViewItemList.Columns[e.ColumnIndex].Name == "itemQuantityColumn" && item != null)
+            {
+                if (item.itemDetails != null)
+                {
+                    e.Value = item.itemDetails.QuantityPerBox;
                 }
                 else
                 {

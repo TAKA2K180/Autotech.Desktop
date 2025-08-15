@@ -54,9 +54,10 @@ namespace Autotech.Desktop.Main.View
             }
             else
             {
+                await Task.Delay(1000);
                 var toastForm = new ToastMessageForm("Invalid username or password. Please try again.");
                 toastForm.Show();
-                Thread.Sleep(2000);
+                await Task.Delay(1000);
                 toastForm.Close();
             }
         }

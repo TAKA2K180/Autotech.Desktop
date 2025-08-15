@@ -221,20 +221,7 @@ namespace Autotech.Desktop.Main.View
 
         private async void btnLogin_Click(object sender, System.EventArgs e)
         {
-            string username = Username;
-            string password = Password;
-
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                new ToastMessageForm("Please enter both username and password").Show();
-                return;
-            }
-
-            var loginService = new LoginServices();
-
-            bool loginSuccessful = await loginService.LoginAsync(username, password);
-
-            ValidateLogin(loginSuccessful);
+            PerformLogin();
         }
 
         private async void ValidateLogin(bool loginSuccessful)
@@ -259,8 +246,6 @@ namespace Autotech.Desktop.Main.View
                 MainForm mainForm = new MainForm();
                 mainForm.FormClosed += (s, e) => this.Show(); // Optional: return to login when main closes
                 mainForm.Show();
-
-                
             }
         }
         private MetroSetControlBox metroSetControlBox1;
