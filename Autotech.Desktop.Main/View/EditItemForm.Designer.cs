@@ -68,75 +68,75 @@
             // 
             txtItemCode.Location = new Point(156, 88);
             txtItemCode.Name = "txtItemCode";
-            txtItemCode.Size = new Size(200, 27);
+            txtItemCode.Size = new Size(592, 27);
             txtItemCode.TabIndex = 1;
             // 
             // txtItemName
             // 
             txtItemName.Location = new Point(156, 118);
             txtItemName.Name = "txtItemName";
-            txtItemName.Size = new Size(200, 27);
+            txtItemName.Size = new Size(592, 27);
             txtItemName.TabIndex = 3;
             // 
             // txtDescription
             // 
             txtDescription.Location = new Point(156, 148);
             txtDescription.Name = "txtDescription";
-            txtDescription.Size = new Size(200, 27);
+            txtDescription.Size = new Size(592, 27);
             txtDescription.TabIndex = 5;
             // 
             // txtOnHand
             // 
             txtOnHand.Location = new Point(156, 178);
             txtOnHand.Name = "txtOnHand";
-            txtOnHand.Size = new Size(200, 27);
+            txtOnHand.Size = new Size(592, 27);
             txtOnHand.TabIndex = 7;
             // 
             // txtBataanRetail
             // 
             txtBataanRetail.Location = new Point(156, 228);
             txtBataanRetail.Name = "txtBataanRetail";
-            txtBataanRetail.Size = new Size(200, 27);
+            txtBataanRetail.Size = new Size(592, 27);
             txtBataanRetail.TabIndex = 9;
             // 
             // txtBataanWholesale
             // 
             txtBataanWholesale.Location = new Point(156, 288);
             txtBataanWholesale.Name = "txtBataanWholesale";
-            txtBataanWholesale.Size = new Size(200, 27);
+            txtBataanWholesale.Size = new Size(592, 27);
             txtBataanWholesale.TabIndex = 11;
             // 
             // txtPampangaRetail
             // 
             txtPampangaRetail.Location = new Point(156, 358);
             txtPampangaRetail.Name = "txtPampangaRetail";
-            txtPampangaRetail.Size = new Size(200, 27);
+            txtPampangaRetail.Size = new Size(592, 27);
             txtPampangaRetail.TabIndex = 13;
             // 
             // txtPampangaWholesale
             // 
             txtPampangaWholesale.Location = new Point(156, 421);
             txtPampangaWholesale.Name = "txtPampangaWholesale";
-            txtPampangaWholesale.Size = new Size(200, 27);
+            txtPampangaWholesale.Size = new Size(592, 27);
             txtPampangaWholesale.TabIndex = 15;
             // 
             // txtZambalesRetail
             // 
             txtZambalesRetail.Location = new Point(156, 485);
             txtZambalesRetail.Name = "txtZambalesRetail";
-            txtZambalesRetail.Size = new Size(200, 27);
+            txtZambalesRetail.Size = new Size(592, 27);
             txtZambalesRetail.TabIndex = 17;
             // 
             // txtZambalesWholesale
             // 
             txtZambalesWholesale.Location = new Point(156, 547);
             txtZambalesWholesale.Name = "txtZambalesWholesale";
-            txtZambalesWholesale.Size = new Size(200, 27);
+            txtZambalesWholesale.Size = new Size(592, 27);
             txtZambalesWholesale.TabIndex = 19;
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(46, 625);
+            btnSave.Location = new Point(244, 614);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(109, 46);
             btnSave.TabIndex = 20;
@@ -225,7 +225,7 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(199, 625);
+            btnCancel.Location = new Point(397, 614);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(109, 46);
             btnCancel.TabIndex = 21;
@@ -234,7 +234,7 @@
             // 
             // EditItemForm
             // 
-            ClientSize = new Size(387, 685);
+            ClientSize = new Size(779, 685);
             Controls.Add(btnCancel);
             Controls.Add(lblItemCode);
             Controls.Add(txtItemCode);

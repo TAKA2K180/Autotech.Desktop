@@ -1,4 +1,5 @@
-﻿using Autotech.Desktop.BusinessLayer.Helpers;
+﻿using Autotech.Desktop.BusinessLayer.DTO;
+using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.Core.DTO;
 using Autotech.Desktop.Core.Enums;
 using Autotech.Desktop.Core.Models;
@@ -38,8 +39,20 @@ namespace Autotech.Desktop.BusinessLayer.Services
                         SessionManager.StoreToken(jwtToken);
                         await FetchAgentDetailsAsync(loginResponse.Agent.Id);
                         //var agentService = new AgentsService();
-                        //loginResponse.Agent.DateLastLogin = DateTime.Now;
-                        //await agentService.UpdateAgentAsync(loginResponse.Agent);
+                        //var agentDTO = new AgentRequestDTO
+                        //{
+                        //    Id = loginResponse.Agent.Id,
+                        //    Username = loginResponse.Agent.Username,
+                        //    Password = loginResponse.Agent.Password,
+                        //    AgentName = loginResponse.Agent.AgentName,
+                        //    AgentContactNumber = loginResponse.Agent.AgentContactNumber,
+                        //    AgentAddress = loginResponse.Agent.AgentAddress,
+                        //    AgentRole = loginResponse.Agent.AgentRole,
+                        //    DateCreated = loginResponse.Agent.DateCreated,
+                        //    DateLastLogin = DateTime.Now,
+                        //    LocationId = loginResponse.Agent.LocationId
+                        //};
+                        //await agentService.UpdateAgentAsync(agentDTO);
                         return true;
                     }
                     else

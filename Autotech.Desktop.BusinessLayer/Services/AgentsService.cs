@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Autotech.Desktop.BusinessLayer.Services
@@ -28,11 +29,15 @@ namespace Autotech.Desktop.BusinessLayer.Services
             throw new Exception("Failed to fetch agents");
         }
 
-        public async Task UpdateAgentAsync(Agents agent)
+        public async Task UpdateAgentAsync(AgentRequestDTO agent)
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+            var json = JsonSerializer.Serialize(agent, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
 
             var response = await client.PutAsJsonAsync($"https://api.autotechph.online/api/v1/Agents/{agent.Id}", agent);
 
@@ -43,7 +48,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             }
         }
 
-        public async Task AddAgentAsync(Agents agent)
+        public async Task AddAgentAsync(AgentRequestDTO agent)
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);

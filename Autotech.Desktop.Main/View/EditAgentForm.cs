@@ -3,6 +3,7 @@ using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.Enums;
 using Autotech.Desktop.Core.Models;
+using Autotech.Desktop.Helper;
 using MetroSet_UI.Forms;
 using System;
 using System.Collections.Generic;
@@ -105,19 +106,28 @@ namespace Autotech.Desktop.Main.View
         {
             try
             {
-                var newAgent = new Agents
+                string password;
+                if (PasswordHelper.VerifyPassword(txtPassword.Text, _agent.Password))
                 {
-                    Id = _isEdit ? _agent.Id : Guid.NewGuid(),
-                    Username = txtUsername.Text.Trim(),
-                    Password = txtPassword.Text.Trim(),
-                    AgentName = txtAgentName.Text.Trim(),
-                    AgentContactNumber = txtContact.Text.Trim(),
-                    AgentAddress = txtAddress.Text.Trim(),
-                    AgentRole = cboUserRole.Text,
-                    DateCreated = _isEdit ? _agent.DateCreated : DateTime.Now,
-                    DateLastLogin = _isEdit ? _agent.DateLastLogin : null,
-                    LocationId = cboLocation.SelectedValue is Guid locId ? locId : Guid.Empty
-                };
+                    password = _agent.Password;
+                }
+                else
+                {
+                    password = PasswordHelper.HashPassword(txtPassword.Text);
+                }
+                    var newAgent = new AgentRequestDTO
+                    {
+                        Id = _isEdit ? _agent.Id : Guid.NewGuid(),
+                        Username = txtUsername.Text.Trim(),
+                        Password = password,
+                        AgentName = txtAgentName.Text.Trim(),
+                        AgentContactNumber = txtContact.Text.Trim(),
+                        AgentAddress = txtAddress.Text.Trim(),
+                        AgentRole = cboUserRole.Text,
+                        DateCreated = _isEdit ? _agent.DateCreated : DateTime.Now,
+                        DateLastLogin = _isEdit ? _agent.DateLastLogin : null,
+                        LocationId = cboLocation.SelectedValue is Guid locId ? locId : Guid.Empty
+                    };
 
                 var service = new AgentsService();
 
