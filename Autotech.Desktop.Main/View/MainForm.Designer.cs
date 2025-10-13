@@ -480,7 +480,7 @@ namespace Autotech.Desktop.Main.View
             comboAccount.Name = "comboAccount";
             comboAccount.SelectedItemBackColor = Color.FromArgb(65, 177, 225);
             comboAccount.SelectedItemForeColor = Color.White;
-            comboAccount.Size = new Size(200, 26);
+            comboAccount.Size = new Size(274, 26);
             comboAccount.Style = Style.Light;
             comboAccount.StyleManager = null;
             comboAccount.TabIndex = 5;
@@ -521,7 +521,7 @@ namespace Autotech.Desktop.Main.View
             txtContactNumber.Multiline = false;
             txtContactNumber.Name = "txtContactNumber";
             txtContactNumber.ReadOnly = false;
-            txtContactNumber.Size = new Size(200, 25);
+            txtContactNumber.Size = new Size(274, 25);
             txtContactNumber.Style = Style.Light;
             txtContactNumber.StyleManager = null;
             txtContactNumber.TabIndex = 7;
@@ -535,7 +535,7 @@ namespace Autotech.Desktop.Main.View
             // 
             lblTerms.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             lblTerms.IsDerivedStyle = true;
-            lblTerms.Location = new Point(1221, 15);
+            lblTerms.Location = new Point(1290, 43);
             lblTerms.Name = "lblTerms";
             lblTerms.Size = new Size(53, 23);
             lblTerms.Style = Style.Light;
@@ -559,7 +559,7 @@ namespace Autotech.Desktop.Main.View
             txtTerms.Image = null;
             txtTerms.IsDerivedStyle = true;
             txtTerms.Lines = null;
-            txtTerms.Location = new Point(1280, 13);
+            txtTerms.Location = new Point(1349, 41);
             txtTerms.MaxLength = 32767;
             txtTerms.Multiline = false;
             txtTerms.Name = "txtTerms";

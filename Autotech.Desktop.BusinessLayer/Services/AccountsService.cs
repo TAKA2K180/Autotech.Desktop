@@ -57,5 +57,23 @@ namespace Autotech.Desktop.BusinessLayer.Services
             var error = await response.Content.ReadAsStringAsync();
             throw new Exception($"Failed to fetch account: {response.StatusCode} - {error}");
         }
+
+        public async Task<List<Accounts>> GetAccountsByLocationIdAsync(Guid locationId)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            // The endpoint format is assumed to be: /api/v1/Accounts/{id}
+            var response = await httpClient.GetAsync($"{apiUrl}/ByLocation/{locationId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<Accounts>>();
+            }
+
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Failed to fetch accounts by location: {response.StatusCode} - {error}");
+        }
     }
 }

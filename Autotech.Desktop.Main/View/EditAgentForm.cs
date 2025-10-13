@@ -107,15 +107,18 @@ namespace Autotech.Desktop.Main.View
             try
             {
                 string password;
-                if (PasswordHelper.VerifyPassword(txtPassword.Text, _agent.Password))
+                if (_agent.Password != null && PasswordHelper.VerifyPassword(txtPassword.Text, _agent.Password))
                 {
+                    // Password is correct, keep the stored hash
                     password = _agent.Password;
                 }
                 else
                 {
+                    // Either no password set or entered password is different → hash the new one
                     password = PasswordHelper.HashPassword(txtPassword.Text);
                 }
-                    var newAgent = new AgentRequestDTO
+
+                var newAgent = new AgentRequestDTO
                     {
                         Id = _isEdit ? _agent.Id : Guid.NewGuid(),
                         Username = txtUsername.Text.Trim(),

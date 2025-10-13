@@ -121,6 +121,7 @@ namespace Autotech.Desktop.Main.View
         private HashSet<Guid> selectedItemIds = new();
         private List<Items> orderCartItems = new();
         private List<SalesDTO> allInvoices = new();
+        private bool isFirstLoad = true;
         #endregion
 
         #region Props
@@ -237,7 +238,7 @@ namespace Autotech.Desktop.Main.View
                         row.Cells["selectColumn"].Value = true;
                     }
                 }
-
+                dataGridViewItemList.ClearSelection(); // Prevent auto-select first row after loading
             }
             catch (Exception ex)
             {
@@ -272,8 +273,6 @@ namespace Autotech.Desktop.Main.View
             {
                 HeaderText = "",
                 Name = "selectColumn",
-                Width = 30,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
             };
             dataGridViewItemList.Columns.Add(checkboxColumn);
 
@@ -291,7 +290,7 @@ namespace Autotech.Desktop.Main.View
                 Name = "itemQuantityColumn"
             });
 
-            //qty per box here
+            //qty per box here 
 
             dataGridViewItemList.Columns.Add(new DataGridViewTextBoxColumn
             {
@@ -327,6 +326,8 @@ namespace Autotech.Desktop.Main.View
             dataGridViewItemList.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dataGridViewItemList.DefaultCellStyle.Padding = new Padding(5);
             dataGridViewItemList.AutoResizeColumns();
+            dataGridViewItemList.ClearSelection(); // Prevent auto-select first row
+            dataGridViewItemList.SelectionChanged += dataGridViewItemList_SelectionChanged;
         }
         private void DataGridViewItemList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -379,6 +380,21 @@ namespace Autotech.Desktop.Main.View
                     row.Cells["selectColumn"].Value = true;
                 }
             }
+        }
+
+        private void dataGridViewItemList_SelectionChanged(object sender, EventArgs e)
+        {
+            if (!isFirstLoad)
+            {
+                foreach (DataGridViewRow row in dataGridViewItemList.SelectedRows)
+                {
+                    if (row.Cells["selectColumn"] != null)
+                    {
+                        row.Cells["selectColumn"].Value = true;
+                    }
+                }
+            }
+            isFirstLoad = false;
         }
 
         #endregion
@@ -694,34 +710,42 @@ namespace Autotech.Desktop.Main.View
             if (dataGridViewOrderCart.Rows.Count == 0 || orderCartItems.Count == 0)
                 return;
 
-            var idsToRemove = new List<Guid>();
+            var codesToRemove = new List<string>();
 
             foreach (DataGridViewRow row in dataGridViewOrderCart.Rows)
             {
                 var cell = row.Cells["selectCartItem"];
                 if (cell != null && cell.Value is bool isChecked && isChecked)
                 {
-                    if (row.DataBoundItem is Items item)
+                    var codeCell = row.Cells["cartItemCode"];
+                    if (codeCell != null && codeCell.Value != null)
                     {
-                        idsToRemove.Add(item.Id);
+                        codesToRemove.Add(codeCell.Value.ToString());
                     }
                 }
             }
 
-            if (idsToRemove.Count == 0)
+            if (codesToRemove.Count == 0)
             {
                 MessageBox.Show("No items selected.");
                 return;
             }
 
-            // Actually remove from cart list
+            // Remove from cart list by ItemCode
             orderCartItems = orderCartItems
-                .Where(item => !idsToRemove.Contains(item.Id))
+                .Where(item => !codesToRemove.Contains(item.ItemCode))
                 .ToList();
 
-            // Rebind
-            dataGridViewOrderCart.DataSource = null;
-            dataGridViewOrderCart.DataSource = orderCartItems;
+            // Remove rows from DataGridView
+            for (int i = dataGridViewOrderCart.Rows.Count - 1; i >= 0; i--)
+            {
+                var row = dataGridViewOrderCart.Rows[i];
+                var codeCell = row.Cells["cartItemCode"];
+                if (codeCell != null && codeCell.Value != null && codesToRemove.Contains(codeCell.Value.ToString()))
+                {
+                    dataGridViewOrderCart.Rows.RemoveAt(i);
+                }
+            }
 
             CalculateCartSubtotal();
         }
@@ -739,11 +763,13 @@ namespace Autotech.Desktop.Main.View
                 // Clear the backing list
                 orderCartItems.Clear();
 
-                // Clear the grid binding
+                // Clear the grid binding and rows
                 dataGridViewOrderCart.DataSource = null;
+                dataGridViewOrderCart.Rows.Clear();
 
-                // Reset subtotal
+                // Reset subtotal and recalculate totals
                 txtSubtotal.Text = "₱0.00";
+                CalculateTotal();
 
                 // Optional toast message
                 new ToastMessageForm("Cart has been emptied.").Show();
@@ -992,7 +1018,8 @@ namespace Autotech.Desktop.Main.View
             try
             {
                 var service = new AccountService();
-                var accounts = await service.GetAllAccountsAsync();
+                var id = SessionManager.AgentDetails.LocationId;
+                var accounts = await service.GetAccountsByLocationIdAsync(id);
 
                 comboAccount.DisplayMember = "Name";
                 comboAccount.ValueMember = "Id";
@@ -1377,7 +1404,6 @@ namespace Autotech.Desktop.Main.View
 
             dataGridViewInvoice.DataSource = null;
             dataGridViewInvoice.DataSource = filtered.ToList();
-
 
 
             // Ensure ID is hidden again
