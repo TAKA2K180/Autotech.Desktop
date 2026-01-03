@@ -35,7 +35,6 @@ namespace Autotech.Desktop.Main.View
         private PictureBox logoPictureBox;
         private MetroSetLabel lblCashier;
         private MetroSetLabel lblAccount;
-        private MetroSetComboBox comboAccount;
         private MetroSetTextBox txtContactNumber;
         private MetroSetLabel lblContactNumber;
         private MetroSetLabel lblTerms;
@@ -87,7 +86,6 @@ namespace Autotech.Desktop.Main.View
             logoPictureBox = new PictureBox();
             lblCashier = new MetroSetLabel();
             lblAccount = new MetroSetLabel();
-            comboAccount = new MetroSetComboBox();
             lblContactNumber = new MetroSetLabel();
             txtContactNumber = new MetroSetTextBox();
             lblTerms = new MetroSetLabel();
@@ -136,6 +134,7 @@ namespace Autotech.Desktop.Main.View
             tabPageUserDetails = new TabPage();
             metroSetControlBox1 = new MetroSetControlBox();
             btnLogout = new MetroSetButton();
+            comboAccount = new ComboBox();
             metroSetTabControl1.SuspendLayout();
             tabPageSales.SuspendLayout();
             pnlPricing.SuspendLayout();
@@ -157,14 +156,14 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.Controls.Add(tabPageInvoice);
             metroSetTabControl1.Controls.Add(tabPageMaintenance);
             metroSetTabControl1.Controls.Add(tabPageUserDetails);
-            metroSetTabControl1.Dock = DockStyle.Top;
+            metroSetTabControl1.Dock = DockStyle.Fill;
             metroSetTabControl1.IsDerivedStyle = true;
             metroSetTabControl1.ItemSize = new Size(100, 38);
             metroSetTabControl1.Location = new Point(12, 70);
             metroSetTabControl1.Name = "metroSetTabControl1";
             metroSetTabControl1.SelectedIndex = 0;
             metroSetTabControl1.SelectedTextColor = Color.White;
-            metroSetTabControl1.Size = new Size(1420, 767);
+            metroSetTabControl1.Size = new Size(1420, 716);
             metroSetTabControl1.SizeMode = TabSizeMode.Fixed;
             metroSetTabControl1.Speed = 100;
             metroSetTabControl1.Style = Style.Light;
@@ -179,6 +178,7 @@ namespace Autotech.Desktop.Main.View
             // 
             // tabPageSales
             // 
+            tabPageSales.Controls.Add(comboAccount);
             tabPageSales.Controls.Add(pnlPricing);
             tabPageSales.Controls.Add(pnlLocation);
             tabPageSales.Controls.Add(lblPage);
@@ -188,7 +188,6 @@ namespace Autotech.Desktop.Main.View
             tabPageSales.Controls.Add(logoPictureBox);
             tabPageSales.Controls.Add(lblCashier);
             tabPageSales.Controls.Add(lblAccount);
-            tabPageSales.Controls.Add(comboAccount);
             tabPageSales.Controls.Add(lblContactNumber);
             tabPageSales.Controls.Add(txtContactNumber);
             tabPageSales.Controls.Add(lblTerms);
@@ -206,7 +205,7 @@ namespace Autotech.Desktop.Main.View
             tabPageSales.Location = new Point(4, 42);
             tabPageSales.Name = "tabPageSales";
             tabPageSales.Padding = new Padding(10);
-            tabPageSales.Size = new Size(1412, 721);
+            tabPageSales.Size = new Size(1412, 670);
             tabPageSales.TabIndex = 0;
             tabPageSales.Text = "Sales";
             tabPageSales.UseVisualStyleBackColor = true;
@@ -459,34 +458,6 @@ namespace Autotech.Desktop.Main.View
             lblAccount.Text = "Account:";
             lblAccount.ThemeAuthor = "Narwin";
             lblAccount.ThemeName = "MetroLite";
-            // 
-            // comboAccount
-            // 
-            comboAccount.AllowDrop = true;
-            comboAccount.ArrowColor = Color.FromArgb(150, 150, 150);
-            comboAccount.BackColor = Color.Transparent;
-            comboAccount.BackgroundColor = Color.FromArgb(238, 238, 238);
-            comboAccount.BorderColor = Color.FromArgb(150, 150, 150);
-            comboAccount.CausesValidation = false;
-            comboAccount.DisabledBackColor = Color.FromArgb(204, 204, 204);
-            comboAccount.DisabledBorderColor = Color.FromArgb(155, 155, 155);
-            comboAccount.DisabledForeColor = Color.FromArgb(136, 136, 136);
-            comboAccount.DrawMode = DrawMode.OwnerDrawFixed;
-            comboAccount.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboAccount.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Regular, GraphicsUnit.Point);
-            comboAccount.IsDerivedStyle = true;
-            comboAccount.ItemHeight = 20;
-            comboAccount.Location = new Point(1010, 10);
-            comboAccount.Name = "comboAccount";
-            comboAccount.SelectedItemBackColor = Color.FromArgb(65, 177, 225);
-            comboAccount.SelectedItemForeColor = Color.White;
-            comboAccount.Size = new Size(274, 26);
-            comboAccount.Style = Style.Light;
-            comboAccount.StyleManager = null;
-            comboAccount.TabIndex = 5;
-            comboAccount.ThemeAuthor = "Narwin";
-            comboAccount.ThemeName = "MetroLite";
-            comboAccount.SelectedIndexChanged += comboAccount_SelectedIndexChanged;
             // 
             // lblContactNumber
             // 
@@ -1198,7 +1169,7 @@ namespace Autotech.Desktop.Main.View
             tabPageInvoice.Controls.Add(metroSetLabel2);
             tabPageInvoice.Location = new Point(4, 42);
             tabPageInvoice.Name = "tabPageInvoice";
-            tabPageInvoice.Size = new Size(1412, 721);
+            tabPageInvoice.Size = new Size(1412, 670);
             tabPageInvoice.TabIndex = 1;
             tabPageInvoice.Text = "Invoice";
             // 
@@ -1414,7 +1385,7 @@ namespace Autotech.Desktop.Main.View
             // 
             tabPageMaintenance.Location = new Point(4, 42);
             tabPageMaintenance.Name = "tabPageMaintenance";
-            tabPageMaintenance.Size = new Size(1412, 721);
+            tabPageMaintenance.Size = new Size(1412, 670);
             tabPageMaintenance.TabIndex = 2;
             tabPageMaintenance.Text = "Maintenance";
             // 
@@ -1422,7 +1393,7 @@ namespace Autotech.Desktop.Main.View
             // 
             tabPageUserDetails.Location = new Point(4, 42);
             tabPageUserDetails.Name = "tabPageUserDetails";
-            tabPageUserDetails.Size = new Size(1412, 721);
+            tabPageUserDetails.Size = new Size(1412, 670);
             tabPageUserDetails.TabIndex = 3;
             // 
             // metroSetControlBox1
@@ -1434,7 +1405,7 @@ namespace Autotech.Desktop.Main.View
             metroSetControlBox1.DisabledForeColor = Color.DimGray;
             metroSetControlBox1.IsDerivedStyle = true;
             metroSetControlBox1.Location = new Point(1332, 7);
-            metroSetControlBox1.MaximizeBox = true;
+            metroSetControlBox1.MaximizeBox = false;
             metroSetControlBox1.MaximizeHoverBackColor = Color.FromArgb(238, 238, 238);
             metroSetControlBox1.MaximizeHoverForeColor = Color.Gray;
             metroSetControlBox1.MaximizeNormalForeColor = Color.Gray;
@@ -1478,6 +1449,14 @@ namespace Autotech.Desktop.Main.View
             btnLogout.ThemeAuthor = "Narwin";
             btnLogout.ThemeName = "MetroLite";
             btnLogout.Click += btnLogout_Click;
+            // 
+            // comboAccount
+            // 
+            comboAccount.FormattingEnabled = true;
+            comboAccount.Location = new Point(1010, 7);
+            comboAccount.Name = "comboAccount";
+            comboAccount.Size = new Size(274, 28);
+            comboAccount.TabIndex = 30;
             // 
             // MainForm
             // 
@@ -1543,6 +1522,7 @@ namespace Autotech.Desktop.Main.View
         private MetroSetLabel lblDateFrom;
         private DateTimePicker dtmDateFrom;
         private MetroSetLabel lblVersion;
+        private ComboBox comboAccount;
     }
 }
 

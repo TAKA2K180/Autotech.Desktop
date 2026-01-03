@@ -1,5 +1,5 @@
 # version.ps1 - Auto Versioning Script for Autotech Desktop
-$majorMinor = "24.1"
+$majorMinor = "26.1"
 $dateCode = (Get-Date -Format "MMdd")
 $buildNumberFile = "$PSScriptRoot\build_number.txt"
 

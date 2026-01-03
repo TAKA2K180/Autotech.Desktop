@@ -51,6 +51,25 @@ namespace Autotech.Desktop.Main.View
                 // Load paginated items
                 await LoadItemsIntoGrid();
 
+                // Start loading ALL items in the background so searches can use cached data without blocking UI
+                if (allItemsLoadTask == null)
+                {
+                    allItemsLoadTask = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var svc = new ItemServices();
+                            var items = await svc.GetAllItemsAsync();
+                            if (items != null && items.Count > 0)
+                                allItems = items;
+                        }
+                        catch (Exception ex)
+                        {
+                            LogHelper.Log("Error preloading all items: ", ex);
+                        }
+                    });
+                }
+
 
                 dataGridViewItemList.CellFormatting += DataGridViewItemList_CellFormatting;
                 txtPaidAmount.TextChanged += txtPaidAmount_TextChanged;
@@ -115,6 +134,7 @@ namespace Autotech.Desktop.Main.View
         #region Variables
         private System.Windows.Forms.Timer dateTimer;
         private List<Items> allItems = new List<Items>();
+        private Task? allItemsLoadTask; // background loader task for all items
         private int currentPage = 1;
         private int pageSize = 20;
         private List<Items> currentPageItems = new();
@@ -246,22 +266,60 @@ namespace Autotech.Desktop.Main.View
                 MessageBox.Show($"Error loading items: {ex.Message}", "Error");
             }
         }
-        private void btnPrevPage_Click(object sender, EventArgs e)
+
+        private async Task<List<Items>> GetAllItemsAsync()
+        {
+            // Return cached if available
+            if (allItems != null && allItems.Count > 0)
+                return allItems;
+
+            // If background load is running, await it
+            if (allItemsLoadTask != null)
+            {
+                try
+                {
+                    await allItemsLoadTask;
+                }
+                catch
+                {
+                    // swallow - fallback to direct fetch
+                }
+                if (allItems != null && allItems.Count > 0)
+                    return allItems;
+            }
+
+            // As a last resort fetch synchronously (async) from service
+            try
+            {
+                var itemService = new ItemServices();
+                var items = await itemService.GetAllItemsAsync();
+                if (items != null && items.Count > 0)
+                    allItems = items;
+                return allItems;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log("Error fetching all items: ", ex);
+                return new List<Items>();
+            }
+        }
+
+        private async void btnPrevPage_Click(object sender, EventArgs e)
         {
             if (currentPage > 1)
             {
                 currentPage--;
-                LoadItemsIntoGrid(currentPage);
+                await LoadItemsIntoGrid(currentPage);
                 lblPage.Text = currentPage.ToString();
-                RestoreCheckboxStates();
+                await RestoreCheckboxStates();
             }
         }
-        private void btnNextPage_Click(object sender, EventArgs e)
+        private async void btnNextPage_Click(object sender, EventArgs e)
         {
             currentPage++;
-            LoadItemsIntoGrid(currentPage);
+            await LoadItemsIntoGrid(currentPage);
             lblPage.Text = currentPage.ToString();
-            RestoreCheckboxStates();
+            await RestoreCheckboxStates();
         }
         #endregion
 
@@ -371,8 +429,11 @@ namespace Autotech.Desktop.Main.View
                 }
             }
         }
-        private void RestoreCheckboxStates()
+        private async Task RestoreCheckboxStates()
         {
+            // allow asynchronous yielding so callers can await and keep UI responsive
+            await Task.Yield();
+
             foreach (DataGridViewRow row in dataGridViewItemList.Rows)
             {
                 if (row.DataBoundItem is Items item && selectedItemIds.Contains(item.Id))
@@ -400,44 +461,116 @@ namespace Autotech.Desktop.Main.View
         #endregion
 
         #region SearchItems
-        private void txtSearchItem_TextChanged(object sender, EventArgs e)
+        private async void txtSearchItem_TextChanged(object sender, EventArgs e)
         {
             string searchText = txtSearchItem.Text.Trim().ToLower();
 
-            if (!string.IsNullOrEmpty(searchText))
+            // Task-based UI invoker helper
+            Task InvokeUiAsync(Action action)
             {
-                // Keep checked rows before filtering
-                var checkedIds = new List<Guid>();
-                foreach (DataGridViewRow row in dataGridViewItemList.Rows)
+                var tcs = new TaskCompletionSource<bool>();
+                try
                 {
-                    if (Convert.ToBoolean(row.Cells["selectColumn"].Value))
+                    if (dataGridViewItemList.InvokeRequired)
                     {
-                        if (row.DataBoundItem is Items item)
-                            checkedIds.Add(item.Id);
+                        dataGridViewItemList.BeginInvoke(new Action(() =>
+                        {
+                            try
+                            {
+                                action();
+                                tcs.SetResult(true);
+                            }
+                            catch (Exception ex)
+                            {
+                                tcs.SetException(ex);
+                            }
+                        }));
+                    }
+                    else
+                    {
+                        action();
+                        tcs.SetResult(true);
                     }
                 }
-
-                // Filter allItems (not currentPageItems)
-                var filtered = allItems.Where(item =>
-                    item.ItemCode.ToLower().Contains(searchText) ||
-                    item.ItemName.ToLower().Contains(searchText) ||
-                    item.ItemDescription.ToLower().Contains(searchText)).ToList();
-
-                dataGridViewItemList.DataSource = filtered;
-
-                // Restore checkboxes
-                foreach (DataGridViewRow row in dataGridViewItemList.Rows)
+                catch (Exception ex)
                 {
-                    if (row.DataBoundItem is Items item && checkedIds.Contains(item.Id))
-                    {
-                        row.Cells["selectColumn"].Value = true;
-                    }
+                    tcs.SetException(ex);
                 }
+
+                return tcs.Task;
+            }
+
+            // Snapshot checked IDs from the backing set (fast, no UI traversal)
+            var checkedIds = new HashSet<Guid>(selectedItemIds);
+
+            // Choose source for search
+            List<Items> sourceForSearch;
+            if (allItems != null && allItems.Count > 0)
+            {
+                sourceForSearch = allItems;
             }
             else
             {
-                // Reset to paginated view
-                dataGridViewItemList.DataSource = currentPageItems;
+                // Ensure background preload is started
+                if (allItemsLoadTask == null)
+                {
+                    allItemsLoadTask = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var svc = new ItemServices();
+                            var items = await svc.GetAllItemsAsync();
+                            if (items != null && items.Count > 0)
+                                allItems = items;
+                        }
+                        catch (Exception ex)
+                        {
+                            LogHelper.Log("Error preloading all items (on-demand): ", ex);
+                        }
+                    });
+                }
+
+                sourceForSearch = currentPageItems;
+            }
+
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                // Run filtering on threadpool
+                var filtered = await Task.Run(() =>
+                {
+                    return sourceForSearch.Where(item =>
+                        (item.ItemCode ?? string.Empty).ToLower().Contains(searchText) ||
+                        (item.ItemName ?? string.Empty).ToLower().Contains(searchText) ||
+                        (item.ItemDescription ?? string.Empty).ToLower().Contains(searchText))
+                    .ToList();
+                });
+
+                // Update UI
+                await InvokeUiAsync(() =>
+                {
+                    dataGridViewItemList.DataSource = null;
+                    dataGridViewItemList.DataSource = filtered;
+
+                    // Restore checkboxes for visible rows
+                    foreach (DataGridViewRow row in dataGridViewItemList.Rows)
+                    {
+                        if (row.DataBoundItem is Items item && checkedIds.Contains(item.Id))
+                            row.Cells["selectColumn"].Value = true;
+                    }
+                });
+            }
+            else
+            {
+                // Reset to paginated view asynchronously and restore checkboxes
+                await InvokeUiAsync(() =>
+                {
+                    dataGridViewItemList.DataSource = null;
+                    dataGridViewItemList.DataSource = currentPageItems;
+                    lblPage.Text = currentPage.ToString();
+                    dataGridViewItemList.ClearSelection();
+                });
+
+                await RestoreCheckboxStates();
             }
         }
 
@@ -1019,7 +1152,21 @@ namespace Autotech.Desktop.Main.View
             {
                 var service = new AccountService();
                 var id = SessionManager.AgentDetails.LocationId;
-                var accounts = await service.GetAccountsByLocationIdAsync(id);
+                var accounts = new List<Accounts>();
+                if (SessionManager.AgentDetails.AgentRole == "Admin")
+                {
+                    accounts = await service.GetAllAccountsAsync();
+                }
+                else
+                {
+                    accounts = await service.GetAccountsByLocationIdAsync(id);
+                }
+
+                // Sort accounts alphabetically by Name (case-insensitive) in-place to avoid extra allocations
+                if (accounts != null && accounts.Count > 1)
+                {
+                    accounts.Sort((a, b) => string.Compare(a?.Name ?? string.Empty, b?.Name ?? string.Empty, StringComparison.CurrentCultureIgnoreCase));
+                }
 
                 comboAccount.DisplayMember = "Name";
                 comboAccount.ValueMember = "Id";
