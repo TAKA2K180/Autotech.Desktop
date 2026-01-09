@@ -35,10 +35,10 @@
   </ItemGroup>
 
 	<PropertyGroup>
-		<Version>26.1.0104.214</Version>
-		<AssemblyVersion>26.1.0104.214</AssemblyVersion>
-		<FileVersion>26.1.0104.214</FileVersion>
-		<InformationalVersion>26.1.0104.214</InformationalVersion>
+		<Version>26.1.0109.215</Version>
+		<AssemblyVersion>26.1.0109.215</AssemblyVersion>
+		<FileVersion>26.1.0109.215</FileVersion>
+		<InformationalVersion>26.1.0109.215</InformationalVersion>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<ApplicationIcon>app.ico</ApplicationIcon>
 	</PropertyGroup>

@@ -74,6 +74,7 @@ namespace Autotech.Desktop.Main.View
                 dataGridViewItemList.CellFormatting += DataGridViewItemList_CellFormatting;
                 txtPaidAmount.TextChanged += txtPaidAmount_TextChanged;
                 comboAccount.SelectedIndexChanged += comboAccount_SelectedIndexChanged;
+                radioRetail.Checked = true;
                 // Final UI tweaks (optional)
             }
             else
@@ -142,6 +143,7 @@ namespace Autotech.Desktop.Main.View
         private List<Items> orderCartItems = new();
         private List<SalesDTO> allInvoices = new();
         private bool isFirstLoad = true;
+        private bool suppressSelectionChanged = false; // when true, ignore SelectionChanged events triggered by programmatic updates
         #endregion
 
         #region Props
@@ -248,6 +250,8 @@ namespace Autotech.Desktop.Main.View
                         allItems.Add(item);
                 }
 
+                // Update grid programmatically - suppress selection changed handling during this update
+                suppressSelectionChanged = true;
                 dataGridViewItemList.DataSource = null;
                 dataGridViewItemList.DataSource = currentPageItems;
 
@@ -259,6 +263,7 @@ namespace Autotech.Desktop.Main.View
                     }
                 }
                 dataGridViewItemList.ClearSelection(); // Prevent auto-select first row after loading
+                suppressSelectionChanged = false;
             }
             catch (Exception ex)
             {
@@ -445,6 +450,9 @@ namespace Autotech.Desktop.Main.View
 
         private void dataGridViewItemList_SelectionChanged(object sender, EventArgs e)
         {
+            if (suppressSelectionChanged)
+                return;
+
             if (!isFirstLoad)
             {
                 foreach (DataGridViewRow row in dataGridViewItemList.SelectedRows)
@@ -455,6 +463,7 @@ namespace Autotech.Desktop.Main.View
                     }
                 }
             }
+
             isFirstLoad = false;
         }
 
@@ -545,9 +554,10 @@ namespace Autotech.Desktop.Main.View
                     .ToList();
                 });
 
-                // Update UI
+                // Update UI (suppress SelectionChanged while we update binding)
                 await InvokeUiAsync(() =>
                 {
+                    suppressSelectionChanged = true;
                     dataGridViewItemList.DataSource = null;
                     dataGridViewItemList.DataSource = filtered;
 
@@ -557,6 +567,8 @@ namespace Autotech.Desktop.Main.View
                         if (row.DataBoundItem is Items item && checkedIds.Contains(item.Id))
                             row.Cells["selectColumn"].Value = true;
                     }
+                    dataGridViewItemList.ClearSelection();
+                    suppressSelectionChanged = false;
                 });
             }
             else
@@ -564,10 +576,12 @@ namespace Autotech.Desktop.Main.View
                 // Reset to paginated view asynchronously and restore checkboxes
                 await InvokeUiAsync(() =>
                 {
+                    suppressSelectionChanged = true;
                     dataGridViewItemList.DataSource = null;
                     dataGridViewItemList.DataSource = currentPageItems;
                     lblPage.Text = currentPage.ToString();
                     dataGridViewItemList.ClearSelection();
+                    suppressSelectionChanged = false;
                 });
 
                 await RestoreCheckboxStates();
@@ -987,7 +1001,11 @@ namespace Autotech.Desktop.Main.View
             decimal remaining = ParseCurrency(txtRemaining.Text);
             decimal tax = ParseCurrency(txtTax.Text);
             decimal discount = ParseCurrency(txtDiscount.Text);
-            decimal discountPercent = discount / (total + discount - tax) * 100;
+            decimal priceBeforeDiscount = total + discount - tax;
+
+            decimal discountPercent = priceBeforeDiscount == 0
+                ? 0
+                : discount / priceBeforeDiscount * 100;
 
             try
             {
