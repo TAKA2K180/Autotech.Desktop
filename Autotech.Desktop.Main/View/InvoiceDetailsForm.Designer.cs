@@ -35,6 +35,7 @@
             lblStatus = new MetroSet_UI.Controls.MetroSetLabel();
             btnCancelInvoice = new MetroSet_UI.Controls.MetroSetButton();
             lblOrigin = new MetroSet_UI.Controls.MetroSetLabel();
+            btnSaveInvoice = new MetroSet_UI.Controls.MetroSetButton();
             ((System.ComponentModel.ISupportInitialize)dataGridViewInvoiceDetails).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dvgPaymentHistory).BeginInit();
             SuspendLayout();
@@ -138,6 +139,7 @@
             txtTax.ThemeName = "MetroLite";
             txtTax.UseSystemPasswordChar = false;
             txtTax.WatermarkText = "Tax";
+            txtTax.KeyPressed += txtTax_KeyPressed;
             // 
             // txtDiscount
             // 
@@ -167,6 +169,7 @@
             txtDiscount.ThemeName = "MetroLite";
             txtDiscount.UseSystemPasswordChar = false;
             txtDiscount.WatermarkText = "Discount";
+            txtDiscount.KeyPressed += txtDiscount_KeyPressed;
             // 
             // txtTotal
             // 
@@ -300,7 +303,7 @@
             btnCloseInvoiceDetails.HoverColor = Color.FromArgb(95, 207, 255);
             btnCloseInvoiceDetails.HoverTextColor = Color.White;
             btnCloseInvoiceDetails.IsDerivedStyle = true;
-            btnCloseInvoiceDetails.Location = new Point(30, 553);
+            btnCloseInvoiceDetails.Location = new Point(30, 583);
             btnCloseInvoiceDetails.Name = "btnCloseInvoiceDetails";
             btnCloseInvoiceDetails.NormalBorderColor = Color.FromArgb(65, 177, 225);
             btnCloseInvoiceDetails.NormalColor = Color.FromArgb(65, 177, 225);
@@ -423,8 +426,8 @@
             btnCancelInvoice.IsDerivedStyle = true;
             btnCancelInvoice.Location = new Point(1197, 553);
             btnCancelInvoice.Name = "btnCancelInvoice";
-            btnCancelInvoice.NormalBorderColor = Color.FromArgb(64, 0, 0);
-            btnCancelInvoice.NormalColor = Color.Maroon;
+            btnCancelInvoice.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnCancelInvoice.NormalColor = Color.FromArgb(65, 177, 225);
             btnCancelInvoice.NormalTextColor = Color.White;
             btnCancelInvoice.PressBorderColor = Color.FromArgb(35, 147, 195);
             btnCancelInvoice.PressColor = Color.FromArgb(35, 147, 195);
@@ -452,9 +455,37 @@
             lblOrigin.ThemeAuthor = "Narwin";
             lblOrigin.ThemeName = "MetroLite";
             // 
+            // btnSaveInvoice
+            // 
+            btnSaveInvoice.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnSaveInvoice.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnSaveInvoice.DisabledForeColor = Color.Gray;
+            btnSaveInvoice.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnSaveInvoice.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnSaveInvoice.HoverColor = Color.FromArgb(95, 207, 255);
+            btnSaveInvoice.HoverTextColor = Color.White;
+            btnSaveInvoice.IsDerivedStyle = true;
+            btnSaveInvoice.Location = new Point(30, 507);
+            btnSaveInvoice.Name = "btnSaveInvoice";
+            btnSaveInvoice.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnSaveInvoice.NormalColor = Color.FromArgb(65, 177, 225);
+            btnSaveInvoice.NormalTextColor = Color.White;
+            btnSaveInvoice.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnSaveInvoice.PressColor = Color.FromArgb(35, 147, 195);
+            btnSaveInvoice.PressTextColor = Color.White;
+            btnSaveInvoice.Size = new Size(150, 40);
+            btnSaveInvoice.Style = MetroSet_UI.Enums.Style.Light;
+            btnSaveInvoice.StyleManager = null;
+            btnSaveInvoice.TabIndex = 22;
+            btnSaveInvoice.Text = "Save Invoice";
+            btnSaveInvoice.ThemeAuthor = "Narwin";
+            btnSaveInvoice.ThemeName = "MetroLite";
+            btnSaveInvoice.Click += btnSaveInvoice_Click;
+            // 
             // InvoiceDetailsForm
             // 
             ClientSize = new Size(1370, 653);
+            Controls.Add(btnSaveInvoice);
             Controls.Add(lblOrigin);
             Controls.Add(btnCancelInvoice);
             Controls.Add(lblStatus);
@@ -495,5 +526,6 @@
         private MetroSet_UI.Controls.MetroSetLabel lblStatus;
         private MetroSet_UI.Controls.MetroSetButton btnCancelInvoice;
         private MetroSet_UI.Controls.MetroSetLabel lblOrigin;
+        private MetroSet_UI.Controls.MetroSetButton btnSaveInvoice;
     }
 }

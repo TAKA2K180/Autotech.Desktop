@@ -71,7 +71,21 @@ namespace Autotech.Desktop.Main.View
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             metroSetTabControl1 = new MetroSetTabControl();
+            tabPageInvoice = new TabPage();
+            lblDateTo = new MetroSetLabel();
+            dtmDateTo = new DateTimePicker();
+            lblDateFrom = new MetroSetLabel();
+            dtmDateFrom = new DateTimePicker();
+            cboAddedOption = new MetroSetComboBox();
+            cboFilterInvoice = new MetroSetComboBox();
+            metroSetLabel3 = new MetroSetLabel();
+            btnInvoiceExport = new MetroSetButton();
+            txtSearchInvoice = new TextBox();
+            btnOpenInvoice = new MetroSetButton();
+            dataGridViewInvoice = new DataGridView();
+            metroSetLabel2 = new MetroSetLabel();
             tabPageSales = new TabPage();
+            comboAccount = new ComboBox();
             pnlPricing = new Panel();
             radioWholesale = new MetroSetRadioButton();
             radioRetail = new MetroSetRadioButton();
@@ -117,25 +131,13 @@ namespace Autotech.Desktop.Main.View
             lblTotal = new MetroSetLabel();
             txtTotal = new MetroSetTextBox();
             lblSalesInfo = new MetroSetLabel();
-            tabPageInvoice = new TabPage();
-            lblDateTo = new MetroSetLabel();
-            dtmDateTo = new DateTimePicker();
-            lblDateFrom = new MetroSetLabel();
-            dtmDateFrom = new DateTimePicker();
-            cboAddedOption = new MetroSetComboBox();
-            cboFilterInvoice = new MetroSetComboBox();
-            metroSetLabel3 = new MetroSetLabel();
-            btnInvoiceExport = new MetroSetButton();
-            txtSearchInvoice = new TextBox();
-            btnOpenInvoice = new MetroSetButton();
-            dataGridViewInvoice = new DataGridView();
-            metroSetLabel2 = new MetroSetLabel();
             tabPageMaintenance = new TabPage();
             tabPageUserDetails = new TabPage();
             metroSetControlBox1 = new MetroSetControlBox();
             btnLogout = new MetroSetButton();
-            comboAccount = new ComboBox();
             metroSetTabControl1.SuspendLayout();
+            tabPageInvoice.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewInvoice).BeginInit();
             tabPageSales.SuspendLayout();
             pnlPricing.SuspendLayout();
             pnlLocation.SuspendLayout();
@@ -143,8 +145,6 @@ namespace Autotech.Desktop.Main.View
             ((System.ComponentModel.ISupportInitialize)dataGridViewItemList).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewOrderCart).BeginInit();
             panelPayment.SuspendLayout();
-            tabPageInvoice.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridViewInvoice).BeginInit();
             SuspendLayout();
             // 
             // metroSetTabControl1
@@ -175,6 +175,235 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.UnselectedTextColor = Color.Gray;
             metroSetTabControl1.UseAnimation = false;
             metroSetTabControl1.SelectedIndexChanged += metroSetTabControl1_SelectedIndexChanged;
+            // 
+            // tabPageInvoice
+            // 
+            tabPageInvoice.Controls.Add(lblDateTo);
+            tabPageInvoice.Controls.Add(dtmDateTo);
+            tabPageInvoice.Controls.Add(lblDateFrom);
+            tabPageInvoice.Controls.Add(dtmDateFrom);
+            tabPageInvoice.Controls.Add(cboAddedOption);
+            tabPageInvoice.Controls.Add(cboFilterInvoice);
+            tabPageInvoice.Controls.Add(metroSetLabel3);
+            tabPageInvoice.Controls.Add(btnInvoiceExport);
+            tabPageInvoice.Controls.Add(txtSearchInvoice);
+            tabPageInvoice.Controls.Add(btnOpenInvoice);
+            tabPageInvoice.Controls.Add(dataGridViewInvoice);
+            tabPageInvoice.Controls.Add(metroSetLabel2);
+            tabPageInvoice.Location = new Point(4, 42);
+            tabPageInvoice.Name = "tabPageInvoice";
+            tabPageInvoice.Size = new Size(1412, 670);
+            tabPageInvoice.TabIndex = 1;
+            tabPageInvoice.Text = "Invoice";
+            // 
+            // lblDateTo
+            // 
+            lblDateTo.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblDateTo.IsDerivedStyle = true;
+            lblDateTo.Location = new Point(701, 46);
+            lblDateTo.Name = "lblDateTo";
+            lblDateTo.Size = new Size(29, 23);
+            lblDateTo.Style = Style.Light;
+            lblDateTo.StyleManager = null;
+            lblDateTo.TabIndex = 14;
+            lblDateTo.Text = "To:";
+            lblDateTo.ThemeAuthor = "Narwin";
+            lblDateTo.ThemeName = "MetroLite";
+            // 
+            // dtmDateTo
+            // 
+            dtmDateTo.Location = new Point(736, 42);
+            dtmDateTo.Name = "dtmDateTo";
+            dtmDateTo.Size = new Size(200, 27);
+            dtmDateTo.TabIndex = 13;
+            dtmDateTo.ValueChanged += dtmDateTo_ValueChanged;
+            // 
+            // lblDateFrom
+            // 
+            lblDateFrom.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lblDateFrom.IsDerivedStyle = true;
+            lblDateFrom.Location = new Point(442, 46);
+            lblDateFrom.Name = "lblDateFrom";
+            lblDateFrom.Size = new Size(47, 23);
+            lblDateFrom.Style = Style.Light;
+            lblDateFrom.StyleManager = null;
+            lblDateFrom.TabIndex = 12;
+            lblDateFrom.Text = "From:";
+            lblDateFrom.ThemeAuthor = "Narwin";
+            lblDateFrom.ThemeName = "MetroLite";
+            // 
+            // dtmDateFrom
+            // 
+            dtmDateFrom.Location = new Point(495, 43);
+            dtmDateFrom.Name = "dtmDateFrom";
+            dtmDateFrom.Size = new Size(200, 27);
+            dtmDateFrom.TabIndex = 11;
+            dtmDateFrom.ValueChanged += dtmDateFrom_ValueChanged;
+            // 
+            // cboAddedOption
+            // 
+            cboAddedOption.AllowDrop = true;
+            cboAddedOption.ArrowColor = Color.FromArgb(150, 150, 150);
+            cboAddedOption.BackColor = Color.Transparent;
+            cboAddedOption.BackgroundColor = Color.FromArgb(238, 238, 238);
+            cboAddedOption.BorderColor = Color.FromArgb(150, 150, 150);
+            cboAddedOption.CausesValidation = false;
+            cboAddedOption.DisabledBackColor = Color.FromArgb(204, 204, 204);
+            cboAddedOption.DisabledBorderColor = Color.FromArgb(155, 155, 155);
+            cboAddedOption.DisabledForeColor = Color.FromArgb(136, 136, 136);
+            cboAddedOption.DrawMode = DrawMode.OwnerDrawFixed;
+            cboAddedOption.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboAddedOption.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            cboAddedOption.FormattingEnabled = true;
+            cboAddedOption.IsDerivedStyle = true;
+            cboAddedOption.ItemHeight = 20;
+            cboAddedOption.Location = new Point(288, 43);
+            cboAddedOption.Name = "cboAddedOption";
+            cboAddedOption.SelectedItemBackColor = Color.FromArgb(65, 177, 225);
+            cboAddedOption.SelectedItemForeColor = Color.White;
+            cboAddedOption.Size = new Size(148, 26);
+            cboAddedOption.Style = Style.Light;
+            cboAddedOption.StyleManager = null;
+            cboAddedOption.TabIndex = 10;
+            cboAddedOption.ThemeAuthor = "Narwin";
+            cboAddedOption.ThemeName = "MetroLite";
+            cboAddedOption.SelectedIndexChanged += cboAddedOption_SelectedIndexChanged;
+            // 
+            // cboFilterInvoice
+            // 
+            cboFilterInvoice.AllowDrop = true;
+            cboFilterInvoice.ArrowColor = Color.FromArgb(150, 150, 150);
+            cboFilterInvoice.BackColor = Color.Transparent;
+            cboFilterInvoice.BackgroundColor = Color.FromArgb(238, 238, 238);
+            cboFilterInvoice.BorderColor = Color.FromArgb(150, 150, 150);
+            cboFilterInvoice.CausesValidation = false;
+            cboFilterInvoice.DisabledBackColor = Color.FromArgb(204, 204, 204);
+            cboFilterInvoice.DisabledBorderColor = Color.FromArgb(155, 155, 155);
+            cboFilterInvoice.DisabledForeColor = Color.FromArgb(136, 136, 136);
+            cboFilterInvoice.DrawMode = DrawMode.OwnerDrawFixed;
+            cboFilterInvoice.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboFilterInvoice.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            cboFilterInvoice.FormattingEnabled = true;
+            cboFilterInvoice.IsDerivedStyle = true;
+            cboFilterInvoice.ItemHeight = 20;
+            cboFilterInvoice.Location = new Point(123, 43);
+            cboFilterInvoice.Name = "cboFilterInvoice";
+            cboFilterInvoice.SelectedItemBackColor = Color.FromArgb(65, 177, 225);
+            cboFilterInvoice.SelectedItemForeColor = Color.White;
+            cboFilterInvoice.Size = new Size(159, 26);
+            cboFilterInvoice.Style = Style.Light;
+            cboFilterInvoice.StyleManager = null;
+            cboFilterInvoice.TabIndex = 9;
+            cboFilterInvoice.ThemeAuthor = "Narwin";
+            cboFilterInvoice.ThemeName = "MetroLite";
+            cboFilterInvoice.SelectedIndexChanged += cboFilterInvoice_SelectedIndexChanged;
+            // 
+            // metroSetLabel3
+            // 
+            metroSetLabel3.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            metroSetLabel3.IsDerivedStyle = true;
+            metroSetLabel3.Location = new Point(17, 43);
+            metroSetLabel3.Name = "metroSetLabel3";
+            metroSetLabel3.Size = new Size(65, 23);
+            metroSetLabel3.Style = Style.Light;
+            metroSetLabel3.StyleManager = null;
+            metroSetLabel3.TabIndex = 8;
+            metroSetLabel3.Text = "Filter By:";
+            metroSetLabel3.ThemeAuthor = "Narwin";
+            metroSetLabel3.ThemeName = "MetroLite";
+            // 
+            // btnInvoiceExport
+            // 
+            btnInvoiceExport.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnInvoiceExport.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnInvoiceExport.DisabledForeColor = Color.Gray;
+            btnInvoiceExport.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnInvoiceExport.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnInvoiceExport.HoverColor = Color.FromArgb(95, 207, 255);
+            btnInvoiceExport.HoverTextColor = Color.White;
+            btnInvoiceExport.IsDerivedStyle = true;
+            btnInvoiceExport.Location = new Point(147, 616);
+            btnInvoiceExport.Name = "btnInvoiceExport";
+            btnInvoiceExport.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnInvoiceExport.NormalColor = Color.FromArgb(65, 177, 225);
+            btnInvoiceExport.NormalTextColor = Color.White;
+            btnInvoiceExport.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnInvoiceExport.PressColor = Color.FromArgb(35, 147, 195);
+            btnInvoiceExport.PressTextColor = Color.White;
+            btnInvoiceExport.Size = new Size(159, 35);
+            btnInvoiceExport.Style = Style.Light;
+            btnInvoiceExport.StyleManager = null;
+            btnInvoiceExport.TabIndex = 7;
+            btnInvoiceExport.Text = "EXPORT TO EXCEL";
+            btnInvoiceExport.ThemeAuthor = "Narwin";
+            btnInvoiceExport.ThemeName = "MetroLite";
+            btnInvoiceExport.Click += btnInvoiceExport_Click;
+            // 
+            // txtSearchInvoice
+            // 
+            txtSearchInvoice.Location = new Point(123, 76);
+            txtSearchInvoice.Name = "txtSearchInvoice";
+            txtSearchInvoice.Size = new Size(159, 27);
+            txtSearchInvoice.TabIndex = 4;
+            txtSearchInvoice.TextChanged += txtSearchInvoice_TextChanged;
+            // 
+            // btnOpenInvoice
+            // 
+            btnOpenInvoice.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnOpenInvoice.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnOpenInvoice.DisabledForeColor = Color.Gray;
+            btnOpenInvoice.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnOpenInvoice.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnOpenInvoice.HoverColor = Color.FromArgb(95, 207, 255);
+            btnOpenInvoice.HoverTextColor = Color.White;
+            btnOpenInvoice.IsDerivedStyle = true;
+            btnOpenInvoice.Location = new Point(15, 616);
+            btnOpenInvoice.Name = "btnOpenInvoice";
+            btnOpenInvoice.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnOpenInvoice.NormalColor = Color.FromArgb(65, 177, 225);
+            btnOpenInvoice.NormalTextColor = Color.White;
+            btnOpenInvoice.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnOpenInvoice.PressColor = Color.FromArgb(35, 147, 195);
+            btnOpenInvoice.PressTextColor = Color.White;
+            btnOpenInvoice.Size = new Size(85, 35);
+            btnOpenInvoice.Style = Style.Light;
+            btnOpenInvoice.StyleManager = null;
+            btnOpenInvoice.TabIndex = 3;
+            btnOpenInvoice.Text = "OPEN";
+            btnOpenInvoice.ThemeAuthor = "Narwin";
+            btnOpenInvoice.ThemeName = "MetroLite";
+            btnOpenInvoice.Click += btnOpenInvoice_Click;
+            // 
+            // dataGridViewInvoice
+            // 
+            dataGridViewInvoice.AllowUserToAddRows = false;
+            dataGridViewInvoice.AllowUserToDeleteRows = false;
+            dataGridViewInvoice.AllowUserToResizeColumns = false;
+            dataGridViewInvoice.AllowUserToResizeRows = false;
+            dataGridViewInvoice.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewInvoice.Location = new Point(15, 119);
+            dataGridViewInvoice.Name = "dataGridViewInvoice";
+            dataGridViewInvoice.ReadOnly = true;
+            dataGridViewInvoice.RowHeadersWidth = 51;
+            dataGridViewInvoice.RowTemplate.Height = 25;
+            dataGridViewInvoice.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewInvoice.Size = new Size(1383, 491);
+            dataGridViewInvoice.TabIndex = 0;
+            dataGridViewInvoice.DataBindingComplete += dataGridViewInvoice_DataBindingComplete;
+            // 
+            // metroSetLabel2
+            // 
+            metroSetLabel2.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            metroSetLabel2.IsDerivedStyle = true;
+            metroSetLabel2.Location = new Point(17, 80);
+            metroSetLabel2.Name = "metroSetLabel2";
+            metroSetLabel2.Size = new Size(128, 23);
+            metroSetLabel2.Style = Style.Light;
+            metroSetLabel2.StyleManager = null;
+            metroSetLabel2.TabIndex = 6;
+            metroSetLabel2.Text = "Search Invoice";
+            metroSetLabel2.ThemeAuthor = "Narwin";
+            metroSetLabel2.ThemeName = "MetroLite";
             // 
             // tabPageSales
             // 
@@ -209,6 +438,14 @@ namespace Autotech.Desktop.Main.View
             tabPageSales.TabIndex = 0;
             tabPageSales.Text = "Sales";
             tabPageSales.UseVisualStyleBackColor = true;
+            // 
+            // comboAccount
+            // 
+            comboAccount.FormattingEnabled = true;
+            comboAccount.Location = new Point(1010, 7);
+            comboAccount.Name = "comboAccount";
+            comboAccount.Size = new Size(274, 28);
+            comboAccount.TabIndex = 30;
             // 
             // pnlPricing
             // 
@@ -1153,234 +1390,6 @@ namespace Autotech.Desktop.Main.View
             lblSalesInfo.ThemeAuthor = "Narwin";
             lblSalesInfo.ThemeName = "MetroLite";
             // 
-            // tabPageInvoice
-            // 
-            tabPageInvoice.Controls.Add(lblDateTo);
-            tabPageInvoice.Controls.Add(dtmDateTo);
-            tabPageInvoice.Controls.Add(lblDateFrom);
-            tabPageInvoice.Controls.Add(dtmDateFrom);
-            tabPageInvoice.Controls.Add(cboAddedOption);
-            tabPageInvoice.Controls.Add(cboFilterInvoice);
-            tabPageInvoice.Controls.Add(metroSetLabel3);
-            tabPageInvoice.Controls.Add(btnInvoiceExport);
-            tabPageInvoice.Controls.Add(txtSearchInvoice);
-            tabPageInvoice.Controls.Add(btnOpenInvoice);
-            tabPageInvoice.Controls.Add(dataGridViewInvoice);
-            tabPageInvoice.Controls.Add(metroSetLabel2);
-            tabPageInvoice.Location = new Point(4, 42);
-            tabPageInvoice.Name = "tabPageInvoice";
-            tabPageInvoice.Size = new Size(1412, 670);
-            tabPageInvoice.TabIndex = 1;
-            tabPageInvoice.Text = "Invoice";
-            // 
-            // lblDateTo
-            // 
-            lblDateTo.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            lblDateTo.IsDerivedStyle = true;
-            lblDateTo.Location = new Point(701, 46);
-            lblDateTo.Name = "lblDateTo";
-            lblDateTo.Size = new Size(29, 23);
-            lblDateTo.Style = Style.Light;
-            lblDateTo.StyleManager = null;
-            lblDateTo.TabIndex = 14;
-            lblDateTo.Text = "To:";
-            lblDateTo.ThemeAuthor = "Narwin";
-            lblDateTo.ThemeName = "MetroLite";
-            // 
-            // dtmDateTo
-            // 
-            dtmDateTo.Location = new Point(736, 42);
-            dtmDateTo.Name = "dtmDateTo";
-            dtmDateTo.Size = new Size(200, 27);
-            dtmDateTo.TabIndex = 13;
-            dtmDateTo.ValueChanged += dtmDateTo_ValueChanged;
-            // 
-            // lblDateFrom
-            // 
-            lblDateFrom.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            lblDateFrom.IsDerivedStyle = true;
-            lblDateFrom.Location = new Point(442, 46);
-            lblDateFrom.Name = "lblDateFrom";
-            lblDateFrom.Size = new Size(47, 23);
-            lblDateFrom.Style = Style.Light;
-            lblDateFrom.StyleManager = null;
-            lblDateFrom.TabIndex = 12;
-            lblDateFrom.Text = "From:";
-            lblDateFrom.ThemeAuthor = "Narwin";
-            lblDateFrom.ThemeName = "MetroLite";
-            // 
-            // dtmDateFrom
-            // 
-            dtmDateFrom.Location = new Point(495, 43);
-            dtmDateFrom.Name = "dtmDateFrom";
-            dtmDateFrom.Size = new Size(200, 27);
-            dtmDateFrom.TabIndex = 11;
-            dtmDateFrom.ValueChanged += dtmDateFrom_ValueChanged;
-            // 
-            // cboAddedOption
-            // 
-            cboAddedOption.AllowDrop = true;
-            cboAddedOption.ArrowColor = Color.FromArgb(150, 150, 150);
-            cboAddedOption.BackColor = Color.Transparent;
-            cboAddedOption.BackgroundColor = Color.FromArgb(238, 238, 238);
-            cboAddedOption.BorderColor = Color.FromArgb(150, 150, 150);
-            cboAddedOption.CausesValidation = false;
-            cboAddedOption.DisabledBackColor = Color.FromArgb(204, 204, 204);
-            cboAddedOption.DisabledBorderColor = Color.FromArgb(155, 155, 155);
-            cboAddedOption.DisabledForeColor = Color.FromArgb(136, 136, 136);
-            cboAddedOption.DrawMode = DrawMode.OwnerDrawFixed;
-            cboAddedOption.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboAddedOption.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Regular, GraphicsUnit.Point);
-            cboAddedOption.FormattingEnabled = true;
-            cboAddedOption.IsDerivedStyle = true;
-            cboAddedOption.ItemHeight = 20;
-            cboAddedOption.Location = new Point(288, 43);
-            cboAddedOption.Name = "cboAddedOption";
-            cboAddedOption.SelectedItemBackColor = Color.FromArgb(65, 177, 225);
-            cboAddedOption.SelectedItemForeColor = Color.White;
-            cboAddedOption.Size = new Size(148, 26);
-            cboAddedOption.Style = Style.Light;
-            cboAddedOption.StyleManager = null;
-            cboAddedOption.TabIndex = 10;
-            cboAddedOption.ThemeAuthor = "Narwin";
-            cboAddedOption.ThemeName = "MetroLite";
-            cboAddedOption.SelectedIndexChanged += cboAddedOption_SelectedIndexChanged;
-            // 
-            // cboFilterInvoice
-            // 
-            cboFilterInvoice.AllowDrop = true;
-            cboFilterInvoice.ArrowColor = Color.FromArgb(150, 150, 150);
-            cboFilterInvoice.BackColor = Color.Transparent;
-            cboFilterInvoice.BackgroundColor = Color.FromArgb(238, 238, 238);
-            cboFilterInvoice.BorderColor = Color.FromArgb(150, 150, 150);
-            cboFilterInvoice.CausesValidation = false;
-            cboFilterInvoice.DisabledBackColor = Color.FromArgb(204, 204, 204);
-            cboFilterInvoice.DisabledBorderColor = Color.FromArgb(155, 155, 155);
-            cboFilterInvoice.DisabledForeColor = Color.FromArgb(136, 136, 136);
-            cboFilterInvoice.DrawMode = DrawMode.OwnerDrawFixed;
-            cboFilterInvoice.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboFilterInvoice.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Regular, GraphicsUnit.Point);
-            cboFilterInvoice.FormattingEnabled = true;
-            cboFilterInvoice.IsDerivedStyle = true;
-            cboFilterInvoice.ItemHeight = 20;
-            cboFilterInvoice.Location = new Point(123, 43);
-            cboFilterInvoice.Name = "cboFilterInvoice";
-            cboFilterInvoice.SelectedItemBackColor = Color.FromArgb(65, 177, 225);
-            cboFilterInvoice.SelectedItemForeColor = Color.White;
-            cboFilterInvoice.Size = new Size(159, 26);
-            cboFilterInvoice.Style = Style.Light;
-            cboFilterInvoice.StyleManager = null;
-            cboFilterInvoice.TabIndex = 9;
-            cboFilterInvoice.ThemeAuthor = "Narwin";
-            cboFilterInvoice.ThemeName = "MetroLite";
-            cboFilterInvoice.SelectedIndexChanged += cboFilterInvoice_SelectedIndexChanged;
-            // 
-            // metroSetLabel3
-            // 
-            metroSetLabel3.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            metroSetLabel3.IsDerivedStyle = true;
-            metroSetLabel3.Location = new Point(17, 43);
-            metroSetLabel3.Name = "metroSetLabel3";
-            metroSetLabel3.Size = new Size(65, 23);
-            metroSetLabel3.Style = Style.Light;
-            metroSetLabel3.StyleManager = null;
-            metroSetLabel3.TabIndex = 8;
-            metroSetLabel3.Text = "Filter By:";
-            metroSetLabel3.ThemeAuthor = "Narwin";
-            metroSetLabel3.ThemeName = "MetroLite";
-            // 
-            // btnInvoiceExport
-            // 
-            btnInvoiceExport.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
-            btnInvoiceExport.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
-            btnInvoiceExport.DisabledForeColor = Color.Gray;
-            btnInvoiceExport.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            btnInvoiceExport.HoverBorderColor = Color.FromArgb(95, 207, 255);
-            btnInvoiceExport.HoverColor = Color.FromArgb(95, 207, 255);
-            btnInvoiceExport.HoverTextColor = Color.White;
-            btnInvoiceExport.IsDerivedStyle = true;
-            btnInvoiceExport.Location = new Point(147, 616);
-            btnInvoiceExport.Name = "btnInvoiceExport";
-            btnInvoiceExport.NormalBorderColor = Color.FromArgb(65, 177, 225);
-            btnInvoiceExport.NormalColor = Color.FromArgb(65, 177, 225);
-            btnInvoiceExport.NormalTextColor = Color.White;
-            btnInvoiceExport.PressBorderColor = Color.FromArgb(35, 147, 195);
-            btnInvoiceExport.PressColor = Color.FromArgb(35, 147, 195);
-            btnInvoiceExport.PressTextColor = Color.White;
-            btnInvoiceExport.Size = new Size(159, 35);
-            btnInvoiceExport.Style = Style.Light;
-            btnInvoiceExport.StyleManager = null;
-            btnInvoiceExport.TabIndex = 7;
-            btnInvoiceExport.Text = "EXPORT TO EXCEL";
-            btnInvoiceExport.ThemeAuthor = "Narwin";
-            btnInvoiceExport.ThemeName = "MetroLite";
-            btnInvoiceExport.Click += btnInvoiceExport_Click;
-            // 
-            // txtSearchInvoice
-            // 
-            txtSearchInvoice.Location = new Point(123, 76);
-            txtSearchInvoice.Name = "txtSearchInvoice";
-            txtSearchInvoice.Size = new Size(159, 27);
-            txtSearchInvoice.TabIndex = 4;
-            txtSearchInvoice.TextChanged += txtSearchInvoice_TextChanged;
-            // 
-            // btnOpenInvoice
-            // 
-            btnOpenInvoice.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
-            btnOpenInvoice.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
-            btnOpenInvoice.DisabledForeColor = Color.Gray;
-            btnOpenInvoice.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            btnOpenInvoice.HoverBorderColor = Color.FromArgb(95, 207, 255);
-            btnOpenInvoice.HoverColor = Color.FromArgb(95, 207, 255);
-            btnOpenInvoice.HoverTextColor = Color.White;
-            btnOpenInvoice.IsDerivedStyle = true;
-            btnOpenInvoice.Location = new Point(15, 616);
-            btnOpenInvoice.Name = "btnOpenInvoice";
-            btnOpenInvoice.NormalBorderColor = Color.FromArgb(65, 177, 225);
-            btnOpenInvoice.NormalColor = Color.FromArgb(65, 177, 225);
-            btnOpenInvoice.NormalTextColor = Color.White;
-            btnOpenInvoice.PressBorderColor = Color.FromArgb(35, 147, 195);
-            btnOpenInvoice.PressColor = Color.FromArgb(35, 147, 195);
-            btnOpenInvoice.PressTextColor = Color.White;
-            btnOpenInvoice.Size = new Size(85, 35);
-            btnOpenInvoice.Style = Style.Light;
-            btnOpenInvoice.StyleManager = null;
-            btnOpenInvoice.TabIndex = 3;
-            btnOpenInvoice.Text = "OPEN";
-            btnOpenInvoice.ThemeAuthor = "Narwin";
-            btnOpenInvoice.ThemeName = "MetroLite";
-            btnOpenInvoice.Click += btnOpenInvoice_Click;
-            // 
-            // dataGridViewInvoice
-            // 
-            dataGridViewInvoice.AllowUserToAddRows = false;
-            dataGridViewInvoice.AllowUserToDeleteRows = false;
-            dataGridViewInvoice.AllowUserToResizeColumns = false;
-            dataGridViewInvoice.AllowUserToResizeRows = false;
-            dataGridViewInvoice.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewInvoice.Location = new Point(15, 119);
-            dataGridViewInvoice.Name = "dataGridViewInvoice";
-            dataGridViewInvoice.ReadOnly = true;
-            dataGridViewInvoice.RowHeadersWidth = 51;
-            dataGridViewInvoice.RowTemplate.Height = 25;
-            dataGridViewInvoice.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewInvoice.Size = new Size(1383, 491);
-            dataGridViewInvoice.TabIndex = 0;
-            // 
-            // metroSetLabel2
-            // 
-            metroSetLabel2.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            metroSetLabel2.IsDerivedStyle = true;
-            metroSetLabel2.Location = new Point(17, 80);
-            metroSetLabel2.Name = "metroSetLabel2";
-            metroSetLabel2.Size = new Size(128, 23);
-            metroSetLabel2.Style = Style.Light;
-            metroSetLabel2.StyleManager = null;
-            metroSetLabel2.TabIndex = 6;
-            metroSetLabel2.Text = "Search Invoice";
-            metroSetLabel2.ThemeAuthor = "Narwin";
-            metroSetLabel2.ThemeName = "MetroLite";
-            // 
             // tabPageMaintenance
             // 
             tabPageMaintenance.Location = new Point(4, 42);
@@ -1450,14 +1459,6 @@ namespace Autotech.Desktop.Main.View
             btnLogout.ThemeName = "MetroLite";
             btnLogout.Click += btnLogout_Click;
             // 
-            // comboAccount
-            // 
-            comboAccount.FormattingEnabled = true;
-            comboAccount.Location = new Point(1010, 7);
-            comboAccount.Name = "comboAccount";
-            comboAccount.Size = new Size(274, 28);
-            comboAccount.TabIndex = 30;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(10F, 20F);
@@ -1471,6 +1472,9 @@ namespace Autotech.Desktop.Main.View
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Autotech POS System";
             metroSetTabControl1.ResumeLayout(false);
+            tabPageInvoice.ResumeLayout(false);
+            tabPageInvoice.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewInvoice).EndInit();
             tabPageSales.ResumeLayout(false);
             pnlPricing.ResumeLayout(false);
             pnlLocation.ResumeLayout(false);
@@ -1478,9 +1482,6 @@ namespace Autotech.Desktop.Main.View
             ((System.ComponentModel.ISupportInitialize)dataGridViewItemList).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewOrderCart).EndInit();
             panelPayment.ResumeLayout(false);
-            tabPageInvoice.ResumeLayout(false);
-            tabPageInvoice.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridViewInvoice).EndInit();
             ResumeLayout(false);
         }
 

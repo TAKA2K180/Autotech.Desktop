@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static Autotech.Desktop.BusinessLayer.Helpers.PagingHelper;
 
@@ -95,18 +96,33 @@ namespace Autotech.Desktop.BusinessLayer.Services
             {
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
-                var json = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                
+                var options = new JsonSerializerOptions
                 {
-                    WriteIndented = true
-                });
+                    WriteIndented = true,
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+                };
+                
+                var json = JsonSerializer.Serialize(item, options);
+                LogHelper.Log($"Updating item with ID: {item.Id}\nPayload: {json}");
 
                 var response = await httpClient.PutAsJsonAsync($"{apiUrl}/{item.Id}", item);
 
-                return response.IsSuccessStatusCode;
+                if (response.IsSuccessStatusCode)
+                {
+                    LogHelper.Log($"Item {item.Id} updated successfully");
+                    return true;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    LogHelper.Log($"Update failed. Status: {response.StatusCode}, Error: {errorContent}");
+                    return false;
+                }
             }
             catch(Exception ex)
             {
-                LogHelper.Log("Error: ", ex);
+                LogHelper.Log("Error updating item: ", ex);
                 throw;
             }
         }

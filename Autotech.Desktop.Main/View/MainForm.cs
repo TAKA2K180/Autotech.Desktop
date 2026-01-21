@@ -6,6 +6,7 @@ using Autotech.Desktop.Core.Models;
 using MetroSet_UI.Controls;
 using MetroSet_UI.Forms;
 using System.ComponentModel;
+using System.Drawing.Printing;
 using System.IO;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
@@ -406,7 +407,8 @@ namespace Autotech.Desktop.Main.View
                 {
                     e.Value = "N/A";
                 }
-            } else if (dataGridViewItemList.Columns[e.ColumnIndex].Name == "itemQuantityColumn" && item != null)
+            }
+            else if (dataGridViewItemList.Columns[e.ColumnIndex].Name == "itemQuantityColumn" && item != null)
             {
                 if (item.itemDetails != null)
                 {
@@ -1024,7 +1026,7 @@ namespace Autotech.Desktop.Main.View
                     DueDate = DateTime.Now.AddDays(int.TryParse(txtTerms.Text, out var dVal) ? dVal : 0),
                     RemainingBalance = Math.Round((double)remaining),
                     Status = "For approval",
-                    TotalLiters = 0,
+                    TotalLiters = 0, 
                     Cluster = "",
                     AccountId = accountId,
                     LocationId = SessionManager.AgentDetails.Location.Id,
@@ -1040,9 +1042,10 @@ namespace Autotech.Desktop.Main.View
                         double.TryParse(row.Cells["cartQuantity"].Value?.ToString(), out double quantity);
                         double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
                         double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
-                        double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountPerItem);
-                        double totalDiscount = price - subtotal;
-                        totalDiscount = Math.Round(totalDiscount, 2);
+                        double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountAmount);
+                        
+                        // Discount is a fixed value, round to 2 decimal places
+                        double totalDiscount = Math.Round(discountAmount, 2);
 
                         return new InvoiceItemDTO
                         {
@@ -1060,11 +1063,18 @@ namespace Autotech.Desktop.Main.View
                 };
 
                 // 4. Call backend
-
                 var service = new SalesService();
-                var invoiceId = await service.CreateInvoiceAsync(invoiceDto);
+                var (invoiceId, invoiceNumber) = await service.CreateInvoiceAsync(invoiceDto);
 
                 new ToastMessageForm("Invoice created successfully!").Show();
+
+                // ✅ Fetch the created invoice for printing
+                var createdInvoice = await service.GetInvoiceByIdAsync(invoiceId);
+                var accountService = new AccountService();
+                var accounts = await accountService.GetAccountByIdAsync(selectedAccount.Id);
+
+                // ✅ Print receipt automatically
+                await PrintReceiptAsync(createdInvoice, accounts);
 
                 // ✅ Clear cart and reset
                 orderCartItems.Clear();
@@ -1133,6 +1143,221 @@ namespace Autotech.Desktop.Main.View
             {
                 txtRemaining.Text = "₱0.00";
             }
+        }
+
+        private async Task PrintReceiptAsync(InvoiceDetailsDTO invoice, Accounts accounts)
+        {
+            try
+            {
+                // Create sanitized file name
+                string invoiceNumber = SanitizeFileName(invoice.strInvoiceNumber);
+                string customerName = SanitizeFileName(invoice.AccountName);
+                string date = invoice.DateSold.ToString("yyyy-MM-dd");
+                string fileName = $"{invoiceNumber}_{customerName}_{date}.pdf";
+
+                // Get Reports folder under app root
+                string appRoot = AppDomain.CurrentDomain.BaseDirectory;
+                string reportsFolder = Path.Combine(appRoot, "Reports");
+                if (!Directory.Exists(reportsFolder))
+                    Directory.CreateDirectory(reportsFolder);
+
+                string savePath = Path.Combine(reportsFolder, fileName);
+
+                // Configure page settings
+                var settings = new PageSettings
+                {
+                    Margins = new Margins(10, 10, 10, 10),
+                    PaperSize = new PaperSize("A4", 827, 1169)
+                };
+
+                // Create print document
+                var printDoc = new PrintDocument();
+                printDoc.DefaultPageSettings = settings;
+                printDoc.PrintPage += (sender, e) => PrintDoc_PrintPage(sender, e, invoice, accounts);
+
+                // Show print preview
+                var previewDialog = new PrintPreviewDialog
+                {
+                    Document = printDoc
+                };
+                previewDialog.ShowDialog();
+
+                // Auto-save to PDF
+                var pdfDoc = new PrintDocument
+                {
+                    DefaultPageSettings = settings,
+                    PrinterSettings = new PrinterSettings
+                    {
+                        PrinterName = "Microsoft Print to PDF",
+                        PrintToFile = true,
+                        PrintFileName = savePath
+                    }
+                };
+
+                pdfDoc.PrintPage += (sender, e) => PrintDoc_PrintPage(sender, e, invoice, accounts);
+                pdfDoc.Print();
+
+                MessageBox.Show($"Receipt printed and saved to:\n{savePath}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log("Print receipt error: ", ex);
+                MessageBox.Show("Failed to print receipt:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string SanitizeFileName(string input)
+        {
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                input = input.Replace(c, '_');
+            }
+            return input.Trim();
+        }
+
+        private void PrintDoc_PrintPage(object sender, PrintPageEventArgs e, InvoiceDetailsDTO invoice, Accounts accounts)
+        {
+            Graphics g = e.Graphics;
+
+            int itemCount = invoice.PurchasedItems.Count;
+            float estimatedHeight = 300 + (itemCount * 20);
+            float halfA4Height = 792 / 2;
+
+            if (estimatedHeight < halfA4Height)
+                e.PageSettings.PaperSize = new PaperSize("HalfA4", 827, (int)estimatedHeight);
+
+            Font headerFont = new Font("Arial", 12, FontStyle.Bold);
+            Font bodyFont = new Font("Arial", 10);
+            float x = e.MarginBounds.Left;
+            float y = e.MarginBounds.Top;
+            float right = e.MarginBounds.Right;
+            float usableWidth = right - x;
+            float lineHeight = bodyFont.GetHeight(g) + 2;
+
+            // Header
+            g.DrawString("AUTOTECH CAR CARE CENTER", headerFont, Brushes.Black, x + usableWidth / 4, y); y += lineHeight;
+            g.DrawString("Wawa, Abucay, Bataan", bodyFont, Brushes.Black, x + usableWidth / 3, y); y += lineHeight;
+            g.DrawString("TRUST RECEIPT", headerFont, Brushes.Black, x + usableWidth / 3, y); y += lineHeight;
+            g.DrawString("*THIS IS NOT YOUR OFFICIAL RECEIPT*", bodyFont, Brushes.Black, x + usableWidth / 4, y); y += lineHeight;
+
+            // Info
+            g.DrawString($"Receipt #: {invoice.strInvoiceNumber}", bodyFont, Brushes.Black, x, y);
+            g.DrawString($"Date: {DateTime.Now:g}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y); y += lineHeight;
+            g.DrawString($"Terms: {invoice.Terms} day(s)", new Font("Arial", 14, FontStyle.Bold), Brushes.Black, x + usableWidth * 0.55f, y);
+            g.DrawString($"Owner's Name: {accounts.ContactPerson}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y + 22);
+            g.DrawString($"Prepared by: {SessionManager.AgentDetails?.AgentName ?? "N/A"}", bodyFont, Brushes.Black, x, y); y += lineHeight;
+            g.DrawString($"Customer: {invoice.AccountName}", bodyFont, Brushes.Black, x, y); y += lineHeight;
+            
+            string addressLabel = "Customer address:";
+            string fullAddress = $"{addressLabel} {accounts.Address}";
+            float ownerColumnX = x + usableWidth * 0.55f;
+            float fullWidth = g.MeasureString(fullAddress, bodyFont).Width;
+
+            if (x + fullWidth > ownerColumnX)
+            {
+                g.DrawString(addressLabel, bodyFont, Brushes.Black, x, y);
+                y += lineHeight;
+                g.DrawString(accounts.Address, bodyFont, Brushes.Black, x, y);
+            }
+            else
+            {
+                g.DrawString(fullAddress, bodyFont, Brushes.Black, x, y);
+            }
+            y += lineHeight;
+
+            // Table columns
+            float totalWidth = 110f;
+            float discWidth = 90f;
+            float unitWidth = 110f;
+            float qtyWidth = 50f;
+
+            float colTotalPos = right - totalWidth;
+            float colDiscPos = colTotalPos - discWidth;
+            float colUnitPos = colDiscPos - unitWidth;
+            float colQtyPos = colUnitPos - qtyWidth;
+            float colDescription = x;
+
+            var numAlign = new StringFormat() { Alignment = StringAlignment.Near };
+            g.DrawString("Description", bodyFont, Brushes.Black, new RectangleF(colDescription, y, colQtyPos - colDescription, lineHeight));
+            g.DrawString("Qty", bodyFont, Brushes.Black, new RectangleF(colQtyPos, y, qtyWidth, lineHeight), numAlign);
+            g.DrawString("Unit", bodyFont, Brushes.Black, new RectangleF(colUnitPos, y, unitWidth, lineHeight), numAlign);
+            g.DrawString("Disc", bodyFont, Brushes.Black, new RectangleF(colDiscPos, y, discWidth, lineHeight), numAlign);
+            g.DrawString("Total", bodyFont, Brushes.Black, new RectangleF(colTotalPos, y, totalWidth, lineHeight), numAlign);
+            y += lineHeight;
+
+            g.DrawLine(Pens.Black, x, y, right, y); y += 4;
+
+            // Items
+            foreach (var item in invoice.PurchasedItems)
+            {
+                var descRect = new RectangleF(colDescription, y, colQtyPos - colDescription, lineHeight);
+                g.DrawString(item.ItemName, bodyFont, Brushes.Black, descRect);
+
+                g.DrawString(item.Quantity.ToString(), bodyFont, Brushes.Black, new RectangleF(colQtyPos, y, qtyWidth, lineHeight), numAlign);
+
+                var unitText = item.ItemPrice.HasValue ? ($"₱{item.ItemPrice.Value:N2}") : "₱0.00";
+                g.DrawString(unitText, bodyFont, Brushes.Black, new RectangleF(colUnitPos, y, unitWidth, lineHeight), numAlign);
+
+                var discText = item.Discount.HasValue ? ($"₱{item.Discount.Value:N2}") : "₱0.00";
+                g.DrawString(discText, bodyFont, Brushes.Black, new RectangleF(colDiscPos, y, discWidth, lineHeight), numAlign);
+
+                g.DrawString($"₱{item.TotalPrice:N2}", bodyFont, Brushes.Black, new RectangleF(colTotalPos, y, totalWidth, lineHeight), numAlign);
+
+                y += lineHeight;
+            }
+
+            y += 6;
+            g.DrawLine(Pens.Black, x, y, right, y); y += 2;
+
+            // Totals
+            float colSplit = x + usableWidth * 0.65f;
+            float totalsLabelCol = colSplit;
+            float totalsValueCol = colSplit + 85f;
+
+            double subtotal = invoice.PurchasedItems.Sum(i => i.TotalPrice);
+            double tax = invoice.Tax;
+            double discount = invoice.DiscountPeso;
+            double total = invoice.TotalSales;
+
+            var rightAlignFormat = new StringFormat() { Alignment = StringAlignment.Far };
+
+            g.DrawString("Subtotal:", bodyFont, Brushes.Black, totalsLabelCol, y);
+            g.DrawString($"₱{subtotal:N2}", bodyFont, Brushes.Black, new RectangleF(totalsValueCol, y, 100, lineHeight), rightAlignFormat);
+            y += lineHeight;
+
+            g.DrawString("Tax:", bodyFont, Brushes.Black, totalsLabelCol, y);
+            g.DrawString($"₱{tax:N2}", bodyFont, Brushes.Black, new RectangleF(totalsValueCol, y, 100, lineHeight), rightAlignFormat);
+            y += lineHeight;
+
+            g.DrawString("Discount:", bodyFont, Brushes.Black, totalsLabelCol, y);
+            g.DrawString($"₱{discount:N2}", bodyFont, Brushes.Black, new RectangleF(totalsValueCol, y, 100, lineHeight), rightAlignFormat);
+            y += lineHeight;
+
+            g.DrawString("Total:", headerFont, Brushes.Black, totalsLabelCol, y);
+            g.DrawString($"₱{total:N2}", headerFont, Brushes.Black, new RectangleF(totalsValueCol, y, 100, lineHeight), rightAlignFormat);
+            y += lineHeight * 2;
+
+            // Terms
+            string termsText = "Terms: Payable in cash otherwise stated. An interest of 3% per month will be charged on all overdue accounts. In case of non-payment of overdue accounts, the courts of Balanga City, Bataan will have jurisdictions and the customer hereby agree to pay the attorney's fees and court cost resulting therefrom.";
+            RectangleF termsRect = new RectangleF(x, y, usableWidth * 0.65f, lineHeight * 5);
+            g.DrawString(termsText, bodyFont, Brushes.Black, termsRect);
+            y += lineHeight * 4;
+
+            // Acknowledgment
+            g.DrawString("ALL CHECKS MUST BE PAYABLE TO: AUTOTECH CAR CARE CENTER", new Font("Arial", 10, FontStyle.Bold), Brushes.Black, x, y);
+            y += lineHeight;
+
+            string ackText = "Received the items in good order, condition and accepted under the terms and conditions stipulated herein and at the back thereof.";
+            RectangleF ackRect = new RectangleF(x, y, usableWidth, lineHeight * 3);
+            g.DrawString(ackText, bodyFont, Brushes.Black, ackRect);
+            y += lineHeight * 2;
+
+            // Signature
+            g.DrawString("Received by:", bodyFont, Brushes.Black, x, y);
+            y += lineHeight;
+            g.DrawString("______________________________", bodyFont, Brushes.Black, x + 80, y);
+            y += lineHeight;
+            g.DrawString("SIGNATURE OVER PRINTED NAME", bodyFont, Brushes.Black, x + 80, y);
         }
         #endregion
 
@@ -1248,6 +1473,12 @@ namespace Autotech.Desktop.Main.View
 
                         dataGridViewInvoice.DataSource = null;
                         dataGridViewInvoice.DataSource = invoices;
+                        // Prevent the grid from auto-selecting the first row after binding
+                        dataGridViewInvoice.ClearSelection();
+                        if (dataGridViewInvoice.Rows.Count > 0)
+                        {
+                            try { dataGridViewInvoice.CurrentCell = null; } catch { /* ignore if not supported */ }
+                        }
 
                         dataGridViewInvoice.Columns["Id"].Visible = false;
 
@@ -1298,7 +1529,7 @@ namespace Autotech.Desktop.Main.View
                 }
             }
 
-            void ShowColumn(string columnName, string header)
+        void ShowColumn(string columnName, string header)
             {
                 if (dataGridViewInvoice.Columns.Contains(columnName))
                 {
@@ -1327,6 +1558,15 @@ namespace Autotech.Desktop.Main.View
 
             cboFilterInvoice.DisplayMember = "Value";
             cboFilterInvoice.ValueMember = "Key";
+        }
+
+        private void dataGridViewInvoice_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            if (dataGridViewInvoice.Rows.Count > 0)
+            {
+                dataGridViewInvoice.ClearSelection();
+                dataGridViewInvoice.CurrentCell = null;
+            }
         }
 
         private void dataGridViewInvoice_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)

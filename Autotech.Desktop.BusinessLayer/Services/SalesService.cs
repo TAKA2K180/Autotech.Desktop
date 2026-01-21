@@ -3,6 +3,7 @@ using Autotech.Desktop.BusinessLayer.Helpers;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Autotech.Desktop.BusinessLayer.DTO;
+using System.Text.Json;
 
 namespace Autotech.Desktop.BusinessLayer.Services
 {
@@ -15,6 +16,10 @@ namespace Autotech.Desktop.BusinessLayer.Services
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            // Serialize to see the request body
+            var json = JsonSerializer.Serialize(invoice, new JsonSerializerOptions { WriteIndented = true });
+            LogHelper.Log($"Invoice Request Body:\n{json}");
 
             var response = await httpClient.PostAsJsonAsync(_apiUrl, invoice);
 
@@ -106,6 +111,24 @@ namespace Autotech.Desktop.BusinessLayer.Services
             {
                 var error = await response.Content.ReadAsStringAsync();
                 throw new Exception("Failed to confirm payment: " + error);
+            }
+        }
+
+        public async Task UpdateInvoiceAsync(Guid invoiceId, InvoiceDTO invoice)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var json = JsonSerializer.Serialize(invoice, new JsonSerializerOptions { WriteIndented = true });
+            LogHelper.Log($"Invoice Update Request Body:\n{json}");
+
+            var response = await httpClient.PutAsJsonAsync($"{_apiUrl}/{invoiceId}", invoice);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Invoice update failed: {errorMessage}");
             }
         }
     }

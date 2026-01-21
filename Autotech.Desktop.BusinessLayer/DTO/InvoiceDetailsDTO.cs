@@ -34,9 +34,9 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public Guid ItemId { get; set; }
         public string ItemName { get; set; }
         public double Quantity { get; set; }
-        public double ItemPrice { get; set; }
+        public double? ItemPrice { get; set; }
         public double TotalPrice { get; set; }
-        public double Discount { get; set; }
+        public double? Discount { get; set; }
     }
 
 }

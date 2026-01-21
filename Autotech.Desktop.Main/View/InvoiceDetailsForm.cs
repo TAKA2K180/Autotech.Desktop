@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Windows.Forms;
 using Autotech.Desktop.BusinessLayer.DTO;
 using Autotech.Desktop.BusinessLayer.Helpers;
@@ -32,7 +33,7 @@ namespace Autotech.Desktop.Main.View
             lblDate.Text = $"Date: {_invoice.DateSold.ToShortDateString()}";
             lblStatus.Text = $"Status: {_invoice.Status}";
             lblOrigin.Text = _invoice.isMobile == true ? "Origin: Mobile" : "Origin: Desktop";
-            
+
             InitializeGrid();
             LoadItemsToGrid();
             LoadPaymentHistoryAsync(invoiceId);
@@ -119,24 +120,26 @@ namespace Autotech.Desktop.Main.View
         {
             dataGridViewInvoiceDetails.DataSource = null;
             dataGridViewInvoiceDetails.DataSource = _invoice.PurchasedItems;
-            
+
 
             RecalculateTotals();
         }
 
         private void dataGridViewInvoiceDetails_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && dataGridViewInvoiceDetails.Columns[e.ColumnIndex].Name == "price")
+            if (e.RowIndex >= 0 && dataGridViewInvoiceDetails.Columns[e.ColumnIndex].Name == "price" || e.RowIndex >= 0 && dataGridViewInvoiceDetails.Columns[e.ColumnIndex].Name == "Discount")
             {
                 var row = dataGridViewInvoiceDetails.Rows[e.RowIndex];
-                if (row.DataBoundItem is InvoiceItemDTO item)
+                if (row.DataBoundItem is PurchasedItemDetailsDTO item)
                 {
                     if (double.TryParse(row.Cells["price"].Value?.ToString(), out double newPrice))
                     {
                         item.ItemPrice = newPrice;
-                        item.TotalPrice = newPrice * item.Quantity;
+                        var discountValue = item.Discount ?? 0;
+                        item.TotalPrice = newPrice * item.Quantity - discountValue;
                         row.Cells["total"].Value = item.TotalPrice;
-                        RecalculateTotals();
+                        dataGridViewInvoiceDetails.Refresh();
+                        RecalculateTotalsAfterLoad();
                     }
                 }
             }
@@ -151,11 +154,29 @@ namespace Autotech.Desktop.Main.View
             }
 
             txtSubtotal.Text = subtotal.ToString("₱#,##0.00");
-            double tax = subtotal * 0.12;
+            double tax = _invoice.Tax;
             double discount = _invoice.DiscountPeso;
             double total = subtotal + tax - discount;
 
             txtTax.Text = _invoice.Tax.ToString("₱#,##0.00");
+            txtDiscount.Text = discount.ToString("₱#,##0.00");
+            txtTotal.Text = total.ToString("₱#,##0.00");
+        }
+
+        private void RecalculateTotalsAfterLoad()
+        {
+            double subtotal = 0;
+            foreach (var item in _invoice.PurchasedItems)
+            {
+                subtotal += item.TotalPrice;
+            }
+
+            txtSubtotal.Text = subtotal.ToString("₱#,##0.00");
+            double tax = double.TryParse(txtTax.Text.Replace("₱", "").Replace(",", ""), out double parsedTax) ? parsedTax : 0;
+            double discount = double.TryParse(txtDiscount.Text.Replace("₱", "").Replace(",", ""), out double parsedDiscount) ? parsedDiscount : 0;
+            double total = subtotal + tax - discount;
+
+            txtTax.Text = tax.ToString("₱#,##0.00");
             txtDiscount.Text = discount.ToString("₱#,##0.00");
             txtTotal.Text = total.ToString("₱#,##0.00");
         }
@@ -262,7 +283,7 @@ namespace Autotech.Desktop.Main.View
                     newStatus = "Incomplete";
                 }
 
-                    await salesService.ConfirmPaymentStatusAsync(_invoice.Id, newStatus);
+                await salesService.ConfirmPaymentStatusAsync(_invoice.Id, newStatus);
 
                 MessageBox.Show($"Invoice status updated to: {newStatus}", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -300,6 +321,10 @@ namespace Autotech.Desktop.Main.View
 
                 dvgPaymentHistory.DataSource = null;
                 dvgPaymentHistory.DataSource = displayPayments;
+
+                // Prevent auto-selection of first row
+                dvgPaymentHistory.ClearSelection();
+                try { dvgPaymentHistory.CurrentCell = null; } catch { }
 
                 // Set user-friendly column headers
                 dvgPaymentHistory.Columns["AmountPaid"].HeaderText = "Amount Paid";
@@ -406,27 +431,33 @@ namespace Autotech.Desktop.Main.View
             g.DrawString("*THIS IS NOT YOUR OFFICIAL RECEIPT*", bodyFont, Brushes.Black, x + usableWidth / 4, y); y += lineHeight;
 
             // Info
-            g.DrawString($"Receipt #: {_invoice.strInvoiceNumber}", bodyFont, Brushes.Black, x, y);
-            g.DrawString($"Date: {DateTime.Now:g}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y); y += lineHeight;
+            g.DrawString($"Receipt #: {_invoice.strInvoiceNumber}", bodyFont, Brushes.Black, x, y); 
+            g.DrawString($"Date: {DateTime.Now:g}   Prepared by: {SessionManager.AgentDetails?.AgentName ?? "N/A"}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y);
+            y += lineHeight;
+            
+            g.DrawString($"Customer: {_invoice.AccountName}", bodyFont, Brushes.Black, x, y);
             g.DrawString($"Terms: {_invoice.Terms} day(s)", new Font("Arial", 14, FontStyle.Bold), Brushes.Black, x + usableWidth * 0.55f, y);
-            g.DrawString($"Owner's Name: {_accounts.ContactPerson}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y + 22);
-            g.DrawString($"Prepared by: {SessionManager.AgentDetails?.AgentName ?? "N/A"}", bodyFont, Brushes.Black, x, y); y += lineHeight;
-            g.DrawString($"Customer: {_invoice.AccountName}", bodyFont, Brushes.Black, x, y); y += lineHeight;
-            string addressLabel = "Customer address:";
-            string fullAddress = $"{addressLabel} {_accounts.Address}";
-            float ownerColumnX = x + usableWidth * 0.55f; // same column as "Owner's Name:"
-            float fullWidth = g.MeasureString(fullAddress, bodyFont).Width;
+            y += lineHeight;
+            
+            g.DrawString($"Contact: {_accounts.ContactNumber}", bodyFont, Brushes.Black, x, y);
+            g.DrawString($"Owner's Name: {_accounts.ContactPerson}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y);
+            y += lineHeight;
 
-            if (x + fullWidth > ownerColumnX)
+            // Handle customer address - shrink text if too long to prevent wrapping
+            string addressLabel = "Address:";
+            string fullAddress = $"{addressLabel} {_accounts.Address}";
+            float addressLineWidth = g.MeasureString(fullAddress, bodyFont).Width;
+            float maxAddressWidth = usableWidth * 0.65f;
+
+            if (addressLineWidth > maxAddressWidth)
             {
-                // Too long – split into two lines
-                g.DrawString(addressLabel, bodyFont, Brushes.Black, x, y);
-                y += lineHeight;
-                g.DrawString(_accounts.Address, bodyFont, Brushes.Black, x, y);
+                // Text is too long - use a smaller font
+                Font smallFont = new Font("Arial", 8);
+                g.DrawString(fullAddress, smallFont, Brushes.Black, x, y);
             }
             else
             {
-                // Fits in one line
+                // Fits in normal font
                 g.DrawString(fullAddress, bodyFont, Brushes.Black, x, y);
             }
             y += lineHeight;
@@ -434,12 +465,25 @@ namespace Autotech.Desktop.Main.View
             StringFormat rightAlign = new StringFormat();
             rightAlign.Alignment = StringAlignment.Far;
 
+            // Use fixed widths for right-hand numeric columns to ensure alignment
+            float totalWidth = 110f;   // space for total amount
+            float discWidth = 90f;     // space for discount
+            float unitWidth = 110f;    // space for unit price
+            float qtyWidth = 50f;      // space for qty
+
+            float colTotalPos = right - totalWidth;
+            float colDiscPos = colTotalPos - discWidth;
+            float colUnitPos = colDiscPos - unitWidth;
+            float colQtyPos = colUnitPos - qtyWidth;
+
             // Table Header
-            g.DrawString("Description", bodyFont, Brushes.Black, colDescription, y);
-            g.DrawString("Qty", bodyFont, Brushes.Black, new RectangleF(colQty, y, colUnit - colQty, lineHeight), rightAlign);
-            g.DrawString("Unit", bodyFont, Brushes.Black, new RectangleF(colUnit-2, y, colDiscount - colUnit, lineHeight), rightAlign);
-            g.DrawString("Disc", bodyFont, Brushes.Black, new RectangleF(colDiscount-2, y, colTotal - colDiscount, lineHeight), rightAlign);
-            g.DrawString("Total", bodyFont, Brushes.Black, new RectangleF(colTotal-2, y, right - colTotal, lineHeight), rightAlign);
+            // Use left-aligned numbers for a uniform appearance
+            var numAlign = new StringFormat() { Alignment = StringAlignment.Near };
+            g.DrawString("Description", bodyFont, Brushes.Black, new RectangleF(colDescription, y, colQtyPos - colDescription, lineHeight));
+            g.DrawString("Qty", bodyFont, Brushes.Black, new RectangleF(colQtyPos, y, qtyWidth, lineHeight), numAlign);
+            g.DrawString("Unit", bodyFont, Brushes.Black, new RectangleF(colUnitPos, y, unitWidth, lineHeight), numAlign);
+            g.DrawString("Disc", bodyFont, Brushes.Black, new RectangleF(colDiscPos, y, discWidth, lineHeight), numAlign);
+            g.DrawString("Total", bodyFont, Brushes.Black, new RectangleF(colTotalPos, y, totalWidth, lineHeight), numAlign);
             y += lineHeight;
 
             g.DrawLine(Pens.Black, x, y, right, y); y += 4;
@@ -447,11 +491,23 @@ namespace Autotech.Desktop.Main.View
             // Items
             foreach (var item in _invoice.PurchasedItems)
             {
-                g.DrawString(item.ItemName, bodyFont, Brushes.Black, colDescription, y);
-                g.DrawString(item.Quantity.ToString(), bodyFont, Brushes.Black, new RectangleF(colQty, y, colUnit - colQty, lineHeight), rightAlign);
-                g.DrawString(item.ItemPrice.ToString("₱#,##0.00"), bodyFont, Brushes.Black, new RectangleF(colUnit, y, colDiscount - colUnit, lineHeight), rightAlign);
-                g.DrawString(item.Discount.ToString("₱#,##0.00"), bodyFont, Brushes.Black, new RectangleF(colDiscount, y, colTotal - colDiscount, lineHeight), rightAlign);
-                g.DrawString(item.TotalPrice.ToString("₱#,##0.00"), bodyFont, Brushes.Black, new RectangleF(colTotal - 15, y, 100, lineHeight), rightAlign);
+                // Description should wrap if too long
+                var descRect = new RectangleF(colDescription, y, colQtyPos - colDescription, lineHeight);
+                g.DrawString(item.ItemName, bodyFont, Brushes.Black, descRect);
+
+                // Qty
+                g.DrawString(item.Quantity.ToString(), bodyFont, Brushes.Black, new RectangleF(colQtyPos, y, qtyWidth, lineHeight), numAlign);
+
+                // Unit price (may be null)
+                var unitText = item.ItemPrice.HasValue ? ($"₱{item.ItemPrice.Value:N2}") : "₱0.00";
+                g.DrawString(unitText, bodyFont, Brushes.Black, new RectangleF(colUnitPos, y, unitWidth, lineHeight), numAlign);
+
+                // Discount (may be null)
+                var discText = item.Discount.HasValue ? ($"₱{item.Discount.Value:N2}") : "₱0.00";
+                g.DrawString(discText, bodyFont, Brushes.Black, new RectangleF(colDiscPos, y, discWidth, lineHeight), numAlign);
+
+                // Total
+                g.DrawString($"₱{item.TotalPrice:N2}", bodyFont, Brushes.Black, new RectangleF(colTotalPos, y, totalWidth, lineHeight), numAlign);
 
                 y += lineHeight;
             }
@@ -459,21 +515,36 @@ namespace Autotech.Desktop.Main.View
             y += 6;
             g.DrawLine(Pens.Black, x, y, right, y); y += 2;
 
-            // Set up positions
-            float colSplit = x + usableWidth * 0.70f;
+            // Set up positions for totals section
+            float colSplit = x + usableWidth * 0.65f;
+            float totalsLabelCol = colSplit;
+            float totalsValueCol = colSplit + 85f;  // Fixed offset for values
             float leftY = y;
             float rightY = y;
 
-            // Right Totals
+            // Right Totals - with proper alignment
             double subtotal = _invoice.PurchasedItems.Sum(i => i.TotalPrice);
             double tax = _invoice.Tax;
             double discount = _invoice.DiscountPeso;
             double total = _invoice.TotalSales;
 
-            g.DrawString($"Subtotal: {subtotal:C}", bodyFont, Brushes.Black, colSplit, rightY); rightY += lineHeight;
-            g.DrawString($"Tax: {tax:C}", bodyFont, Brushes.Black, colSplit, rightY); rightY += lineHeight;
-            g.DrawString($"Discount: {discount:C}", bodyFont, Brushes.Black, colSplit, rightY); rightY += lineHeight;
-            g.DrawString($"Total: {total:C}", headerFont, Brushes.Black, colSplit, rightY); rightY += lineHeight * 2;
+            StringFormat rightAlignFormat = new StringFormat() { Alignment = StringAlignment.Far };
+
+            g.DrawString("Subtotal:", bodyFont, Brushes.Black, totalsLabelCol, rightY);
+            g.DrawString($"₱{subtotal:N2}", bodyFont, Brushes.Black, new RectangleF(totalsValueCol, rightY, 100, lineHeight), rightAlignFormat);
+            rightY += lineHeight;
+
+            g.DrawString("Tax:", bodyFont, Brushes.Black, totalsLabelCol, rightY);
+            g.DrawString($"₱{tax:N2}", bodyFont, Brushes.Black, new RectangleF(totalsValueCol, rightY, 100, lineHeight), rightAlignFormat);
+            rightY += lineHeight;
+
+            g.DrawString("Discount:", bodyFont, Brushes.Black, totalsLabelCol, rightY);
+            g.DrawString($"₱{discount:N2}", bodyFont, Brushes.Black, new RectangleF(totalsValueCol, rightY, 100, lineHeight), rightAlignFormat);
+            rightY += lineHeight;
+
+            g.DrawString("Total:", headerFont, Brushes.Black, totalsLabelCol, rightY);
+            g.DrawString($"₱{total:N2}", headerFont, Brushes.Black, new RectangleF(totalsValueCol, rightY, 100, lineHeight), rightAlignFormat);
+            rightY += lineHeight * 2;
 
             // Terms block (left side)
             string termsText = "Terms: Payable in cash otherwise stated. An interest of 3% per month will be charged on all overdue accounts. In case of non-payment of overdue accounts, the courts of Balanga City, Bataan will have jurisdictions and the customer hereby agree to pay the attorney's fees and court cost resulting therefrom.";
@@ -490,7 +561,7 @@ namespace Autotech.Desktop.Main.View
             string ackText = "Received the items in good order, condition and accepted under the terms and conditions stipulated herein and at the back thereof.";
             RectangleF ackRect = new RectangleF(x, y, usableWidth, lineHeight * 3);
             g.DrawString(ackText, bodyFont, Brushes.Black, ackRect);
-            y += lineHeight *2;
+            y += lineHeight * 2;
 
             // Signature
             g.DrawString("Received by:", bodyFont, Brushes.Black, x, y);
@@ -500,5 +571,94 @@ namespace Autotech.Desktop.Main.View
             g.DrawString("SIGNATURE OVER PRINTED NAME", bodyFont, Brushes.Black, x + 80, y);
         }
 
+        private void txtTax_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                RecalculateTotalsAfterLoad();
+            }
+        }
+
+        private void txtDiscount_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                RecalculateTotalsAfterLoad();
+            }
+        }
+
+        private async void btnSaveInvoice_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Validate invoice state
+                if (_invoice == null || _invoice.Id == Guid.Empty)
+                {
+                    MessageBox.Show("Invoice data is not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Parse totals from UI
+                double tax = double.TryParse(txtTax.Text.Replace("₱", "").Replace(",", ""), out double parsedTax) ? parsedTax : 0;
+                double discount = double.TryParse(txtDiscount.Text.Replace("₱", "").Replace(",", ""), out double parsedDiscount) ? parsedDiscount : 0;
+                double subtotal = _invoice.PurchasedItems.Sum(i => i.TotalPrice);
+                double total = subtotal + tax - discount;
+
+                // Update invoice object with edited values
+                _invoice.Tax = tax;
+                _invoice.DiscountPeso = discount;
+                _invoice.TotalSales = total;
+
+                // Calculate discount percent
+                double priceBeforeDiscount = total + discount - tax;
+                double discountPercent = priceBeforeDiscount == 0 ? 0 : (discount / priceBeforeDiscount) * 100;
+
+                // Build update DTO
+                var updateDto = new InvoiceDTO
+                {
+                    DateSold = _invoice.DateSold,
+                    Agent = _invoice.Agent,
+                    DiscountPercent = discountPercent,
+                    DiscountPeso = discount,
+                    Tax = tax,
+                    TotalSales = total,
+                    AccountName = _invoice.AccountName,
+                    PaymentType = _invoice.PaymentType,
+                    Terms = _invoice.Terms,
+                    DueDate = _invoice.DueDate,
+                    RemainingBalance = _invoice.RemainingBalance,
+                    Status = _invoice.Status,
+                    TotalLiters = _invoice.TotalLiters,
+                    Cluster = _invoice.Cluster,
+                    AccountId = _invoice.AccountId,
+                    LocationId = _invoice.LocationId,
+                    strInvoiceNumber = _invoice.strInvoiceNumber,
+                    PurchasedItems = _invoice.PurchasedItems.Select(item => new InvoiceItemDTO
+                    {
+                        ItemId = item.ItemId,
+                        Quantity = item.Quantity,
+                        ItemPrice = item.ItemPrice ?? 0,
+                        TotalPrice = item.TotalPrice,
+                        ItemName = item.ItemName,
+                        Discount = item.Discount ?? 0,
+                        AgentId = SessionManager.AgentDetails.Id
+                    }).ToList()
+                };
+
+                // Call API to update invoice
+                var service = new SalesService();
+                await service.UpdateInvoiceAsync(_invoice.Id, updateDto);
+
+                MessageBox.Show("Invoice saved successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Refresh parent form
+                await _mainForm.LoadInvoicesAsync();
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log("Error saving invoice: ", ex);
+                MessageBox.Show($"Failed to save invoice: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

@@ -62,6 +62,8 @@
             lblZambalesRetail = new Label();
             lblZambalesWholesale = new Label();
             btnCancel = new Button();
+            txtQtyPerBox = new TextBox();
+            label1 = new Label();
             SuspendLayout();
             // 
             // txtItemCode
@@ -94,49 +96,49 @@
             // 
             // txtBataanRetail
             // 
-            txtBataanRetail.Location = new Point(156, 228);
+            txtBataanRetail.Location = new Point(156, 274);
             txtBataanRetail.Name = "txtBataanRetail";
             txtBataanRetail.Size = new Size(592, 27);
             txtBataanRetail.TabIndex = 9;
             // 
             // txtBataanWholesale
             // 
-            txtBataanWholesale.Location = new Point(156, 288);
+            txtBataanWholesale.Location = new Point(156, 334);
             txtBataanWholesale.Name = "txtBataanWholesale";
             txtBataanWholesale.Size = new Size(592, 27);
             txtBataanWholesale.TabIndex = 11;
             // 
             // txtPampangaRetail
             // 
-            txtPampangaRetail.Location = new Point(156, 358);
+            txtPampangaRetail.Location = new Point(156, 404);
             txtPampangaRetail.Name = "txtPampangaRetail";
             txtPampangaRetail.Size = new Size(592, 27);
             txtPampangaRetail.TabIndex = 13;
             // 
             // txtPampangaWholesale
             // 
-            txtPampangaWholesale.Location = new Point(156, 421);
+            txtPampangaWholesale.Location = new Point(156, 467);
             txtPampangaWholesale.Name = "txtPampangaWholesale";
             txtPampangaWholesale.Size = new Size(592, 27);
             txtPampangaWholesale.TabIndex = 15;
             // 
             // txtZambalesRetail
             // 
-            txtZambalesRetail.Location = new Point(156, 485);
+            txtZambalesRetail.Location = new Point(156, 531);
             txtZambalesRetail.Name = "txtZambalesRetail";
             txtZambalesRetail.Size = new Size(592, 27);
             txtZambalesRetail.TabIndex = 17;
             // 
             // txtZambalesWholesale
             // 
-            txtZambalesWholesale.Location = new Point(156, 547);
+            txtZambalesWholesale.Location = new Point(156, 593);
             txtZambalesWholesale.Name = "txtZambalesWholesale";
             txtZambalesWholesale.Size = new Size(592, 27);
             txtZambalesWholesale.TabIndex = 19;
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(244, 614);
+            btnSave.Location = new Point(246, 653);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(109, 46);
             btnSave.TabIndex = 20;
@@ -177,7 +179,7 @@
             // 
             // lblBataanRetail
             // 
-            lblBataanRetail.Location = new Point(26, 208);
+            lblBataanRetail.Location = new Point(26, 254);
             lblBataanRetail.Name = "lblBataanRetail";
             lblBataanRetail.Size = new Size(120, 47);
             lblBataanRetail.TabIndex = 8;
@@ -185,7 +187,7 @@
             // 
             // lblBataanWholesale
             // 
-            lblBataanWholesale.Location = new Point(26, 266);
+            lblBataanWholesale.Location = new Point(26, 312);
             lblBataanWholesale.Name = "lblBataanWholesale";
             lblBataanWholesale.Size = new Size(120, 49);
             lblBataanWholesale.TabIndex = 10;
@@ -193,7 +195,7 @@
             // 
             // lblPampangaRetail
             // 
-            lblPampangaRetail.Location = new Point(26, 328);
+            lblPampangaRetail.Location = new Point(26, 374);
             lblPampangaRetail.Name = "lblPampangaRetail";
             lblPampangaRetail.Size = new Size(120, 57);
             lblPampangaRetail.TabIndex = 12;
@@ -201,7 +203,7 @@
             // 
             // lblPampangaWholesale
             // 
-            lblPampangaWholesale.Location = new Point(16, 399);
+            lblPampangaWholesale.Location = new Point(16, 445);
             lblPampangaWholesale.Name = "lblPampangaWholesale";
             lblPampangaWholesale.Size = new Size(130, 49);
             lblPampangaWholesale.TabIndex = 14;
@@ -209,7 +211,7 @@
             // 
             // lblZambalesRetail
             // 
-            lblZambalesRetail.Location = new Point(26, 462);
+            lblZambalesRetail.Location = new Point(26, 508);
             lblZambalesRetail.Name = "lblZambalesRetail";
             lblZambalesRetail.Size = new Size(120, 50);
             lblZambalesRetail.TabIndex = 16;
@@ -217,7 +219,7 @@
             // 
             // lblZambalesWholesale
             // 
-            lblZambalesWholesale.Location = new Point(16, 524);
+            lblZambalesWholesale.Location = new Point(16, 570);
             lblZambalesWholesale.Name = "lblZambalesWholesale";
             lblZambalesWholesale.Size = new Size(130, 50);
             lblZambalesWholesale.TabIndex = 18;
@@ -225,16 +227,33 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(397, 614);
+            btnCancel.Location = new Point(399, 653);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(109, 46);
             btnCancel.TabIndex = 21;
             btnCancel.Text = "Cancel";
             btnCancel.Click += btnCancel_Click;
             // 
+            // txtQtyPerBox
+            // 
+            txtQtyPerBox.Location = new Point(156, 211);
+            txtQtyPerBox.Name = "txtQtyPerBox";
+            txtQtyPerBox.Size = new Size(592, 27);
+            txtQtyPerBox.TabIndex = 22;
+            // 
+            // label1
+            // 
+            label1.Location = new Point(26, 214);
+            label1.Name = "label1";
+            label1.Size = new Size(120, 27);
+            label1.TabIndex = 23;
+            label1.Text = "QTY per box:";
+            // 
             // EditItemForm
             // 
-            ClientSize = new Size(779, 685);
+            ClientSize = new Size(779, 725);
+            Controls.Add(label1);
+            Controls.Add(txtQtyPerBox);
             Controls.Add(btnCancel);
             Controls.Add(lblItemCode);
             Controls.Add(txtItemCode);
@@ -281,5 +300,7 @@
         private Label lblZambalesRetail;
         private Label lblZambalesWholesale;
         private Button btnCancel;
+        private TextBox txtQtyPerBox;
+        private Label label1;
     }
 }

@@ -292,6 +292,7 @@ namespace Autotech.Desktop.Main
                     i.itemDetails.ItemsSold,
                     i.itemDetails.Sales,
                     OnHand = i.itemDetails?.OnHand ?? 0,
+                    QtyPerBox = i.itemDetails?.QuantityPerBox ?? 0,
                     BataanRetail = i.itemDetails?.BataanRetail ?? 0,
                     BataanWholesale = i.itemDetails?.BataanWholeSale ?? 0,
                     PampangaRetail = i.itemDetails?.PampangaRetail ?? 0,
@@ -328,20 +329,27 @@ namespace Autotech.Desktop.Main
                         DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" },
                         Width = 120
                     });
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Qty Per Box",
+                        DataPropertyName = "QtyPerBox",
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "N2" },
+                        Width = 120
+                    });
 
                     // 📍 Bataan
                     dtgItems.Columns.Add(new DataGridViewTextBoxColumn
                     {
                         HeaderText = "Bataan Retail",
                         DataPropertyName = "BataanRetail",
-                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "₱#,##0.00" },
                         Width = 120
                     });
                     dtgItems.Columns.Add(new DataGridViewTextBoxColumn
                     {
                         HeaderText = "Bataan Wholesale",
                         DataPropertyName = "BataanWholesale",
-                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "₱#,##0.00" },
                         Width = 120
                     });
 
@@ -350,14 +358,14 @@ namespace Autotech.Desktop.Main
                     {
                         HeaderText = "Pampanga Retail",
                         DataPropertyName = "PampangaRetail",
-                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "₱#,##0.00" },
                         Width = 120
                     });
                     dtgItems.Columns.Add(new DataGridViewTextBoxColumn
                     {
                         HeaderText = "Pampanga Wholesale",
                         DataPropertyName = "PampangaWholesale",
-                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "₱#,##0.00" },
                         Width = 120
                     });
 
@@ -366,14 +374,14 @@ namespace Autotech.Desktop.Main
                     {
                         HeaderText = "Zambales Retail",
                         DataPropertyName = "ZambalesRetail",
-                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "₱#,##0.00" },
                         Width = 120
                     });
                     dtgItems.Columns.Add(new DataGridViewTextBoxColumn
                     {
                         HeaderText = "Zambales Wholesale",
                         DataPropertyName = "ZambalesWholesale",
-                        DefaultCellStyle = new DataGridViewCellStyle { Format = "C2" },
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "₱#,##0.00" },
                         Width = 120
                     });
                 }
@@ -403,6 +411,7 @@ namespace Autotech.Desktop.Main
                     i.ItemName,
                     i.ItemDescription,
                     OnHand = i.itemDetails?.OnHand ?? 0,
+                    QtyPerBox = i.itemDetails?.QuantityPerBox ?? 0,
                     BataanRetail = i.itemDetails?.BataanRetail ?? 0,
                     BataanWholesale = i.itemDetails?.BataanWholeSale ?? 0,
                     PampangaRetail = i.itemDetails?.PampangaRetail ?? 0,
