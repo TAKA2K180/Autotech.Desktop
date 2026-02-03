@@ -129,6 +129,7 @@ namespace Autotech.Desktop.Main.View
 
             var requestDtos = itemsToImport.Select(i => new ItemRequestDto
             {
+                Id = Guid.NewGuid(),
                 ItemCode = i.ItemCode,
                 ItemName = i.ItemName,
                 ItemDescription = i.ItemDescription,

@@ -145,6 +145,8 @@ namespace Autotech.Desktop.Main.View
         private List<SalesDTO> allInvoices = new();
         private bool isFirstLoad = true;
         private bool suppressSelectionChanged = false; // when true, ignore SelectionChanged events triggered by programmatic updates
+        private System.Windows.Forms.Timer invoiceSearchDebounceTimer; // debounce timer for invoice search
+        private System.Windows.Forms.Timer datePickerDebounceTimer; // debounce timer for date picker changes
         #endregion
 
         #region Props
@@ -1026,7 +1028,7 @@ namespace Autotech.Desktop.Main.View
                     DueDate = DateTime.Now.AddDays(int.TryParse(txtTerms.Text, out var dVal) ? dVal : 0),
                     RemainingBalance = Math.Round((double)remaining),
                     Status = "For approval",
-                    TotalLiters = 0, 
+                    TotalLiters = 0,
                     Cluster = "",
                     AccountId = accountId,
                     LocationId = SessionManager.AgentDetails.Location.Id,
@@ -1043,7 +1045,7 @@ namespace Autotech.Desktop.Main.View
                         double.TryParse(row.Cells["cartPrice"].Value?.ToString(), out double price);
                         double.TryParse(row.Cells["cartSubtotal"].Value?.ToString(), out double subtotal);
                         double.TryParse(row.Cells["cartDiscount"].Value?.ToString(), out double discountAmount);
-                        
+
                         // Discount is a fixed value, round to 2 decimal places
                         double totalDiscount = Math.Round(discountAmount, 2);
 
@@ -1247,7 +1249,7 @@ namespace Autotech.Desktop.Main.View
             g.DrawString($"Owner's Name: {accounts.ContactPerson}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y + 22);
             g.DrawString($"Prepared by: {SessionManager.AgentDetails?.AgentName ?? "N/A"}", bodyFont, Brushes.Black, x, y); y += lineHeight;
             g.DrawString($"Customer: {invoice.AccountName}", bodyFont, Brushes.Black, x, y); y += lineHeight;
-            
+
             string addressLabel = "Customer address:";
             string fullAddress = $"{addressLabel} {accounts.Address}";
             float ownerColumnX = x + usableWidth * 0.55f;
@@ -1529,7 +1531,7 @@ namespace Autotech.Desktop.Main.View
                 }
             }
 
-        void ShowColumn(string columnName, string header)
+            void ShowColumn(string columnName, string header)
             {
                 if (dataGridViewInvoice.Columns.Contains(columnName))
                 {
@@ -1539,7 +1541,7 @@ namespace Autotech.Desktop.Main.View
                 }
             }
 
-            ApplyInvoiceFilterAndSorting();
+            await ApplyInvoiceFilterAndSortingAsync();
         }
 
         private void PopulateFilterCombo()
@@ -1604,9 +1606,144 @@ namespace Autotech.Desktop.Main.View
             }
         }
 
-        private void txtSearchInvoice_TextChanged(object sender, EventArgs e)
+        private async void txtSearchInvoice_TextChanged(object sender, EventArgs e)
         {
-            ApplyInvoiceFilterAndSorting();
+            // Clear existing timer to reset the delay
+            if (invoiceSearchDebounceTimer != null)
+            {
+                invoiceSearchDebounceTimer.Stop();
+                invoiceSearchDebounceTimer.Dispose();
+            }
+
+            // Create new timer with 500ms delay
+            invoiceSearchDebounceTimer = new System.Windows.Forms.Timer();
+            invoiceSearchDebounceTimer.Interval = 500;
+            invoiceSearchDebounceTimer.Tick += async (s, args) =>
+            {
+                invoiceSearchDebounceTimer.Stop();
+                await ApplyInvoiceFilterAndSortingAsync();
+            };
+            invoiceSearchDebounceTimer.Start();
+        }
+
+        private async Task ApplyInvoiceFilterAndSortingAsync()
+        {
+            // Return early if prerequisites aren't met (non-blocking check)
+            if (cboFilterInvoice.SelectedItem == null || allInvoices == null || allInvoices.Count == 0)
+                return;
+
+            // Capture UI values on UI thread before going async
+            string keyword = txtSearchInvoice.Text.Trim().ToLower();
+            var selectedKey = ((dynamic)cboFilterInvoice.SelectedItem).Key.ToString();
+            var sortOption = cboAddedOption.SelectedItem?.ToString() ?? "";
+            ToastMessageForm loadingToast = null;
+
+            try
+            {
+
+                // ✅ Show loading toast
+                loadingToast = new ToastMessageForm("Searching invoices...");
+                loadingToast.Show();
+                loadingToast.TopMost = true;
+                loadingToast.BringToFront();
+
+                Task.Delay(500).Wait(); // Small delay to ensure toast is visible
+                // Run entire filtering and sorting logic on thread pool to avoid UI blocking
+                var filtered = await Task.Run(() =>
+                {
+                    IEnumerable<SalesDTO> result = allInvoices;
+
+                    // Apply filtering
+                    switch (selectedKey)
+                    {
+                        case "strInvoiceNumber":
+                            result = result.Where(i => i.strInvoiceNumber != null && i.strInvoiceNumber.ToLower().Contains(keyword));
+                            break;
+                        case "Agent":
+                            result = result.Where(i => i.Agent != null && i.Agent.ToLower().Contains(keyword));
+                            break;
+                        case "DateSold":
+                            result = result.Where(i =>
+                                i.DateSold.Date >= dtmDateFrom.Value.Date &&
+                                i.DateSold.Date <= dtmDateTo.Value.Date);
+                            break;
+                        case "AccountName":
+                            result = result.Where(i => i.AccountName != null && i.AccountName.ToLower().Contains(keyword));
+                            break;
+                        case "PaymentType":
+                            result = result.Where(i => i.PaymentType != null && i.PaymentType.ToLower().Contains(keyword));
+                            break;
+                        case "DueDate":
+                            result = result.Where(i =>
+                                i.DueDate.Date >= dtmDateFrom.Value.Date &&
+                                i.DueDate.Date <= dtmDateTo.Value.Date);
+                            break;
+                        case "Status":
+                            result = result.Where(i => i.Status != null && i.Status.ToLower().Contains(keyword));
+                            break;
+                        case "Cluster":
+                            result = result.Where(i => i.Cluster != null && i.Cluster.ToLower().Contains(keyword));
+                            break;
+                    }
+
+                    // Apply sorting
+                    if (selectedKey == "DateSold")
+                        result = sortOption == "Descending"
+                            ? result.OrderByDescending(i => i.DateSold)
+                            : result.OrderBy(i => i.DateSold);
+                    else if (selectedKey == "DueDate")
+                        result = sortOption == "Descending"
+                            ? result.OrderByDescending(i => i.DueDate)
+                            : result.OrderBy(i => i.DueDate);
+
+                    return result.ToList();
+                });
+
+                // Marshal results back to UI thread asynchronously
+                await Task.Run(() =>
+                {
+                    Invoke(new Action(() =>
+                    {
+                        dataGridViewInvoice.DataSource = null;
+                        dataGridViewInvoice.DataSource = filtered;
+
+                        // Hide ID columns
+                        if (dataGridViewInvoice.Columns.Contains("Id"))
+                            dataGridViewInvoice.Columns["Id"].Visible = false;
+                        if (dataGridViewInvoice.Columns.Contains("accountId"))
+                            dataGridViewInvoice.Columns["accountId"].Visible = false;
+                        if (dataGridViewInvoice.Columns.Contains("locationId"))
+                            dataGridViewInvoice.Columns["locationId"].Visible = false;
+
+                        // Show and configure visible columns
+                        ShowColumn("strInvoiceNumber", "Invoice #");
+                        ShowColumn("DateSold", "Date Sold");
+                        ShowColumn("Agent", "Agent Name");
+                        ShowColumn("AccountName", "Customer Name");
+                        ShowColumn("PaymentType", "Payment Method");
+                        ShowColumn("TotalSales", "Total Sales");
+                        ShowColumn("Tax", "Tax Amount");
+                        ShowColumn("DiscountPeso", "Discount (₱)");
+                        ShowColumn("Terms", "Terms (Days)");
+                        ShowColumn("DueDate", "Due Date");
+                        ShowColumn("RemainingBalance", "Balance Remaining");
+                        ShowColumn("Status", "Status");
+                        ShowColumn("Cluster", "Cluster");
+                    }));
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log("Error in ApplyInvoiceFilterAndSortingAsync: ", ex);
+            }
+            finally
+            {
+                // ✅ Close loading toast
+                if (loadingToast != null && !loadingToast.IsDisposed)
+                {
+                    loadingToast.Close();
+                }
+            }
         }
 
         private async void btnOpenInvoice_Click(object sender, EventArgs e)
@@ -1748,97 +1885,12 @@ namespace Autotech.Desktop.Main.View
             };
         }
 
-        private void ApplyInvoiceFilterAndSorting()
-        {
-            if (cboFilterInvoice.SelectedItem == null || allInvoices == null)
-                return;
-
-            string keyword = txtSearchInvoice.Text.Trim().ToLower();
-            var selectedKey = ((dynamic)cboFilterInvoice.SelectedItem).Key.ToString();
-            var sortOption = cboAddedOption.SelectedItem?.ToString();
-
-            IEnumerable<SalesDTO> filtered = allInvoices;
-
-            // Filter by selected column
-            switch (selectedKey)
-            {
-                case "strInvoiceNumber":
-                    filtered = filtered.Where(i => i.strInvoiceNumber.ToLower().Contains(keyword));
-                    break;
-                case "Agent":
-                    filtered = filtered.Where(i => i.Agent.ToLower().Contains(keyword));
-                    break;
-                case "DateSold":
-                    // Apply date range filter instead of keyword-based match
-                    filtered = filtered.Where(i =>
-                        i.DateSold.Date >= dtmDateFrom.Value.Date &&
-                        i.DateSold.Date <= dtmDateTo.Value.Date);
-                    break;
-                case "AccountName":
-                    filtered = filtered.Where(i => i.AccountName.ToLower().Contains(keyword));
-                    break;
-                case "PaymentType":
-                    filtered = filtered.Where(i => i.PaymentType.ToLower().Contains(keyword));
-                    break;
-                case "DueDate":
-                    filtered = filtered.Where(i =>
-                        i.DueDate.Date >= dtmDateFrom.Value.Date &&
-                        i.DueDate.Date <= dtmDateTo.Value.Date);
-                    break;
-                case "Status":
-                    filtered = filtered.Where(i => i.Status.ToLower().Contains(keyword));
-                    break;
-                case "Cluster":
-                    filtered = filtered.Where(i => i.Cluster.ToLower().Contains(keyword));
-                    break;
-            }
-
-            // Apply sorting if date-based column is selected
-            if (selectedKey == "DateSold")
-            {
-                filtered = sortOption == "Descending"
-                    ? filtered.OrderByDescending(i => i.DateSold)
-                    : filtered.OrderBy(i => i.DateSold);
-            }
-            else if (selectedKey == "DueDate")
-            {
-                filtered = sortOption == "Descending"
-                    ? filtered.OrderByDescending(i => i.DueDate)
-                    : filtered.OrderBy(i => i.DueDate);
-            }
-
-            dataGridViewInvoice.DataSource = null;
-            dataGridViewInvoice.DataSource = filtered.ToList();
-
-
-            // Ensure ID is hidden again
-            if (dataGridViewInvoice.Columns.Contains("Id") || dataGridViewInvoice.Columns.Contains("accountId") || dataGridViewInvoice.Columns.Contains("locationId"))
-            {
-                dataGridViewInvoice.Columns["Id"].Visible = false;
-                dataGridViewInvoice.Columns["accountId"].Visible = false;
-                dataGridViewInvoice.Columns["locationId"].Visible = false;
-            }
-
-            // Re-apply visible columns and headers
-            ShowColumn("strInvoiceNumber", "Invoice #");
-            ShowColumn("DateSold", "Date Sold");
-            ShowColumn("Agent", "Agent Name");
-            ShowColumn("AccountName", "Customer Name");
-            ShowColumn("PaymentType", "Payment Method");
-            ShowColumn("TotalSales", "Total Sales");
-            ShowColumn("Tax", "Tax Amount");
-            ShowColumn("DiscountPeso", "Discount (₱)");
-            ShowColumn("Terms", "Terms (Days)");
-            ShowColumn("DueDate", "Due Date");
-            ShowColumn("RemainingBalance", "Balance Remaining");
-            ShowColumn("Status", "Status");
-            ShowColumn("Cluster", "Cluster");
-        }
-
         private void cboAddedOption_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ApplyInvoiceFilterAndSorting();
+            // Call async method from event handler
+            _ = ApplyInvoiceFilterAndSortingAsync();
         }
+
         void ShowColumn(string columnName, string header)
         {
             if (dataGridViewInvoice.Columns.Contains(columnName))
@@ -1848,14 +1900,45 @@ namespace Autotech.Desktop.Main.View
                 column.HeaderText = header;
             }
         }
+
         private void dtmDateFrom_ValueChanged(object sender, EventArgs e)
         {
-            ApplyInvoiceFilterAndSorting();
+            // Clear existing timer to reset the delay
+            if (datePickerDebounceTimer != null)
+            {
+                datePickerDebounceTimer.Stop();
+                datePickerDebounceTimer.Dispose();
+            }
+
+            // Create new timer with 500ms delay
+            datePickerDebounceTimer = new System.Windows.Forms.Timer();
+            datePickerDebounceTimer.Interval = 1500;
+            datePickerDebounceTimer.Tick += async (s, args) =>
+            {
+                datePickerDebounceTimer.Stop();
+                await ApplyInvoiceFilterAndSortingAsync();
+            };
+            datePickerDebounceTimer.Start();
         }
 
         private void dtmDateTo_ValueChanged(object sender, EventArgs e)
         {
-            ApplyInvoiceFilterAndSorting();
+            // Clear existing timer to reset the delay
+            if (datePickerDebounceTimer != null)
+            {
+                datePickerDebounceTimer.Stop();
+                datePickerDebounceTimer.Dispose();
+            }
+
+            // Create new timer with 500ms delay
+            datePickerDebounceTimer = new System.Windows.Forms.Timer();
+            datePickerDebounceTimer.Interval = 1500;
+            datePickerDebounceTimer.Tick += async (s, args) =>
+            {
+                datePickerDebounceTimer.Stop();
+                await ApplyInvoiceFilterAndSortingAsync();
+            };
+            datePickerDebounceTimer.Start();
         }
 
         #endregion
@@ -1876,6 +1959,20 @@ namespace Autotech.Desktop.Main.View
         private void metroSetControlBox1_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private async void btnStartSearch_Click(object sender, EventArgs e)
+        {
+            await ApplyInvoiceFilterAndSortingAsync();
+        }
+
+        private async void txtSearchInvoice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true; // prevent beep sound
+                await ApplyInvoiceFilterAndSortingAsync();
+            }
         }
     }
 }

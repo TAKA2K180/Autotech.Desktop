@@ -72,6 +72,7 @@ namespace Autotech.Desktop.Main.View
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             metroSetTabControl1 = new MetroSetTabControl();
             tabPageInvoice = new TabPage();
+            btnStartSearch = new MetroSetButton();
             lblDateTo = new MetroSetLabel();
             dtmDateTo = new DateTimePicker();
             lblDateFrom = new MetroSetLabel();
@@ -152,8 +153,8 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.AnimateEasingType = EasingType.CubeOut;
             metroSetTabControl1.AnimateTime = 200;
             metroSetTabControl1.BackgroundColor = Color.White;
-            metroSetTabControl1.Controls.Add(tabPageSales);
             metroSetTabControl1.Controls.Add(tabPageInvoice);
+            metroSetTabControl1.Controls.Add(tabPageSales);
             metroSetTabControl1.Controls.Add(tabPageMaintenance);
             metroSetTabControl1.Controls.Add(tabPageUserDetails);
             metroSetTabControl1.Dock = DockStyle.Fill;
@@ -178,6 +179,7 @@ namespace Autotech.Desktop.Main.View
             // 
             // tabPageInvoice
             // 
+            tabPageInvoice.Controls.Add(btnStartSearch);
             tabPageInvoice.Controls.Add(lblDateTo);
             tabPageInvoice.Controls.Add(dtmDateTo);
             tabPageInvoice.Controls.Add(lblDateFrom);
@@ -195,6 +197,33 @@ namespace Autotech.Desktop.Main.View
             tabPageInvoice.Size = new Size(1412, 670);
             tabPageInvoice.TabIndex = 1;
             tabPageInvoice.Text = "Invoice";
+            // 
+            // btnStartSearch
+            // 
+            btnStartSearch.DisabledBackColor = Color.FromArgb(120, 65, 177, 225);
+            btnStartSearch.DisabledBorderColor = Color.FromArgb(120, 65, 177, 225);
+            btnStartSearch.DisabledForeColor = Color.Gray;
+            btnStartSearch.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnStartSearch.HoverBorderColor = Color.FromArgb(95, 207, 255);
+            btnStartSearch.HoverColor = Color.FromArgb(95, 207, 255);
+            btnStartSearch.HoverTextColor = Color.White;
+            btnStartSearch.IsDerivedStyle = true;
+            btnStartSearch.Location = new Point(288, 76);
+            btnStartSearch.Name = "btnStartSearch";
+            btnStartSearch.NormalBorderColor = Color.FromArgb(65, 177, 225);
+            btnStartSearch.NormalColor = Color.FromArgb(65, 177, 225);
+            btnStartSearch.NormalTextColor = Color.White;
+            btnStartSearch.PressBorderColor = Color.FromArgb(35, 147, 195);
+            btnStartSearch.PressColor = Color.FromArgb(35, 147, 195);
+            btnStartSearch.PressTextColor = Color.White;
+            btnStartSearch.Size = new Size(148, 27);
+            btnStartSearch.Style = Style.Light;
+            btnStartSearch.StyleManager = null;
+            btnStartSearch.TabIndex = 15;
+            btnStartSearch.Text = "SEARCH";
+            btnStartSearch.ThemeAuthor = "Narwin";
+            btnStartSearch.ThemeName = "MetroLite";
+            btnStartSearch.Click += btnStartSearch_Click;
             // 
             // lblDateTo
             // 
@@ -345,7 +374,7 @@ namespace Autotech.Desktop.Main.View
             txtSearchInvoice.Name = "txtSearchInvoice";
             txtSearchInvoice.Size = new Size(159, 27);
             txtSearchInvoice.TabIndex = 4;
-            txtSearchInvoice.TextChanged += txtSearchInvoice_TextChanged;
+            txtSearchInvoice.KeyPress += txtSearchInvoice_KeyPress;
             // 
             // btnOpenInvoice
             // 
@@ -1524,6 +1553,7 @@ namespace Autotech.Desktop.Main.View
         private DateTimePicker dtmDateFrom;
         private MetroSetLabel lblVersion;
         private ComboBox comboAccount;
+        private MetroSetButton btnStartSearch;
     }
 }
 
