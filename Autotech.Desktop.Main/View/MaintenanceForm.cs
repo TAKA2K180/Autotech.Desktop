@@ -407,6 +407,7 @@ namespace Autotech.Desktop.Main
                 .Where(i => i.ItemName != null && i.ItemName.Contains(keyword, StringComparison.OrdinalIgnoreCase))
                 .Select(i => new
                 {
+                    i.Id,
                     i.ItemCode,
                     i.ItemName,
                     i.ItemDescription,

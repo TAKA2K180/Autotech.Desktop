@@ -153,8 +153,8 @@ namespace Autotech.Desktop.Main.View
             metroSetTabControl1.AnimateEasingType = EasingType.CubeOut;
             metroSetTabControl1.AnimateTime = 200;
             metroSetTabControl1.BackgroundColor = Color.White;
-            metroSetTabControl1.Controls.Add(tabPageInvoice);
             metroSetTabControl1.Controls.Add(tabPageSales);
+            metroSetTabControl1.Controls.Add(tabPageInvoice);
             metroSetTabControl1.Controls.Add(tabPageMaintenance);
             metroSetTabControl1.Controls.Add(tabPageUserDetails);
             metroSetTabControl1.Dock = DockStyle.Fill;
