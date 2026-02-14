@@ -304,6 +304,15 @@ namespace Autotech.Desktop.Main
                 // Define columns once
                 if (dtgItems.Columns.Count == 0)
                 {
+                    // Hidden column for Id - important for edit functionality
+                    dtgItems.Columns.Add(new DataGridViewTextBoxColumn
+                    {
+                        HeaderText = "Id",
+                        DataPropertyName = "Id",
+                        Name = "Id",
+                        Visible = false
+                    });
+
                     dtgItems.Columns.Add(new DataGridViewTextBoxColumn
                     {
                         HeaderText = "Code",
@@ -508,21 +517,29 @@ namespace Autotech.Desktop.Main
             {
                 if (dtgItems.CurrentRow?.DataBoundItem is not null)
                 {
-                    // The anonymous object includes Id
-                    dynamic rowData = dtgItems.CurrentRow.DataBoundItem;
-
-                    Guid itemId = rowData.Id; // ✅ this works even if Id column is not shown
-
-                    var selectedItem = _items.FirstOrDefault(i => i.Id == itemId);
-                    if (selectedItem != null)
+                    try
                     {
-                        using (var editForm = new EditItemForm(selectedItem))
+                        dynamic rowData = dtgItems.CurrentRow.DataBoundItem;
+                        
+                        // Access Id from the hidden column
+                        Guid itemId = (Guid)dtgItems.CurrentRow.Cells["Id"].Value;
+                        
+                        var selectedItem = _items.FirstOrDefault(i => i.Id == itemId);
+                        if (selectedItem != null)
                         {
-                            if (editForm.ShowDialog() == DialogResult.OK)
+                            using (var editForm = new EditItemForm(selectedItem))
                             {
-                                await LoadItemsAsync();
+                                if (editForm.ShowDialog() == DialogResult.OK)
+                                {
+                                    await LoadItemsAsync();
+                                }
                             }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogHelper.Log("Error accessing item Id: ", ex);
+                        MessageBox.Show($"Error retrieving item: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

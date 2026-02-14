@@ -1460,11 +1460,10 @@ namespace Autotech.Desktop.Main.View
                 loadingToast.TopMost = true;
                 loadingToast.BringToFront();
                 dataGridViewInvoice.Enabled = false;
-
+               
                 await Task.Run(async () =>
                 {
-                    await Task.Delay(1000);
-
+                    Task.Delay(1000).Wait();
                     var salesService = new SalesService();
                     var invoices = await salesService.GetAllInvoicesAsync();
                     allInvoices = invoices;
@@ -1541,7 +1540,7 @@ namespace Autotech.Desktop.Main.View
                 }
             }
 
-            await ApplyInvoiceFilterAndSortingAsync();
+            //await ApplyInvoiceFilterAndSortingAsync();
         }
 
         private void PopulateFilterCombo()
@@ -1656,11 +1655,18 @@ namespace Autotech.Desktop.Main.View
                     // Apply filtering
                     switch (selectedKey)
                     {
-                        case "strInvoiceNumber":
-                            result = result.Where(i => i.strInvoiceNumber != null && i.strInvoiceNumber.ToLower().Contains(keyword));
+                        case "InvoiceNumber":
+                            // Only filter if keyword is not empty
+                            if (!string.IsNullOrEmpty(keyword))
+                            {
+                                result = result.Where(i => i.strInvoiceNumber != null && i.strInvoiceNumber.ToLower().Contains(keyword));
+                            }
                             break;
                         case "Agent":
-                            result = result.Where(i => i.Agent != null && i.Agent.ToLower().Contains(keyword));
+                            if (!string.IsNullOrEmpty(keyword))
+                            {
+                                result = result.Where(i => i.Agent != null && i.Agent.ToLower().Contains(keyword));
+                            }
                             break;
                         case "DateSold":
                             result = result.Where(i =>
@@ -1668,10 +1674,16 @@ namespace Autotech.Desktop.Main.View
                                 i.DateSold.Date <= dtmDateTo.Value.Date);
                             break;
                         case "AccountName":
-                            result = result.Where(i => i.AccountName != null && i.AccountName.ToLower().Contains(keyword));
+                            if (!string.IsNullOrEmpty(keyword))
+                            {
+                                result = result.Where(i => i.AccountName != null && i.AccountName.ToLower().Contains(keyword));
+                            }
                             break;
                         case "PaymentType":
-                            result = result.Where(i => i.PaymentType != null && i.PaymentType.ToLower().Contains(keyword));
+                            if (!string.IsNullOrEmpty(keyword))
+                            {
+                                result = result.Where(i => i.PaymentType != null && i.PaymentType.ToLower().Contains(keyword));
+                            }
                             break;
                         case "DueDate":
                             result = result.Where(i =>
@@ -1679,10 +1691,16 @@ namespace Autotech.Desktop.Main.View
                                 i.DueDate.Date <= dtmDateTo.Value.Date);
                             break;
                         case "Status":
-                            result = result.Where(i => i.Status != null && i.Status.ToLower().Contains(keyword));
+                            if (!string.IsNullOrEmpty(keyword))
+                            {
+                                result = result.Where(i => i.Status != null && i.Status.ToLower().Contains(keyword));
+                            }
                             break;
                         case "Cluster":
-                            result = result.Where(i => i.Cluster != null && i.Cluster.ToLower().Contains(keyword));
+                            if (!string.IsNullOrEmpty(keyword))
+                            {
+                                result = result.Where(i => i.Cluster != null && i.Cluster.ToLower().Contains(keyword));
+                            }
                             break;
                     }
 
@@ -1887,8 +1905,8 @@ namespace Autotech.Desktop.Main.View
 
         private void cboAddedOption_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Call async method from event handler
-            _ = ApplyInvoiceFilterAndSortingAsync();
+            //// Call async method from event handler
+            //_ = ApplyInvoiceFilterAndSortingAsync();
         }
 
         void ShowColumn(string columnName, string header)
@@ -1903,42 +1921,42 @@ namespace Autotech.Desktop.Main.View
 
         private void dtmDateFrom_ValueChanged(object sender, EventArgs e)
         {
-            // Clear existing timer to reset the delay
-            if (datePickerDebounceTimer != null)
-            {
-                datePickerDebounceTimer.Stop();
-                datePickerDebounceTimer.Dispose();
-            }
+            //// Clear existing timer to reset the delay
+            //if (datePickerDebounceTimer != null)
+            //{
+            //    datePickerDebounceTimer.Stop();
+            //    datePickerDebounceTimer.Dispose();
+            //}
 
-            // Create new timer with 500ms delay
-            datePickerDebounceTimer = new System.Windows.Forms.Timer();
-            datePickerDebounceTimer.Interval = 1500;
-            datePickerDebounceTimer.Tick += async (s, args) =>
-            {
-                datePickerDebounceTimer.Stop();
-                await ApplyInvoiceFilterAndSortingAsync();
-            };
-            datePickerDebounceTimer.Start();
+            //// Create new timer with 500ms delay
+            //datePickerDebounceTimer = new System.Windows.Forms.Timer();
+            //datePickerDebounceTimer.Interval = 1500;
+            //datePickerDebounceTimer.Tick += async (s, args) =>
+            //{
+            //    datePickerDebounceTimer.Stop();
+            //    await ApplyInvoiceFilterAndSortingAsync();
+            //};
+            //datePickerDebounceTimer.Start();
         }
 
         private void dtmDateTo_ValueChanged(object sender, EventArgs e)
         {
-            // Clear existing timer to reset the delay
-            if (datePickerDebounceTimer != null)
-            {
-                datePickerDebounceTimer.Stop();
-                datePickerDebounceTimer.Dispose();
-            }
+            //// Clear existing timer to reset the delay
+            //if (datePickerDebounceTimer != null)
+            //{
+            //    datePickerDebounceTimer.Stop();
+            //    datePickerDebounceTimer.Dispose();
+            //}
 
-            // Create new timer with 500ms delay
-            datePickerDebounceTimer = new System.Windows.Forms.Timer();
-            datePickerDebounceTimer.Interval = 1500;
-            datePickerDebounceTimer.Tick += async (s, args) =>
-            {
-                datePickerDebounceTimer.Stop();
-                await ApplyInvoiceFilterAndSortingAsync();
-            };
-            datePickerDebounceTimer.Start();
+            //// Create new timer with 500ms delay
+            //datePickerDebounceTimer = new System.Windows.Forms.Timer();
+            //datePickerDebounceTimer.Interval = 1500;
+            //datePickerDebounceTimer.Tick += async (s, args) =>
+            //{
+            //    datePickerDebounceTimer.Stop();
+            //    await ApplyInvoiceFilterAndSortingAsync();
+            //};
+            //datePickerDebounceTimer.Start();
         }
 
         #endregion

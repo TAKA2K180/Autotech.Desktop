@@ -503,7 +503,7 @@ namespace Autotech.Desktop.Main.View
                 g.DrawString(unitText, bodyFont, Brushes.Black, new RectangleF(colUnitPos, y, unitWidth, lineHeight), numAlign);
 
                 // Discount (may be null)
-                var discText = item.Discount.HasValue ? ($"₱{item.Discount.Value:N2}") : "₱0.00";
+                var discText = item.Discount.HasValue ? ($"%{item.Discount.Value:N2}") : "%0.00";
                 g.DrawString(discText, bodyFont, Brushes.Black, new RectangleF(colDiscPos, y, discWidth, lineHeight), numAlign);
 
                 // Total
@@ -550,9 +550,9 @@ namespace Autotech.Desktop.Main.View
             string termsText = "Terms: Payable in cash otherwise stated. An interest of 3% per month will be charged on all overdue accounts. In case of non-payment of overdue accounts, the courts of Balanga City, Bataan will have jurisdictions and the customer hereby agree to pay the attorney's fees and court cost resulting therefrom.";
             RectangleF termsRect = new RectangleF(x, leftY, usableWidth * 0.65f, lineHeight * 5);
             g.DrawString(termsText, bodyFont, Brushes.Black, termsRect);
-            leftY += (lineHeight * 4); // optional +2 padding
-            rightY += lineHeight * 2;  // if you want
-            y = Math.Min(leftY, rightY); // <<< use Max, NOT Min
+            leftY += (lineHeight * 3.5f); // Reduced spacing to save paper
+            rightY += lineHeight * 2;
+            y = Math.Min(leftY, rightY);
 
             // Acknowledgment section
             g.DrawString("ALL CHECKS MUST BE PAYABLE TO: AUTOTECH CAR CARE CENTER", new Font("Arial", 10, FontStyle.Bold), Brushes.Black, x, y);
