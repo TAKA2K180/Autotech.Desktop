@@ -3,6 +3,7 @@ using Autotech.Desktop.BusinessLayer.Helpers;
 using Autotech.Desktop.BusinessLayer.Services;
 using Autotech.Desktop.Core.Enums;
 using Autotech.Desktop.Core.Models;
+using Autotech.Desktop.Main.Helpers;
 using MetroSet_UI.Controls;
 using MetroSet_UI.Forms;
 using System.ComponentModel;
@@ -1016,7 +1017,7 @@ namespace Autotech.Desktop.Main.View
                 // 3. Build Invoice DTO
                 var invoiceDto = new InvoiceDTO
                 {
-                    DateSold = DateTime.Now,
+                    DateSold = TimeHelper.GetPhilippineTime(),
                     Agent = SessionManager.AgentDetails.AgentName,
                     DiscountPercent = (double)discountPercent,
                     DiscountPeso = (double)discount,
@@ -1025,13 +1026,13 @@ namespace Autotech.Desktop.Main.View
                     AccountName = accountName,
                     PaymentType = paymentMethod,
                     Terms = int.TryParse(txtTerms.Text, out var termsVal) ? termsVal : 0,
-                    DueDate = DateTime.Now.AddDays(int.TryParse(txtTerms.Text, out var dVal) ? dVal : 0),
+                    DueDate = TimeHelper.GetPhilippineTime().AddDays(int.TryParse(txtTerms.Text, out var dVal) ? dVal : 0),
                     RemainingBalance = Math.Round((double)remaining),
                     Status = "For approval",
                     TotalLiters = 0,
-                    Cluster = "",
+                    Cluster = string.IsNullOrWhiteSpace(selectedAccount.Cluster) ? "" : selectedAccount.Cluster,
                     AccountId = accountId,
-                    LocationId = SessionManager.AgentDetails.Location.Id,
+                    LocationId = selectedAccount.LocationId,
                     strInvoiceNumber = "",
                     PurchasedItems = dataGridViewOrderCart.Rows
                     .Cast<DataGridViewRow>()
@@ -1076,7 +1077,8 @@ namespace Autotech.Desktop.Main.View
                 var accounts = await accountService.GetAccountByIdAsync(selectedAccount.Id);
 
                 // ✅ Print receipt automatically
-                await PrintReceiptAsync(createdInvoice, accounts);
+                var printReceipt = new ReportHelper();
+                await printReceipt.PrintInvoiceAsync(createdInvoice, accounts);
 
                 // ✅ Clear cart and reset
                 orderCartItems.Clear();
@@ -1244,7 +1246,7 @@ namespace Autotech.Desktop.Main.View
 
             // Info
             g.DrawString($"Receipt #: {invoice.strInvoiceNumber}", bodyFont, Brushes.Black, x, y);
-            g.DrawString($"Date: {DateTime.Now:g}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y); y += lineHeight;
+            g.DrawString($"Date: {TimeHelper.GetPhilippineTime():g}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y); y += lineHeight;
             g.DrawString($"Terms: {invoice.Terms} day(s)", new Font("Arial", 14, FontStyle.Bold), Brushes.Black, x + usableWidth * 0.55f, y);
             g.DrawString($"Owner's Name: {accounts.ContactPerson}", bodyFont, Brushes.Black, x + usableWidth * 0.55f, y + 22);
             g.DrawString($"Prepared by: {SessionManager.AgentDetails?.AgentName ?? "N/A"}", bodyFont, Brushes.Black, x, y); y += lineHeight;

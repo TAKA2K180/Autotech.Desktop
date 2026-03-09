@@ -35,8 +35,13 @@ namespace Autotech.Desktop.Main.View
             txtContactNumber.Text = _account.ContactNumber;
             txtAddress.Text = _account.Address;
             txtTerms.Value = _account.Terms;
-            var location = _locations.Where(l => l.Id == _account.LocationId).First();
-            cboLocation.Text = location.LocationName;
+            
+            var location = _locations?.Where(l => l.Id == _account.LocationId).FirstOrDefault();
+            if (location != null)
+            {
+                cboLocation.Text = location.LocationName;
+            }
+            
             chkIsActive.Checked = _account.isActive;
             if (_account.RegisterDate > dtmDateRegistered.MinDate && _account.RegisterDate < dtmDateRegistered.MaxDate)
             {
