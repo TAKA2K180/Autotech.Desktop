@@ -131,6 +131,24 @@ namespace Autotech.Desktop.BusinessLayer.Services
                 throw new Exception($"Invoice update failed: {errorMessage}");
             }
         }
+
+        public async Task<List<PurchasedItemExportDTO>> GetAllPurchasedItemsAsync()
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var response = await httpClient.GetAsync($"{_apiUrl}/PurchasedItems");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var purchasedItems = await response.Content.ReadFromJsonAsync<List<PurchasedItemExportDTO>>();
+                return purchasedItems ?? new List<PurchasedItemExportDTO>();
+            }
+
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Failed to retrieve purchased items: {errorMessage}");
+        }
     }
 
     public class InvoiceResponseDTO

@@ -1797,6 +1797,17 @@ namespace Autotech.Desktop.Main.View
 
         private void btnInvoiceExport_Click(object sender, EventArgs e)
         {
+            var dialog = new ExcelExportDialog();
+            
+            // Subscribe to button click events
+            dialog.InvoicesButtonClicked += (s, args) => ExportInvoicesToExcel();
+            dialog.PurchasedItemsButtonClicked += (s, args) => ExportPurchasedItemsToExcel();
+            
+            dialog.ShowDialog();
+        }
+
+        private void ExportInvoicesToExcel()
+        {
             try
             {
                 using (var package = new OfficeOpenXml.ExcelPackage())
@@ -1851,6 +1862,97 @@ namespace Autotech.Desktop.Main.View
             {
                 LogHelper.Log("Error: ", ex);
                 MessageBox.Show("Error exporting data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void ExportPurchasedItemsToExcel()
+        {
+            ToastMessageForm loadingToast = null;
+            try
+            {
+                loadingToast = new ToastMessageForm("Exporting purchased items...");
+                loadingToast.Show();
+                loadingToast.TopMost = true;
+                loadingToast.BringToFront();
+                Task.Delay(500).Wait();
+
+
+                // Fetch all purchased items from the backend
+                var salesService = new SalesService();
+                var purchasedItems = await salesService.GetAllPurchasedItemsAsync();
+
+                if (purchasedItems == null || purchasedItems.Count == 0)
+                {
+                    MessageBox.Show("No purchased items to export.", "No Data", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                using (var package = new OfficeOpenXml.ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Purchased Items");
+
+                    // Add headers
+                    worksheet.Cells[1, 1].Value = "Invoice Number";
+                    worksheet.Cells[1, 2].Value = "Item Name";
+                    worksheet.Cells[1, 3].Value = "Quantity";
+                    worksheet.Cells[1, 4].Value = "Unit Price";
+                    worksheet.Cells[1, 5].Value = "Total Price";
+                    worksheet.Cells[1, 6].Value = "Quantity Per Box";
+                    worksheet.Cells[1, 7].Value = "Discount";
+
+                    // Style headers
+                    var headerRange = worksheet.Cells[1, 1, 1, 7];
+                    headerRange.Style.Font.Bold = true;
+                    headerRange.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+
+                    // Add data
+                    int rowIndex = 2;
+                    foreach (var item in purchasedItems)
+                    {
+                        worksheet.Cells[rowIndex, 1].Value = item.strInvoiceNumber;
+                        worksheet.Cells[rowIndex, 2].Value = item.ItemName;
+                        worksheet.Cells[rowIndex, 3].Value = item.Quantity;
+                        worksheet.Cells[rowIndex, 4].Value = item.ItemPrice;
+                        worksheet.Cells[rowIndex, 4].Style.Numberformat.Format = "₱#,##0.00";
+                        worksheet.Cells[rowIndex, 5].Value = item.TotalPrice;
+                        worksheet.Cells[rowIndex, 5].Style.Numberformat.Format = "₱#,##0.00";
+                        worksheet.Cells[rowIndex, 6].Value = item.QuantyPerBox;
+                        worksheet.Cells[rowIndex, 7].Value = item.Discount;
+                        worksheet.Cells[rowIndex, 7].Style.Numberformat.Format = "₱#,##0.00";
+
+                        rowIndex++;
+                    }
+
+                    // Auto-fit columns
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                    // Prompt to save file
+                    using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                    {
+                        saveFileDialog.Filter = "Excel Files|*.xlsx";
+                        saveFileDialog.FileName = "PurchasedItemsExport.xlsx";
+
+                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            File.WriteAllBytes(saveFileDialog.FileName, package.GetAsByteArray());
+                            MessageBox.Show("Export successful!", "Excel Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log("Error exporting purchased items: ", ex);
+                MessageBox.Show("Error exporting purchased items: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // ✅ Close loading toast
+                if (loadingToast != null && !loadingToast.IsDisposed)
+                {
+                    loadingToast.Close();
+                }
             }
         }
 
