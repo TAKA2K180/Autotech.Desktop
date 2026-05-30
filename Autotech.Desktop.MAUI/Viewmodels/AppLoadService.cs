@@ -20,7 +20,22 @@ public sealed class AppLoadService
         Context.Clear();
 
         progress?.Report("Loading inventory...");
+        // Load first page into CurrentPageItems
         Context.CurrentPageItems.AddRange(await _itemServices.GetPaginatedItemsAsync(Context.CurrentItemPage, PageSize));
+
+        // Also load the full items list for searches that should span all items
+        try
+        {
+            var all = await _itemServices.GetAllItemsAsync();
+            if (all is not null)
+            {
+                Context.AllItems.AddRange(all);
+            }
+        }
+        catch
+        {
+            // If full items cannot be loaded, fall back to paged items only
+        }
 
         progress?.Report("Loading accounts...");
         var locationId = SessionManager.AgentDetails?.LocationId ?? Guid.Empty;
@@ -39,6 +54,19 @@ public sealed class AppLoadService
     {
         Context.CurrentItemPage = page;
         Context.CurrentPageItems.Clear();
-        Context.CurrentPageItems.AddRange(await _itemServices.GetPaginatedItemsAsync(page, PageSize));
+        var pageItems = await _itemServices.GetPaginatedItemsAsync(page, PageSize);
+        Context.CurrentPageItems.AddRange(pageItems);
+
+        // Ensure AllItems accumulates items as pages are loaded (don't replace)
+        if (pageItems is not null)
+        {
+            foreach (var item in pageItems)
+            {
+                if (!Context.AllItems.Contains(item))
+                {
+                    Context.AllItems.Add(item);
+                }
+            }
+        }
     }
 }

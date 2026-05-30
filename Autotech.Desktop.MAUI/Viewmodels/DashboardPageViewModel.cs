@@ -480,14 +480,24 @@ public sealed class DashboardPageViewModel : ViewModelBase
     public void ApplyItemFilter()
     {
         var keyword = ItemSearchText?.Trim() ?? string.Empty;
-        var filtered = string.IsNullOrWhiteSpace(keyword)
-            ? _currentPageItems
-            : _currentPageItems.Where(item =>
+        // Use the full item set when searching so user can find items not present on current page
+        if (string.IsNullOrWhiteSpace(keyword))
+        {
+            // When search is cleared, restore the last paged items and page text
+            Replace(Items, _currentPageItems);
+            ItemsPageText = $"Page {_currentItemPage}";
+        }
+        else
+        {
+            var source = _loadService.Context.AllItems.Count > 0 ? _loadService.Context.AllItems : _currentPageItems;
+            var filtered = source.Where(item =>
                 Contains(item.ItemName, keyword) ||
                 Contains(item.ItemCode, keyword) ||
                 Contains(item.ItemDescription, keyword));
 
-        Replace(Items, filtered);
+            Replace(Items, filtered);
+        }
+
         ItemsCount = Items.Count.ToString("N0");
     }
 
