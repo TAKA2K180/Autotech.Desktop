@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Name="LoginRoot"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Autotech.Desktop.MAUI.Views.LoginPage"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto"
+          Padding="32"
+          BackgroundColor="{AppThemeBinding Light=#F6FAF8, Dark=#111817}">
+        <Border MaximumWidthRequest="920"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Stroke="#2D3D39"
+                BackgroundColor="{AppThemeBinding Light=White, Dark=#14201D}"
+                Padding="0">
+            <Grid x:Name="LoginLayout"
+                  ColumnDefinitions="1.15*,0.85*"
+                  RowDefinitions="Auto"
+                  ColumnSpacing="0">
+                <Grid Padding="42"
+                      BackgroundColor="{AppThemeBinding Light=#F8FBFA, Dark=#101B18}">
+                    <VerticalStackLayout Spacing="18" VerticalOptions="Center">
+                        <Image Source="logo.jpg"
+                               HeightRequest="112"
+                               WidthRequest="112"
+                               Aspect="AspectFit"
+                               HorizontalOptions="Start" />
+
+                        <Label Text="Autotech Desktop"
+                               FontSize="36"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#12312D, Dark=#E6FFFA}" />
+
+                        <Label Text="Sales, inventory, accounts, and invoices in one workspace."
+                               FontSize="16"
+                               LineHeight="1.25"
+                               TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}"
+                               MaximumWidthRequest="430" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Grid x:Name="SignInPanel"
+                      Grid.Column="1"
+                      Padding="38"
+                      BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                    <VerticalStackLayout Spacing="16" VerticalOptions="Center">
+                        <Label Text="Sign in"
+                               FontSize="26"
+                               FontAttributes="Bold" />
+
+                        <Label Text="Use your agent account to continue."
+                               TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+
+                        <Entry Placeholder="Username"
+                               Text="{Binding Username}"
+                               ReturnType="Next"
+                               MinimumWidthRequest="280" />
+
+                        <Entry Placeholder="Password"
+                               Text="{Binding Password}"
+                               IsPassword="True"
+                               ReturnType="Go"
+                               Completed="PasswordEntry_Completed"
+                               MinimumWidthRequest="280" />
+
+                        <Label Text="{Binding ErrorMessage}"
+                               TextColor="#F97066"
+                               IsVisible="{Binding HasError}" />
+
+                        <Button Text="Sign in"
+                                HeightRequest="48"
+                                Command="{Binding LoginCommand}" />
+
+                        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                           IsVisible="{Binding IsBusy}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Label Grid.Row="1"
+               Text="{Binding VersionText}"
+               Margin="0,20,0,0"
+               TextColor="{AppThemeBinding Light=#66736F, Dark=#9AA8A4}"
+               HorizontalOptions="Center" />
+    </Grid>
+</ContentPage>

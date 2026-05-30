@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Name="DashboardRoot"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Autotech.Desktop.MAUI.Views.DashboardPage"
+             Title="Autotech">
+
+    <Grid RowDefinitions="Auto,*" BackgroundColor="{AppThemeBinding Light=#F6FAF8, Dark=#111817}">
+        <Grid Padding="18,12"
+              ColumnDefinitions="*,Auto"
+              ColumnSpacing="12"
+              BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+            <VerticalStackLayout Spacing="2">
+                <Label Text="Autotech POS System"
+                       FontSize="20"
+                       FontAttributes="Bold" />
+                <Label Text="{Binding AgentMeta}"
+                       TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+                <Button Text="Refresh" Command="{Binding RefreshCommand}" />
+                <Button Text="Logout" Command="{Binding LogoutCommand}" BackgroundColor="#52615E" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <Grid Grid.Row="1" Padding="18" RowDefinitions="Auto,Auto,*" RowSpacing="14">
+                <HorizontalStackLayout Grid.Row="0" Spacing="8">
+                    <Button Text="Sales" Command="{Binding SelectTabCommand}" CommandParameter="POS" />
+                    <Button Text="Invoice" Command="{Binding SelectTabCommand}" CommandParameter="Invoice" />
+                    <Button Text="Maintenance"
+                            IsVisible="{Binding CanAccessMaintenance}"
+                            Command="{Binding SelectTabCommand}"
+                            CommandParameter="Maintenance" />
+                </HorizontalStackLayout>
+
+                <Label Grid.Row="1"
+                       Text="{Binding OperationMessage}"
+                       IsVisible="{Binding HasOperationMessage}"
+                       TextColor="#B42318" />
+
+                <Grid Grid.Row="2"
+                      IsVisible="{Binding IsPosTab}"
+                      RowDefinitions="*,Auto"
+                      RowSpacing="14">
+                    <FlexLayout x:Name="SalesPanels"
+                                Grid.Row="0"
+                                Direction="Row"
+                                Wrap="Wrap"
+                                AlignItems="Stretch"
+                                JustifyContent="SpaceBetween">
+                        <Border Padding="12"
+                                x:Name="ItemsPanel"
+                                Margin="0,0,12,12"
+                                FlexLayout.Basis="640"
+                                FlexLayout.Grow="1"
+                                FlexLayout.Shrink="1"
+                                BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                            <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="10">
+                                <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Image Source="logo.jpg" HeightRequest="68" WidthRequest="68" Aspect="AspectFit" />
+                                    <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                        <Label Text="{Binding SalesClock}" FontAttributes="Bold" />
+                                        <Label Text="{Binding AgentName, StringFormat='Cashier: {0}'}" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2"
+                                           Text="{Binding ItemsPageText}"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                </Grid>
+
+                                <FlexLayout Grid.Row="1" Direction="Row" Wrap="Wrap" AlignItems="Center">
+                                    <SearchBar Placeholder="Search item..."
+                                               Text="{Binding ItemSearchText}"
+                                               FlexLayout.Basis="280" />
+                                    <Picker Title="Pricing"
+                                            ItemsSource="{Binding PricingModes}"
+                                            SelectedItem="{Binding PricingMode}"
+                                            WidthRequest="160"
+                                            Margin="8,0,0,0" />
+                                    <Picker Title="Location"
+                                            ItemsSource="{Binding Locations}"
+                                            SelectedItem="{Binding SelectedLocation}"
+                                            WidthRequest="170"
+                                            Margin="8,0,0,0" />
+                                </FlexLayout>
+
+                                <ScrollView x:Name="ItemsScroll"
+                                            Grid.Row="2"
+                                            Orientation="Horizontal"
+                                            HorizontalOptions="Fill"
+                                            HorizontalScrollBarVisibility="Always">
+                                    <CollectionView x:Name="ItemsList"
+                                                    WidthRequest="1280"
+                                                    HorizontalOptions="Start"
+                                                    ItemsSource="{Binding Items}"
+                                                    SelectionMode="Single"
+                                                    SelectionChanged="ItemsCollection_SelectionChanged"
+                                                    HeightRequest="390">
+                                        <CollectionView.Header>
+                                            <Grid Padding="8" ColumnDefinitions="520,150,120,490" ColumnSpacing="10" BackgroundColor="#E8F2EF">
+                                                <Label Text="Item Name" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="1" Text="Quantity Per Box" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="2" Text="Onhand" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="3" Text="Item Description" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                            </Grid>
+                                        </CollectionView.Header>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="0" StrokeThickness="0" BackgroundColor="Transparent">
+                                                    <Grid Padding="8" ColumnDefinitions="520,150,120,490" ColumnSpacing="10">
+                                                        <Label Text="{Binding ItemName}" FontSize="16" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                                        <Label Grid.Column="1" Text="{Binding itemDetails.QuantityPerBox, StringFormat='{0:N0}'}" FontSize="16" />
+                                                        <Label Grid.Column="2" Text="{Binding itemDetails.OnHand, StringFormat='{0:N0}'}" FontSize="16" />
+                                                        <Label Grid.Column="3" Text="{Binding ItemDescription}" FontSize="16" LineBreakMode="TailTruncation" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </ScrollView>
+
+                                <HorizontalStackLayout Grid.Row="3"
+                                                       Spacing="8"
+                                                       HeightRequest="46"
+                                                       VerticalOptions="End">
+                                    <Button Text="&lt;&lt;" Command="{Binding PreviousItemsCommand}" />
+                                    <Button Text="&gt;&gt;" Command="{Binding NextItemsCommand}" />
+                                    <Label Text="{Binding ItemsCount, StringFormat='{0} visible'}"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <Border Padding="12"
+                                Margin="0,0,0,12"
+                                FlexLayout.Basis="620"
+                                FlexLayout.Grow="1"
+                                FlexLayout.Shrink="1"
+                                BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                            <Grid RowDefinitions="52,52,32,*,46" RowSpacing="8">
+                                <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Label Text="Account:" VerticalOptions="Center" />
+                                    <Picker Grid.Column="1"
+                                            ItemsSource="{Binding Accounts}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedAccount}"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="420"
+                                            MaximumWidthRequest="520"
+                                            HeightRequest="36"
+                                            VerticalOptions="Center" />
+                                </Grid>
+
+                                <Grid Grid.Row="1" ColumnDefinitions="Auto,420,Auto,80" ColumnSpacing="10" HorizontalOptions="Start">
+                                    <Label Text="Contact:" VerticalOptions="Center" />
+                                    <Entry Grid.Column="1"
+                                           Text="{Binding ContactNumber}"
+                                           IsReadOnly="True"
+                                           HeightRequest="36"
+                                           VerticalOptions="Center" />
+                                    <Label Grid.Column="2" Text="Terms:" VerticalOptions="Center" />
+                                    <Entry Grid.Column="3"
+                                           Text="{Binding Terms}"
+                                           Keyboard="Numeric"
+                                           HeightRequest="36"
+                                           VerticalOptions="Center" />
+                                </Grid>
+
+                                <Label Grid.Row="2"
+                                       Text="Order Cart"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center" />
+                                    <CollectionView x:Name="CartList"
+                                                    Grid.Row="3"
+                                                    ItemsSource="{Binding CartItems}"
+                                                    SelectionMode="None"
+                                                    Margin="0,4,8,0"
+                                                    VerticalOptions="Fill"
+                                                    HorizontalOptions="Fill">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="12"
+                                                        Margin="0,0,0,10"
+                                                        Stroke="#2D3D39"
+                                                        BackgroundColor="{AppThemeBinding Light=#F8FBFA, Dark=#101B18}">
+                                                    <Grid RowDefinitions="Auto,Auto"
+                                                          ColumnDefinitions="36,*"
+                                                          ColumnSpacing="10"
+                                                          RowSpacing="12">
+                                                        <CheckBox IsChecked="{Binding IsSelected}"
+                                                                  VerticalOptions="Start"
+                                                                  HorizontalOptions="Center" />
+
+                                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                            <Label Text="{Binding ItemName}"
+                                                                   FontSize="14"
+                                                                   FontAttributes="Bold"
+                                                                   LineBreakMode="TailTruncation" />
+                                                            <Label Text="{Binding ItemCode}"
+                                                                   FontSize="12"
+                                                                   LineBreakMode="TailTruncation"
+                                                                   TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                                        </VerticalStackLayout>
+
+                                                        <Grid Grid.Row="1"
+                                                              Grid.ColumnSpan="2"
+                                                              ColumnDefinitions="100,100,110,120"
+                                                              ColumnSpacing="14"
+                                                              HorizontalOptions="Start">
+                                                            <VerticalStackLayout Spacing="2">
+                                                                <Label Text="Price" FontSize="12" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                                                <Label Text="{Binding UnitPriceText}" FontSize="14" />
+                                                            </VerticalStackLayout>
+
+                                                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                                <Label Text="Qty" FontSize="12" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                                                <Entry Text="{Binding QuantityText}" Keyboard="Numeric" WidthRequest="88" HeightRequest="34" />
+                                                            </VerticalStackLayout>
+
+                                                            <VerticalStackLayout Grid.Column="2" Spacing="2">
+                                                                <Label Text="Disc %" FontSize="12" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                                                <Entry Text="{Binding DiscountText}" Keyboard="Numeric" WidthRequest="92" HeightRequest="34" />
+                                                            </VerticalStackLayout>
+
+                                                            <VerticalStackLayout Grid.Column="3" Spacing="2">
+                                                                <Label Text="Subtotal" FontSize="12" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                                                <Label Text="{Binding SubtotalText}" FontSize="14" FontAttributes="Bold" />
+                                                            </VerticalStackLayout>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+
+                                <HorizontalStackLayout Grid.Row="4"
+                                                       Spacing="8"
+                                                       VerticalOptions="End"
+                                                       HorizontalOptions="Start">
+                                    <Button Text="Remove selected"
+                                            Command="{Binding RemoveSelectedCartItemsCommand}"
+                                            HeightRequest="40"
+                                            VerticalOptions="Center" />
+                                    <Button Text="Clear"
+                                            Command="{Binding ClearCartCommand}"
+                                            BackgroundColor="#52615E"
+                                            HeightRequest="40"
+                                            VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </FlexLayout>
+
+                    <Border Grid.Row="1"
+                            Padding="14"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                        <FlexLayout Direction="Row"
+                                    Wrap="Wrap"
+                                    AlignItems="Stretch"
+                                    JustifyContent="Start">
+                            <VerticalStackLayout Margin="0,0,18,0"
+                                                 FlexLayout.Basis="360"
+                                                 FlexLayout.Grow="0"
+                                                 Spacing="8">
+                                <Label Text="Payment" FontAttributes="Bold" />
+                                <Picker ItemsSource="{Binding PaymentMethods}"
+                                        ItemDisplayBinding="{Binding Description}"
+                                        SelectedItem="{Binding SelectedPaymentMethod}" />
+                                <Label Text="Paid Amount" />
+                                <Entry Text="{Binding PaidAmountText}" Keyboard="Numeric" />
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                    <Label Text="{Binding ChangeText, StringFormat='Change: {0}'}" />
+                                    <Label Grid.Column="1" Text="{Binding RemainingText, StringFormat='Remaining: {0}'}" />
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Margin="0,0,18,0"
+                                                 FlexLayout.Basis="340"
+                                                 FlexLayout.Grow="0"
+                                                 Spacing="8">
+                                <Label Text="Totals" FontAttributes="Bold" />
+                                <Grid ColumnDefinitions="110,*" ColumnSpacing="10">
+                                    <Label Text="Subtotal" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding SubtotalText}" FontAttributes="Bold" VerticalOptions="Center" />
+                                </Grid>
+                                <Grid ColumnDefinitions="110,*" ColumnSpacing="10">
+                                    <Label Text="Tax" VerticalOptions="Center" />
+                                    <Entry Grid.Column="1" Text="{Binding TaxText}" Keyboard="Numeric" />
+                                </Grid>
+                                <Grid ColumnDefinitions="110,*" ColumnSpacing="10">
+                                    <Label Text="Discount" VerticalOptions="Center" />
+                                    <Entry Grid.Column="1" Text="{Binding InvoiceDiscountText}" Keyboard="Numeric" />
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <Border Padding="14"
+                                    FlexLayout.Basis="360"
+                                    FlexLayout.Grow="0"
+                                    Stroke="#2D3D39"
+                                    BackgroundColor="{AppThemeBinding Light=#F8FBFA, Dark=#101B18}">
+                                <VerticalStackLayout Spacing="12" VerticalOptions="Center">
+                                    <Label Text="Amount Due"
+                                           TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                    <Label Text="{Binding TotalText}"
+                                           FontSize="28"
+                                           FontAttributes="Bold" />
+                                    <Button Text="Pay"
+                                            HeightRequest="52"
+                                            WidthRequest="320"
+                                            HorizontalOptions="Start"
+                                            Command="{Binding PayCommand}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </FlexLayout>
+                    </Border>
+                </Grid>
+
+                <Grid Grid.Row="2"
+                      IsVisible="{Binding IsInvoiceTab}"
+                      RowDefinitions="Auto,*,Auto"
+                      RowSpacing="12">
+                    <FlexLayout Grid.Row="0"
+                                Direction="Row"
+                                Wrap="Wrap"
+                                AlignItems="End">
+                        <VerticalStackLayout Spacing="4" Margin="0,0,12,0">
+                            <Label Text="Filter By:" />
+                            <Picker ItemsSource="{Binding InvoiceFilterOptions}"
+                                    ItemDisplayBinding="{Binding Description}"
+                                    SelectedItem="{Binding SelectedInvoiceFilter}"
+                                    WidthRequest="190" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4" Margin="0,0,12,0" IsVisible="{Binding IsInvoiceDateFilter}">
+                            <Label Text="Date From" />
+                            <DatePicker Date="{Binding InvoiceDateFrom}" WidthRequest="160" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4" Margin="0,0,12,0" IsVisible="{Binding IsInvoiceDateFilter}">
+                            <Label Text="Date To" />
+                            <DatePicker Date="{Binding InvoiceDateTo}" WidthRequest="160" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4" Margin="0,0,12,0" IsVisible="{Binding IsInvoiceDateFilter}">
+                            <Label Text="Sort" />
+                            <Picker ItemsSource="{Binding InvoiceDateSortOptions}"
+                                    SelectedItem="{Binding InvoiceDateSortOption}"
+                                    WidthRequest="150" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4" Margin="0,0,12,0">
+                            <Label Text="Search Invoice" />
+                            <SearchBar Placeholder="Search invoices..."
+                                       Text="{Binding InvoiceSearchText}"
+                                       WidthRequest="260" />
+                        </VerticalStackLayout>
+
+                        <Button Text="Search"
+                                Command="{Binding SearchInvoicesCommand}"
+                                WidthRequest="150" />
+                        <Label Text="{Binding InvoicesCount, StringFormat='{0} invoices'}"
+                               Margin="12,0,0,0"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                    </FlexLayout>
+
+                    <Border x:Name="InvoiceGridPanel"
+                            Grid.Row="1"
+                            Padding="10"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                        <ScrollView x:Name="InvoiceScroll"
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="Fill"
+                                    HorizontalScrollBarVisibility="Always">
+                            <CollectionView x:Name="InvoiceList"
+                                            ItemsSource="{Binding Invoices}"
+                                            HorizontalOptions="Fill"
+                                            WidthRequest="2100">
+                                <CollectionView.Header>
+                                    <Grid Padding="8"
+                                          ColumnDefinitions="120,150,160,280,160,140,120,130,120,140,180,130,130"
+                                          ColumnSpacing="10"
+                                          BackgroundColor="#E8F2EF">
+                                        <Label Text="Invoice #" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="1" Text="Date Sold" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="2" Text="Agent Name" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="3" Text="Customer Name" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="4" Text="Payment Method" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="5" Text="Total Sales" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="6" Text="Tax Amount" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="7" Text="Discount (₱)" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="8" Text="Terms (Days)" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="9" Text="Due Date" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="10" Text="Balance Remaining" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="11" Text="Status" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                        <Label Grid.Column="12" Text="Cluster" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
+                                    </Grid>
+                                </CollectionView.Header>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8"
+                                              ColumnDefinitions="120,150,160,280,160,140,120,130,120,140,180,130,130"
+                                              ColumnSpacing="10"
+                                              BackgroundColor="{Binding RowBackground}">
+                                            <Label Text="{Binding InvoiceNumber}" FontSize="16" FontAttributes="Bold" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="1" Text="{Binding DateSoldText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="2" Text="{Binding AgentName}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="3" Text="{Binding CustomerName}" FontSize="16" TextColor="{Binding RowTextColor}" LineBreakMode="TailTruncation" />
+                                            <Label Grid.Column="4" Text="{Binding PaymentMethod}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="5" Text="{Binding TotalSalesText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="6" Text="{Binding TaxAmountText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="7" Text="{Binding DiscountText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="8" Text="{Binding TermsText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="9" Text="{Binding DueDateText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="10" Text="{Binding RemainingBalanceText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="11" Text="{Binding Status}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            <Label Grid.Column="12" Text="{Binding Cluster}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </ScrollView>
+                    </Border>
+
+                    <HorizontalStackLayout Grid.Row="2" Spacing="10">
+                        <Button Text="Open" WidthRequest="100" />
+                        <Button Text="Export to Excel" WidthRequest="170" />
+                    </HorizontalStackLayout>
+                </Grid>
+
+                <ScrollView Grid.Row="2" IsVisible="{Binding IsMaintenanceTab}">
+                    <FlexLayout Direction="Row" Wrap="Wrap">
+                        <Border Padding="12" Margin="0,0,12,12" FlexLayout.Basis="380" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Accounts" FontSize="18" FontAttributes="Bold" />
+                                <SearchBar Placeholder="Search accounts" Text="{Binding MaintenanceAccountSearchText}" />
+                                <CollectionView ItemsSource="{Binding MaintenanceAccounts}" HeightRequest="360">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <VerticalStackLayout Padding="8" Spacing="2">
+                                                <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                                <Label Text="{Binding ContactPerson}" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                                <Label Text="{Binding Address}" FontSize="12" LineBreakMode="TailTruncation" />
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Padding="12" Margin="0,0,12,12" FlexLayout.Basis="380" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Agents" FontSize="18" FontAttributes="Bold" />
+                                <CollectionView ItemsSource="{Binding MaintenanceAgents}" HeightRequest="420">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <VerticalStackLayout Padding="8" Spacing="2">
+                                                <Label Text="{Binding AgentName}" FontAttributes="Bold" />
+                                                <Label Text="{Binding Username}" />
+                                                <Label Text="{Binding AgentRole}" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Padding="12" Margin="0,0,12,12" FlexLayout.Basis="520" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Items" FontSize="18" FontAttributes="Bold" />
+                                <SearchBar Placeholder="Search items" Text="{Binding MaintenanceItemSearchText}" />
+                                <CollectionView ItemsSource="{Binding MaintenanceItems}" HeightRequest="420">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Padding="8" ColumnDefinitions="1.4*,*,*,*" ColumnSpacing="8">
+                                                <Label Text="{Binding ItemName}" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                                <Label Grid.Column="1" Text="{Binding ItemCode}" />
+                                                <Label Grid.Column="2" Text="{Binding itemDetails.OnHand, StringFormat='On hand: {0:N0}'}" />
+                                                <Label Grid.Column="3" Text="{Binding itemDetails.QuantityPerBox, StringFormat='Box: {0:N0}'}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Border>
+                    </FlexLayout>
+                </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

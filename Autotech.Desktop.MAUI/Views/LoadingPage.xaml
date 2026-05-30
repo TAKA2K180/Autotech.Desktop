@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Autotech.Desktop.MAUI.Views.LoadingPage"
+             Shell.NavBarIsVisible="False">
+
+    <Grid Padding="28" BackgroundColor="{AppThemeBinding Light=#F6FAF8, Dark=#111817}">
+        <VerticalStackLayout Spacing="18"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             MaximumWidthRequest="420">
+            <Image Source="logo.jpg"
+                   HeightRequest="118"
+                   WidthRequest="118"
+                   Aspect="AspectFit"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Autotech Desktop"
+                   FontSize="30"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{AppThemeBinding Light=#12312D, Dark=#E6FFFA}" />
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               WidthRequest="44"
+                               HeightRequest="44" />
+
+            <Label Text="{Binding StatusText}"
+                   FontSize="15"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding HasError}"
+                   TextColor="#B42318"
+                   HorizontalTextAlignment="Center" />
+
+            <Button Text="Retry"
+                    Command="{Binding RetryCommand}"
+                    IsVisible="{Binding CanRetry}" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
