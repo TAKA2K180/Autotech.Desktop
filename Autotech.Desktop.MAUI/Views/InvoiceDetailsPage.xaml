@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Autotech.Desktop.MAUI.Views.InvoiceDetailsPage"
+             Title="Invoice Details"
+             BackgroundColor="{AppThemeBinding Light=#F5F7F6, Dark=#0F1715}">
+    <Grid Padding="16" RowDefinitions="Auto,*,Auto" RowSpacing="12">
+        <Border Grid.Row="0" Padding="14" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="{Binding Title}" FontSize="22" FontAttributes="Bold" />
+                    <HorizontalStackLayout Spacing="18">
+                        <Label Text="{Binding CustomerText}" />
+                        <Label Text="{Binding DateText}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="End">
+                        <Label Text="{Binding StatusText}" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                        <Label Text="{Binding OriginText}" HorizontalTextAlignment="End" />
+                    </VerticalStackLayout>
+                    <Button Text="Close"
+                            Command="{Binding CloseCommand}"
+                            WidthRequest="100"
+                            HeightRequest="40" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="1.05*,0.95*" ColumnSpacing="12">
+            <Border Padding="12" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <Label Text="Invoice Items" FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                            <Button Text="Print Invoice"
+                                    Command="{Binding PrintCommand}"
+                                    WidthRequest="130"
+                                    HeightRequest="38" />
+                            <Button Text="Save Invoice"
+                                    Command="{Binding SaveCommand}"
+                                    WidthRequest="130"
+                                    HeightRequest="38" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <CollectionView Grid.Row="1" ItemsSource="{Binding Items}">
+                        <CollectionView.Header>
+                            <Grid Padding="10"
+                                  ColumnDefinitions="2*,70,115,115,120"
+                                  ColumnSpacing="10"
+                                  MinimumHeightRequest="50"
+                                  BackgroundColor="#E8F2EF">
+                                <Label Text="Item" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="Qty" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                                <Label Grid.Column="2" Text="Unit Price" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                                <Label Grid.Column="3" Text="Discount" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                                <Label Grid.Column="4" Text="Total" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                            </Grid>
+                        </CollectionView.Header>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10"
+                                      ColumnDefinitions="2*,70,115,115,120"
+                                      ColumnSpacing="10"
+                                      MinimumHeightRequest="62">
+                                    <Label Text="{Binding ItemName}" FontSize="16" FontAttributes="Bold" LineBreakMode="TailTruncation" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding Quantity, StringFormat='{0:N0}'}" FontSize="16" VerticalOptions="Center" />
+                                    <Entry Grid.Column="2" Text="{Binding ItemPriceText}" FontSize="16" Keyboard="Numeric" HeightRequest="42" />
+                                    <Entry Grid.Column="3" Text="{Binding DiscountText}" FontSize="16" Keyboard="Numeric" HeightRequest="42" />
+                                    <Label Grid.Column="4" Text="{Binding TotalPriceText}" FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*,160,160,170" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Subtotal" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                            <Label Text="{Binding SubtotalText}" FontSize="18" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Tax" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                            <Entry Text="{Binding TaxText}" Keyboard="Numeric" HeightRequest="38" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="2">
+                            <Label Text="Discount" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                            <Entry Text="{Binding DiscountText}" Keyboard="Numeric" HeightRequest="38" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="3" Padding="10" BackgroundColor="{AppThemeBinding Light=#F8FBFA, Dark=#101B18}">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Total" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
+                                <Label Text="{Binding TotalText}" FontSize="22" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Padding="12" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <Label Text="Payment History" FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                            <Button Text="Confirm Payment"
+                                    Command="{Binding ConfirmPaymentCommand}"
+                                    WidthRequest="150"
+                                    HeightRequest="38" />
+                            <Button Text="Cancel Invoice"
+                                    Command="{Binding CancelInvoiceCommand}"
+                                    BackgroundColor="#7A1E1E"
+                                    WidthRequest="140"
+                                    HeightRequest="38" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <CollectionView Grid.Row="1" ItemsSource="{Binding Payments}">
+                        <CollectionView.Header>
+                            <Grid Padding="10"
+                                  ColumnDefinitions="120,160,160,160"
+                                  ColumnSpacing="10"
+                                  MinimumHeightRequest="50"
+                                  BackgroundColor="#E8F2EF">
+                                <Label Text="Amount Paid" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="Date Paid" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                                <Label Grid.Column="2" Text="Payment Method" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                                <Label Grid.Column="3" Text="Remaining Balance" FontSize="16" FontAttributes="Bold" TextColor="#12312D" VerticalOptions="Center" />
+                            </Grid>
+                        </CollectionView.Header>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10"
+                                      ColumnDefinitions="120,160,160,160"
+                                      ColumnSpacing="10"
+                                      MinimumHeightRequest="60">
+                                    <Label Text="{Binding AmountPaid}" FontSize="16" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding DatePaid}" FontSize="16" VerticalOptions="Center" />
+                                    <Label Grid.Column="2" Text="{Binding PaymentMethod}" FontSize="16" VerticalOptions="Center" />
+                                    <Label Grid.Column="3" Text="{Binding RemainingBalance}" FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="160,*,140" ColumnSpacing="10">
+                        <Picker ItemsSource="{Binding PaymentMethods}"
+                                ItemDisplayBinding="{Binding Description}"
+                                SelectedItem="{Binding SelectedPaymentMethod}"
+                                HeightRequest="40" />
+                        <Entry Grid.Column="1"
+                               Placeholder="Payment amount"
+                               Text="{Binding PaymentAmountText}"
+                               Keyboard="Numeric"
+                               HeightRequest="40" />
+                        <Button Grid.Column="2"
+                                Text="Add Payment"
+                                Command="{Binding AddPaymentCommand}"
+                                HeightRequest="40" />
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Label Grid.Row="2"
+               Text="{Binding Message}"
+               IsVisible="{Binding HasMessage}"
+               TextColor="#F6C453" />
+    </Grid>
+</ContentPage>

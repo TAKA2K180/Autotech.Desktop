@@ -378,11 +378,14 @@
                             <CollectionView x:Name="InvoiceList"
                                             ItemsSource="{Binding Invoices}"
                                             HorizontalOptions="Fill"
+                                            SelectionMode="Single"
+                                            SelectionChanged="InvoicesCollection_SelectionChanged"
                                             WidthRequest="2100">
                                 <CollectionView.Header>
-                                    <Grid Padding="8"
+                                    <Grid Padding="10"
                                           ColumnDefinitions="120,150,160,280,160,140,120,130,120,140,180,130,130"
                                           ColumnSpacing="10"
+                                          MinimumHeightRequest="46"
                                           BackgroundColor="#E8F2EF">
                                         <Label Text="Invoice #" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
                                         <Label Grid.Column="1" Text="Date Sold" FontSize="16" FontAttributes="Bold" TextColor="#12312D" />
@@ -401,24 +404,38 @@
                                 </CollectionView.Header>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Padding="8"
-                                              ColumnDefinitions="120,150,160,280,160,140,120,130,120,140,180,130,130"
-                                              ColumnSpacing="10"
-                                              BackgroundColor="{Binding RowBackground}">
-                                            <Label Text="{Binding InvoiceNumber}" FontSize="16" FontAttributes="Bold" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="1" Text="{Binding DateSoldText}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="2" Text="{Binding AgentName}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="3" Text="{Binding CustomerName}" FontSize="16" TextColor="{Binding RowTextColor}" LineBreakMode="TailTruncation" />
-                                            <Label Grid.Column="4" Text="{Binding PaymentMethod}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="5" Text="{Binding TotalSalesText}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="6" Text="{Binding TaxAmountText}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="7" Text="{Binding DiscountText}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="8" Text="{Binding TermsText}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="9" Text="{Binding DueDateText}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="10" Text="{Binding RemainingBalanceText}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="11" Text="{Binding Status}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                            <Label Grid.Column="12" Text="{Binding Cluster}" FontSize="16" TextColor="{Binding RowTextColor}" />
-                                        </Grid>
+                                        <Border StrokeThickness="0" BackgroundColor="{Binding RowBackground}">
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup Name="CommonStates">
+                                                    <VisualState Name="Normal" />
+                                                    <VisualState Name="Selected">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BackgroundColor" Value="#38DCC8" />
+                                                            <Setter Property="Stroke" Value="#FFFFFF" />
+                                                            <Setter Property="StrokeThickness" Value="2" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                            <Grid Padding="10"
+                                                  ColumnDefinitions="120,150,160,280,160,140,120,130,120,140,180,130,130"
+                                                  ColumnSpacing="10"
+                                                  MinimumHeightRequest="56">
+                                                <Label Text="{Binding InvoiceNumber}" FontSize="16" FontAttributes="Bold" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="1" Text="{Binding DateSoldText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="2" Text="{Binding AgentName}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="3" Text="{Binding CustomerName}" FontSize="16" TextColor="{Binding RowTextColor}" LineBreakMode="TailTruncation" />
+                                                <Label Grid.Column="4" Text="{Binding PaymentMethod}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="5" Text="{Binding TotalSalesText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="6" Text="{Binding TaxAmountText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="7" Text="{Binding DiscountText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="8" Text="{Binding TermsText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="9" Text="{Binding DueDateText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="10" Text="{Binding RemainingBalanceText}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="11" Text="{Binding Status}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                                <Label Grid.Column="12" Text="{Binding Cluster}" FontSize="16" TextColor="{Binding RowTextColor}" />
+                                            </Grid>
+                                        </Border>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
@@ -426,68 +443,344 @@
                     </Border>
 
                     <HorizontalStackLayout Grid.Row="2" Spacing="10">
-                        <Button Text="Open" WidthRequest="100" />
+                        <Button Text="Open" WidthRequest="100" Clicked="OpenInvoice_Clicked" />
                         <Button Text="Export to Excel" WidthRequest="170" />
                     </HorizontalStackLayout>
                 </Grid>
 
-                <ScrollView Grid.Row="2" IsVisible="{Binding IsMaintenanceTab}">
-                    <FlexLayout Direction="Row" Wrap="Wrap">
-                        <Border Padding="12" Margin="0,0,12,12" FlexLayout.Basis="380" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Accounts" FontSize="18" FontAttributes="Bold" />
+                <Grid Grid.Row="2"
+                      IsVisible="{Binding IsMaintenanceTab}"
+                      RowDefinitions="Auto,*,Auto"
+                      RowSpacing="10">
+                    <HorizontalStackLayout Spacing="8">
+                        <Button Text="Agents" Command="{Binding SelectMaintenanceTabCommand}" CommandParameter="Agents" />
+                        <Button Text="Accounts" Command="{Binding SelectMaintenanceTabCommand}" CommandParameter="Accounts" />
+                        <Button Text="Items" Command="{Binding SelectMaintenanceTabCommand}" CommandParameter="Items" />
+                        <Button Text="Reports" Command="{Binding SelectMaintenanceTabCommand}" CommandParameter="Reports" />
+                    </HorizontalStackLayout>
+
+                    <Border x:Name="MaintenanceGridPanel"
+                            Grid.Row="1"
+                            Padding="12"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
+                        <Grid>
+                            <Grid IsVisible="{Binding IsMaintenanceAgentsTab}" RowDefinitions="Auto,*" RowSpacing="10">
+                                <SearchBar Placeholder="Search agents" Text="{Binding MaintenanceAgentSearchText}" />
+                                <CollectionView x:Name="MaintenanceAgentsList"
+                                                Grid.Row="1"
+                                                ItemsSource="{Binding MaintenanceAgents}"
+                                                SelectedItem="{Binding SelectedMaintenanceAgent, Mode=TwoWay}"
+                                                SelectionMode="Single"
+                                                SelectionChanged="MaintenanceAgents_SelectionChanged">
+                                    <CollectionView.Header>
+                                        <Grid Padding="10" ColumnDefinitions="1.2*,*,*,*,*" ColumnSpacing="12" BackgroundColor="#E8F2EF">
+                                            <Label Text="Agent Name" FontAttributes="Bold" TextColor="#12312D" />
+                                            <Label Grid.Column="1" Text="Username" FontAttributes="Bold" TextColor="#12312D" />
+                                            <Label Grid.Column="2" Text="Contact" FontAttributes="Bold" TextColor="#12312D" />
+                                            <Label Grid.Column="3" Text="Role" FontAttributes="Bold" TextColor="#12312D" />
+                                            <Label Grid.Column="4" Text="Last Login" FontAttributes="Bold" TextColor="#12312D" />
+                                        </Grid>
+                                    </CollectionView.Header>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border StrokeThickness="0" BackgroundColor="Transparent">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup Name="CommonStates">
+                                                        <VisualState Name="Normal" />
+                                                        <VisualState Name="Selected">
+                                                            <VisualState.Setters>
+                                                                <Setter Property="BackgroundColor" Value="#38DCC8" />
+                                                                <Setter Property="Stroke" Value="#FFFFFF" />
+                                                                <Setter Property="StrokeThickness" Value="2" />
+                                                            </VisualState.Setters>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+                                                <Grid Padding="10" ColumnDefinitions="1.2*,*,*,*,*" ColumnSpacing="12" MinimumHeightRequest="48">
+                                                    <Label Text="{Binding AgentName}" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                                    <Label Grid.Column="1" Text="{Binding Username}" LineBreakMode="TailTruncation" />
+                                                    <Label Grid.Column="2" Text="{Binding AgentContactNumber}" LineBreakMode="TailTruncation" />
+                                                    <Label Grid.Column="3" Text="{Binding AgentRole}" />
+                                                    <Label Grid.Column="4" Text="{Binding DateLastLogin, StringFormat='{0:g}'}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsMaintenanceAccountsTab}" RowDefinitions="Auto,*" RowSpacing="10">
                                 <SearchBar Placeholder="Search accounts" Text="{Binding MaintenanceAccountSearchText}" />
-                                <CollectionView ItemsSource="{Binding MaintenanceAccounts}" HeightRequest="360">
+                                <CollectionView x:Name="MaintenanceAccountsList"
+                                                Grid.Row="1"
+                                                ItemsSource="{Binding MaintenanceAccounts}"
+                                                SelectedItem="{Binding SelectedMaintenanceAccount, Mode=TwoWay}"
+                                                SelectionMode="Single"
+                                                SelectionChanged="MaintenanceAccounts_SelectionChanged">
+                                    <CollectionView.Header>
+                                        <Grid Padding="10" ColumnDefinitions="1.2*,*,1.8*,*,*" ColumnSpacing="12" BackgroundColor="#E8F2EF">
+                                            <Label Text="Account Name" FontAttributes="Bold" TextColor="#12312D" />
+                                            <Label Grid.Column="1" Text="Contact Person" FontAttributes="Bold" TextColor="#12312D" />
+                                            <Label Grid.Column="2" Text="Address" FontAttributes="Bold" TextColor="#12312D" />
+                                            <Label Grid.Column="3" Text="Contact" FontAttributes="Bold" TextColor="#12312D" />
+                                            <Label Grid.Column="4" Text="Terms" FontAttributes="Bold" TextColor="#12312D" />
+                                        </Grid>
+                                    </CollectionView.Header>
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <VerticalStackLayout Padding="8" Spacing="2">
-                                                <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                                <Label Text="{Binding ContactPerson}" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
-                                                <Label Text="{Binding Address}" FontSize="12" LineBreakMode="TailTruncation" />
-                                            </VerticalStackLayout>
+                                            <Border StrokeThickness="0" BackgroundColor="Transparent">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup Name="CommonStates">
+                                                        <VisualState Name="Normal" />
+                                                        <VisualState Name="Selected">
+                                                            <VisualState.Setters>
+                                                                <Setter Property="BackgroundColor" Value="#38DCC8" />
+                                                                <Setter Property="Stroke" Value="#FFFFFF" />
+                                                                <Setter Property="StrokeThickness" Value="2" />
+                                                            </VisualState.Setters>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+                                                <Grid Padding="10" ColumnDefinitions="1.2*,*,1.8*,*,*" ColumnSpacing="12" MinimumHeightRequest="52">
+                                                    <Label Text="{Binding Name}" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                                    <Label Grid.Column="1" Text="{Binding ContactPerson}" LineBreakMode="TailTruncation" />
+                                                    <Label Grid.Column="2" Text="{Binding Address}" LineBreakMode="TailTruncation" />
+                                                    <Label Grid.Column="3" Text="{Binding ContactNumber}" LineBreakMode="TailTruncation" />
+                                                    <Label Grid.Column="4" Text="{Binding Terms}" />
+                                                </Grid>
+                                            </Border>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
-                            </VerticalStackLayout>
-                        </Border>
+                            </Grid>
 
-                        <Border Padding="12" Margin="0,0,12,12" FlexLayout.Basis="380" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Agents" FontSize="18" FontAttributes="Bold" />
-                                <CollectionView ItemsSource="{Binding MaintenanceAgents}" HeightRequest="420">
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate>
-                                            <VerticalStackLayout Padding="8" Spacing="2">
-                                                <Label Text="{Binding AgentName}" FontAttributes="Bold" />
-                                                <Label Text="{Binding Username}" />
-                                                <Label Text="{Binding AgentRole}" TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}" />
-                                            </VerticalStackLayout>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <Border Padding="12" Margin="0,0,12,12" FlexLayout.Basis="520" BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}">
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Items" FontSize="18" FontAttributes="Bold" />
+                            <Grid IsVisible="{Binding IsMaintenanceItemsTab}" RowDefinitions="Auto,*" RowSpacing="10">
                                 <SearchBar Placeholder="Search items" Text="{Binding MaintenanceItemSearchText}" />
-                                <CollectionView ItemsSource="{Binding MaintenanceItems}" HeightRequest="420">
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid Padding="8" ColumnDefinitions="1.4*,*,*,*" ColumnSpacing="8">
-                                                <Label Text="{Binding ItemName}" FontAttributes="Bold" LineBreakMode="TailTruncation" />
-                                                <Label Grid.Column="1" Text="{Binding ItemCode}" />
-                                                <Label Grid.Column="2" Text="{Binding itemDetails.OnHand, StringFormat='On hand: {0:N0}'}" />
-                                                <Label Grid.Column="3" Text="{Binding itemDetails.QuantityPerBox, StringFormat='Box: {0:N0}'}" />
+                                <ScrollView x:Name="MaintenanceItemsScroll"
+                                            Grid.Row="1"
+                                            Orientation="Horizontal"
+                                            HorizontalOptions="Fill"
+                                            HorizontalScrollBarVisibility="Always">
+                                    <CollectionView x:Name="MaintenanceItemsList"
+                                                    ItemsSource="{Binding MaintenanceItems}"
+                                                    SelectedItem="{Binding SelectedMaintenanceItem, Mode=TwoWay}"
+                                                    SelectionMode="Single"
+                                                    SelectionChanged="MaintenanceItems_SelectionChanged"
+                                                    WidthRequest="2200">
+                                        <CollectionView.Header>
+                                            <Grid Padding="10" ColumnDefinitions="130,300,360,100,110,130,150,140,170,140,170" ColumnSpacing="12" BackgroundColor="#E8F2EF">
+                                                <Label Text="Code" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="1" Text="Name" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="2" Text="Description" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="3" Text="On Hand" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="4" Text="Qty Per Box" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="5" Text="Bataan Retail" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="6" Text="Bataan Wholesale" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="7" Text="Pampanga Retail" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="8" Text="Pampanga Wholesale" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="9" Text="Zambales Retail" FontAttributes="Bold" TextColor="#12312D" />
+                                                <Label Grid.Column="10" Text="Zambales Wholesale" FontAttributes="Bold" TextColor="#12312D" />
                                             </Grid>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
-                            </VerticalStackLayout>
-                        </Border>
-                    </FlexLayout>
-                </ScrollView>
+                                        </CollectionView.Header>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border StrokeThickness="0" BackgroundColor="Transparent">
+                                                    <VisualStateManager.VisualStateGroups>
+                                                        <VisualStateGroup Name="CommonStates">
+                                                            <VisualState Name="Normal" />
+                                                            <VisualState Name="Selected">
+                                                                <VisualState.Setters>
+                                                                    <Setter Property="BackgroundColor" Value="#38DCC8" />
+                                                                    <Setter Property="Stroke" Value="#FFFFFF" />
+                                                                    <Setter Property="StrokeThickness" Value="2" />
+                                                                </VisualState.Setters>
+                                                            </VisualState>
+                                                        </VisualStateGroup>
+                                                    </VisualStateManager.VisualStateGroups>
+                                                    <Grid Padding="10" ColumnDefinitions="130,300,360,100,110,130,150,140,170,140,170" ColumnSpacing="12" MinimumHeightRequest="52">
+                                                        <Label Text="{Binding ItemCode}" LineBreakMode="TailTruncation" />
+                                                        <Label Grid.Column="1" Text="{Binding ItemName}" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                                        <Label Grid.Column="2" Text="{Binding ItemDescription}" LineBreakMode="TailTruncation" />
+                                                        <Label Grid.Column="3" Text="{Binding itemDetails.OnHand, StringFormat='{0:N0}'}" />
+                                                        <Label Grid.Column="4" Text="{Binding itemDetails.QuantityPerBox, StringFormat='{0:N0}'}" />
+                                                        <Label Grid.Column="5" Text="{Binding itemDetails.BataanRetail, StringFormat='{0:N2}'}" />
+                                                        <Label Grid.Column="6" Text="{Binding itemDetails.BataanWholeSale, StringFormat='{0:N2}'}" />
+                                                        <Label Grid.Column="7" Text="{Binding itemDetails.PampangaRetail, StringFormat='{0:N2}'}" />
+                                                        <Label Grid.Column="8" Text="{Binding itemDetails.PampangaWholeSale, StringFormat='{0:N2}'}" />
+                                                        <Label Grid.Column="9" Text="{Binding itemDetails.ZambalesRetail, StringFormat='{0:N2}'}" />
+                                                        <Label Grid.Column="10" Text="{Binding itemDetails.ZambalesWholeSale, StringFormat='{0:N2}'}" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </ScrollView>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsMaintenanceReportsTab}" RowDefinitions="Auto,*" RowSpacing="12">
+                                <Label Text="Reports" FontSize="18" FontAttributes="Bold" />
+                                <VerticalStackLayout Grid.Row="1" Spacing="12" WidthRequest="360" HorizontalOptions="Start">
+                                    <Button Text="Profit Per Month" HeightRequest="54" Command="{Binding ProfitPerMonthReportCommand}" />
+                                    <Button Text="Item sales" HeightRequest="54" Command="{Binding ItemSalesReportCommand}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <HorizontalStackLayout Grid.Row="2" Spacing="10">
+                        <Button Text="Edit" WidthRequest="110" Command="{Binding MaintenanceEditCommand}" />
+                        <Button Text="Add" WidthRequest="110" Command="{Binding MaintenanceAddCommand}" />
+                        <Button Text="Import via Excel"
+                                WidthRequest="160"
+                                IsVisible="{Binding IsMaintenanceItemsTab}"
+                                Command="{Binding MaintenanceImportExcelCommand}" />
+                        <Button Text="Refresh" WidthRequest="120" Command="{Binding MaintenanceRefreshCommand}" />
+                    </HorizontalStackLayout>
+                </Grid>
+        </Grid>
+
+        <Grid Grid.RowSpan="2"
+              IsVisible="{Binding IsMaintenanceEditorOpen}"
+              BackgroundColor="#99000000"
+              Padding="24">
+            <Border WidthRequest="760"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Padding="22"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#17211F}"
+                    Stroke="{AppThemeBinding Light=#CAD6D2, Dark=#31423E}">
+                <Grid RowDefinitions="Auto,*,Auto" RowSpacing="16">
+                    <Label Text="{Binding MaintenanceEditorTitle}"
+                           FontSize="22"
+                           FontAttributes="Bold" />
+
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Spacing="14">
+                            <Grid IsVisible="{Binding IsMaintenanceAgentEditor}"
+                                  ColumnDefinitions="*,*"
+                                  ColumnSpacing="14"
+                                  RowDefinitions="Auto,Auto,Auto">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Username" />
+                                    <Entry Text="{Binding EditAgentUsername}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Password" />
+                                    <Entry Text="{Binding EditAgentPassword}" IsPassword="True" Placeholder="Leave blank to keep current password" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Spacing="5">
+                                    <Label Text="Agent name" />
+                                    <Entry Text="{Binding EditAgentName}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="5">
+                                    <Label Text="Contact number" />
+                                    <Entry Text="{Binding EditAgentContact}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                                    <Label Text="Role" />
+                                    <Entry Text="{Binding EditAgentRole}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="5">
+                                    <Label Text="Address" />
+                                    <Entry Text="{Binding EditAgentAddress}" />
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsMaintenanceAccountEditor}"
+                                  ColumnDefinitions="*,*"
+                                  ColumnSpacing="14"
+                                  RowDefinitions="Auto,Auto,Auto">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Account name" />
+                                    <Entry Text="{Binding EditAccountName}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Contact person" />
+                                    <Entry Text="{Binding EditAccountContactPerson}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Spacing="5">
+                                    <Label Text="Email" />
+                                    <Entry Text="{Binding EditAccountEmail}" Keyboard="Email" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="5">
+                                    <Label Text="Contact number" />
+                                    <Entry Text="{Binding EditAccountContactNumber}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                                    <Label Text="Terms" />
+                                    <Entry Text="{Binding EditAccountTerms}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="5">
+                                    <Label Text="Address" />
+                                    <Entry Text="{Binding EditAccountAddress}" />
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsMaintenanceItemEditor}"
+                                  ColumnDefinitions="*,*"
+                                  ColumnSpacing="14"
+                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Code" />
+                                    <Entry Text="{Binding EditItemCode}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Name" />
+                                    <Entry Text="{Binding EditItemName}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="5">
+                                    <Label Text="Description" />
+                                    <Editor Text="{Binding EditItemDescription}" AutoSize="TextChanges" HeightRequest="72" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                                    <Label Text="On hand" />
+                                    <Entry Text="{Binding EditItemOnHand}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="5">
+                                    <Label Text="Qty per box" />
+                                    <Entry Text="{Binding EditItemQuantityPerBox}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="3" Spacing="5">
+                                    <Label Text="Bataan retail" />
+                                    <Entry Text="{Binding EditItemBataanRetail}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="3" Grid.Column="1" Spacing="5">
+                                    <Label Text="Bataan wholesale" />
+                                    <Entry Text="{Binding EditItemBataanWholesale}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="4" Spacing="5">
+                                    <Label Text="Pampanga retail" />
+                                    <Entry Text="{Binding EditItemPampangaRetail}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="4" Grid.Column="1" Spacing="5">
+                                    <Label Text="Pampanga wholesale" />
+                                    <Entry Text="{Binding EditItemPampangaWholesale}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="5" Spacing="5">
+                                    <Label Text="Zambales retail" />
+                                    <Entry Text="{Binding EditItemZambalesRetail}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="5" Grid.Column="1" Spacing="5">
+                                    <Label Text="Zambales wholesale" />
+                                    <Entry Text="{Binding EditItemZambalesWholesale}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <HorizontalStackLayout Grid.Row="2"
+                                           Spacing="10"
+                                           HorizontalOptions="End">
+                        <Button Text="Cancel"
+                                WidthRequest="120"
+                                BackgroundColor="#52615E"
+                                Command="{Binding MaintenanceCancelEditorCommand}" />
+                        <Button Text="Save"
+                                WidthRequest="140"
+                                Command="{Binding MaintenanceSaveEditorCommand}" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
         </Grid>
     </Grid>
 </ContentPage>

@@ -69,11 +69,16 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="ClosedXML" Version="0.105.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Autotech.Desktop.BusinessLayer\Autotech.Desktop.BusinessLayer.csproj" />
 		<ProjectReference Include="..\Autotech.Desktop.Helper\Autotech.Desktop.Helper.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+		<FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -43,6 +43,20 @@ namespace Autotech.Desktop.BusinessLayer.Services
             }
         }
 
+        public async Task AddAccountAsync(Accounts account)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
+
+            var response = await client.PostAsJsonAsync(apiUrl, account);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to add account: {response.StatusCode} - {error}");
+            }
+        }
+
         public async Task<Accounts> GetAccountByIdAsync(Guid id)
         {
             using var httpClient = new HttpClient();

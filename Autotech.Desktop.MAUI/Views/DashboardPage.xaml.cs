@@ -1,3 +1,4 @@
+using Autotech.Desktop.BusinessLayer.DTO;
 using Autotech.Desktop.Core.Models;
 using Autotech.Desktop.MAUI.Viewmodels;
 using Microsoft.Maui.Layouts;
@@ -8,6 +9,7 @@ public partial class DashboardPage : ContentPage
 {
     private DashboardPageViewModel ViewModel => (DashboardPageViewModel)BindingContext;
     private IDispatcherTimer? _clockTimer;
+    private DashboardPageViewModel.InvoiceRow? _selectedInvoice;
     private bool _loaded;
 
     public DashboardPage()
@@ -57,6 +59,14 @@ public partial class DashboardPage : ContentPage
         invoiceViewportWidth = Math.Max(480, invoiceViewportWidth);
         InvoiceScroll.WidthRequest = invoiceViewportWidth;
         InvoiceList.WidthRequest = Math.Max(2100, invoiceViewportWidth);
+
+        if (MaintenanceGridPanel is not null && MaintenanceItemsScroll is not null && MaintenanceItemsList is not null)
+        {
+            var maintenanceViewportWidth = MaintenanceGridPanel.Width > 0 ? MaintenanceGridPanel.Width - 24 : width - 64;
+            maintenanceViewportWidth = Math.Max(480, maintenanceViewportWidth);
+            MaintenanceItemsScroll.WidthRequest = maintenanceViewportWidth;
+            MaintenanceItemsList.WidthRequest = Math.Max(2200, maintenanceViewportWidth);
+        }
     }
 
     protected override void OnDisappearing()
@@ -83,4 +93,35 @@ public partial class DashboardPage : ContentPage
         }
     }
 
+    private void InvoicesCollection_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        _selectedInvoice = e.CurrentSelection.FirstOrDefault() as DashboardPageViewModel.InvoiceRow;
+    }
+
+    private void MaintenanceAgents_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedMaintenanceAgent = e.CurrentSelection.FirstOrDefault() as AgentDTO;
+    }
+
+    private void MaintenanceAccounts_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedMaintenanceAccount = e.CurrentSelection.FirstOrDefault() as Accounts;
+    }
+
+    private void MaintenanceItems_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedMaintenanceItem = e.CurrentSelection.FirstOrDefault() as Items;
+    }
+
+    private async void OpenInvoice_Clicked(object? sender, EventArgs e)
+    {
+        if (_selectedInvoice is null)
+        {
+            await DisplayAlertAsync("Open Invoice", "Select an invoice first.", "OK");
+            return;
+        }
+
+        await Navigation.PushModalAsync(new InvoiceDetailsPage(_selectedInvoice.Id));
+        await ViewModel.LoadAsync(forceReload: true);
+    }
 }
