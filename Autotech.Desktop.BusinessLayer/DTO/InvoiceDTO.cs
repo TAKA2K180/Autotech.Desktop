@@ -24,7 +24,6 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public double TotalLiters { get; set; }
         public string Cluster { get; set; }
         public Guid AccountId { get; set; }
-        public Guid LocationId { get; set; }
         public List<InvoiceItemDTO> PurchasedItems { get; set; }
         public string strInvoiceNumber { get; set; } = string.Empty; // dummy
     }

@@ -18,8 +18,5 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public string AgentRole { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateLastLogin { get; set; }
-        // Foreign key to Location
-        public Guid LocationId { get; set; }
-        public Locations? Location { get; set; }
     }
 }

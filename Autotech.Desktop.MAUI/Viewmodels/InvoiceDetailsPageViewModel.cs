@@ -266,7 +266,6 @@ public sealed class InvoiceDetailsPageViewModel : ViewModelBase
                 TotalLiters = _invoice.TotalLiters,
                 Cluster = _invoice.Cluster,
                 AccountId = _invoice.AccountId,
-                LocationId = _invoice.LocationId,
                 strInvoiceNumber = _invoice.strInvoiceNumber,
                 PurchasedItems = Items.Select(item => new InvoiceItemDTO
                 {

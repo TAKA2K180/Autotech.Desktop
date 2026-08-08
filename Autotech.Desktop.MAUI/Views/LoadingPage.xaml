@@ -9,13 +9,21 @@
                              HorizontalOptions="Center"
                              VerticalOptions="Center"
                              MaximumWidthRequest="420">
-            <Image Source="logo.jpg"
-                   HeightRequest="118"
-                   WidthRequest="118"
-                   Aspect="AspectFit"
-                   HorizontalOptions="Center" />
+            <Border HeightRequest="118"
+                    WidthRequest="118"
+                    Stroke="#38DCC8"
+                    StrokeThickness="2"
+                    BackgroundColor="{AppThemeBinding Light=#E8F7F4, Dark=#0D2A25}"
+                    HorizontalOptions="Center">
+                <Label Text="SP"
+                       FontSize="36"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       TextColor="#38DCC8" />
+            </Border>
 
-            <Label Text="Autotech Desktop"
+            <Label Text="StockPilot Pro ERP"
                    FontSize="30"
                    FontAttributes="Bold"
                    HorizontalTextAlignment="Center"

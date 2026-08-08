@@ -21,18 +21,26 @@
                 <Grid Padding="42"
                       BackgroundColor="{AppThemeBinding Light=#F8FBFA, Dark=#101B18}">
                     <VerticalStackLayout Spacing="18" VerticalOptions="Center">
-                        <Image Source="logo.jpg"
-                               HeightRequest="112"
-                               WidthRequest="112"
-                               Aspect="AspectFit"
-                               HorizontalOptions="Start" />
+                        <Border HeightRequest="112"
+                                WidthRequest="112"
+                                Stroke="#38DCC8"
+                                StrokeThickness="2"
+                                BackgroundColor="{AppThemeBinding Light=#E8F7F4, Dark=#0D2A25}"
+                                HorizontalOptions="Start">
+                            <Label Text="SP"
+                                   FontSize="34"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   TextColor="#38DCC8" />
+                        </Border>
 
-                        <Label Text="Autotech Desktop"
+                        <Label Text="StockPilot Pro ERP"
                                FontSize="36"
                                FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light=#12312D, Dark=#E6FFFA}" />
 
-                        <Label Text="Sales, inventory, accounts, and invoices in one workspace."
+                        <Label Text="Sales, inventory, accounts, invoices, and reporting in one workspace."
                                FontSize="16"
                                LineHeight="1.25"
                                TextColor="{AppThemeBinding Light=#52615E, Dark=#B7C8C4}"

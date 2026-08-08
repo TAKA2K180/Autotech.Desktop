@@ -17,7 +17,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
 {
     public class ItemServices
     {
-        private readonly string apiUrl = "https://api.autotechph.online/api/v1/Items";
+        private readonly string apiUrl = $"{ApiSettings.BaseUrl}/Items";
 
         public async Task<List<Items>> GetAllItemsAsync()
         {
@@ -78,7 +78,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", SessionManager.Token);
 
-            var url = $"https://api.autotechph.online/api/v1/Items/desktop/paginated?pageNumber={pageNumber}&pageSize={pageSize}";
+            var url = $"{ApiSettings.BaseUrl}/Items/desktop/paginated?pageNumber={pageNumber}&pageSize={pageSize}";
             var response = await httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text;
 using System.Windows.Input;
 using Autotech.Desktop.BusinessLayer.DTO;
 using Autotech.Desktop.BusinessLayer.Helpers;
@@ -19,13 +20,19 @@ public sealed class DashboardPageViewModel : ViewModelBase
     private readonly AgentsService _agentsService = new();
     private readonly AccountService _accountService = new();
     private readonly ItemServices _itemServices = new();
+    private readonly SupplierService _supplierService = new();
+    private readonly StockMovementService _stockMovementService = new();
+    private readonly ExpenseService _expenseService = new();
     private readonly List<Items> _currentPageItems = new();
     private readonly List<Accounts> _allAccounts = new();
     private readonly List<SalesDTO> _allInvoices = new();
     private readonly List<AgentDTO> _allAgents = new();
     private readonly List<Items> _maintenanceItems = new();
+    private readonly List<Supplier> _allSuppliers = new();
+    private readonly List<StockMovement> _allStockMovements = new();
+    private readonly List<Expense> _allExpenses = new();
     private int _currentItemPage = 1;
-    private string _agentName = "Autotech";
+    private string _agentName = "StockPilot Pro ERP";
     private string _agentMeta = string.Empty;
     private string _salesClock = string.Empty;
     private string _selectedTab = "POS";
@@ -43,12 +50,15 @@ public sealed class DashboardPageViewModel : ViewModelBase
     private string? _maintenanceAccountSearchText;
     private string? _maintenanceAgentSearchText;
     private string? _maintenanceItemSearchText;
+    private string? _maintenanceSupplierSearchText;
     private string _selectedMaintenanceTab = "Agents";
     private Accounts? _selectedMaintenanceAccount;
     private AgentDTO? _selectedMaintenanceAgent;
     private Items? _selectedMaintenanceItem;
+    private Supplier? _selectedMaintenanceSupplier;
+    private StockMovement? _selectedMaintenanceStockMovement;
+    private Expense? _selectedMaintenanceExpense;
     private string _pricingMode = "Retail";
-    private string _selectedLocation = "Bataan";
     private Accounts? _selectedAccount;
     private PaymentOption? _selectedPaymentMethod;
     private string _contactNumber = string.Empty;
@@ -78,17 +88,37 @@ public sealed class DashboardPageViewModel : ViewModelBase
     private string _editAccountContactNumber = string.Empty;
     private string _editAccountAddress = string.Empty;
     private string _editAccountTerms = "0";
+    private string _editAccountCreditLimit = "0";
     private string _editItemCode = string.Empty;
     private string _editItemName = string.Empty;
     private string _editItemDescription = string.Empty;
+    private string _editItemUnitOfMeasure = "pcs";
+    private string _editItemCostPrice = "0";
+    private string _editItemMinimumStockLevel = "0";
     private string _editItemOnHand = "0";
     private string _editItemQuantityPerBox = "0";
-    private string _editItemBataanRetail = "0";
-    private string _editItemBataanWholesale = "0";
-    private string _editItemPampangaRetail = "0";
-    private string _editItemPampangaWholesale = "0";
-    private string _editItemZambalesRetail = "0";
-    private string _editItemZambalesWholesale = "0";
+    private string _editItemRetailPrice = "0";
+    private string _editItemWholesalePrice = "0";
+    private string _editSupplierName = string.Empty;
+    private string _editSupplierContactPerson = string.Empty;
+    private string _editSupplierContactNumber = string.Empty;
+    private string _editSupplierEmail = string.Empty;
+    private string _editSupplierAddress = string.Empty;
+    private string _editStockMovementItemCode = string.Empty;
+    private string _editStockMovementType = "Stock In";
+    private string _editStockMovementQuantity = "0";
+    private string _editStockMovementUnitCost = "0";
+    private string _editStockMovementReference = string.Empty;
+    private string _editStockMovementNotes = string.Empty;
+    private string _editExpenseCategory = "Miscellaneous";
+    private string _editExpenseDescription = string.Empty;
+    private string _editExpenseAmount = "0";
+    private string _editExpenseReference = string.Empty;
+    private string _selectedReportPeriod = "This Month";
+    private string _reportDateRangeText = string.Empty;
+    private string _reportGeneratedText = string.Empty;
+    private string _reportExecutiveSummary = string.Empty;
+    private CancellationTokenSource? _operationMessageClearToken;
 
     public DashboardPageViewModel()
     {
@@ -112,6 +142,8 @@ public sealed class DashboardPageViewModel : ViewModelBase
         MaintenanceCancelEditorCommand = new Command(CloseMaintenanceEditor);
         ProfitPerMonthReportCommand = new Command(OpenProfitPerMonthReport);
         ItemSalesReportCommand = new Command(OpenItemSalesReport);
+        ExportReportsPdfCommand = new Command(async () => await ExportReportsPdfAsync(), () => !IsBusy);
+        ExportReportsExcelCommand = new Command(async () => await ExportReportsExcelAsync(), () => !IsBusy);
 
         PaymentMethods = EnumHelper.GetPaymentMethodDescriptions()
             .Select(pair => new PaymentOption(pair.Key, pair.Value))
@@ -134,11 +166,33 @@ public sealed class DashboardPageViewModel : ViewModelBase
 
     public ObservableCollection<Items> MaintenanceItems { get; } = new();
 
+    public ObservableCollection<Supplier> MaintenanceSuppliers { get; } = new();
+
+    public ObservableCollection<StockMovement> MaintenanceStockMovements { get; } = new();
+
+    public ObservableCollection<Expense> MaintenanceExpenses { get; } = new();
+
+    public ObservableCollection<ReportKpi> ReportKpis { get; } = new();
+
+    public ObservableCollection<ReportBreakdownRow> SalesByStatusReport { get; } = new();
+
+    public ObservableCollection<ReportBreakdownRow> SalesByAgentReport { get; } = new();
+
+    public ObservableCollection<ReportBreakdownRow> SalesByCustomerReport { get; } = new();
+
+    public ObservableCollection<ReportBreakdownRow> SalesByPaymentReport { get; } = new();
+
+    public ObservableCollection<ReportBreakdownRow> MonthlySalesTrendReport { get; } = new();
+
+    public ObservableCollection<ReportBreakdownRow> TopSellingItemsReport { get; } = new();
+
+    public ObservableCollection<InventoryValuationRow> InventoryValuationReport { get; } = new();
+
+    public ObservableCollection<InventoryValuationRow> LowStockReport { get; } = new();
+
     public List<PaymentOption> PaymentMethods { get; }
 
     public List<string> PricingModes { get; } = ["Retail", "Wholesale"];
-
-    public List<string> Locations { get; } = ["Bataan", "Zambales", "Pampanga"];
 
     public List<InvoiceFilterChoice> InvoiceFilterOptions { get; } =
         Enum.GetValues(typeof(InvoiceFilterOption))
@@ -147,6 +201,12 @@ public sealed class DashboardPageViewModel : ViewModelBase
             .ToList();
 
     public List<string> InvoiceDateSortOptions { get; } = ["Descending", "Ascending"];
+
+    public List<string> ReportPeriodOptions { get; } = ["Today", "This Week", "This Month", "This Quarter", "This Year", "All Time"];
+
+    public List<string> StockMovementTypes { get; } = ["Stock In", "Stock Out", "Adjustment", "Return", "Defective"];
+
+    public List<string> ExpenseCategories { get; } = ["Salary", "Commission", "Fuel", "Food Allowance", "Truck Maintenance", "Warehouse Maintenance", "Office Supplies", "Miscellaneous"];
 
     public ICommand SelectTabCommand { get; }
 
@@ -188,6 +248,10 @@ public sealed class DashboardPageViewModel : ViewModelBase
 
     public ICommand ItemSalesReportCommand { get; }
 
+    public ICommand ExportReportsPdfCommand { get; }
+
+    public ICommand ExportReportsExcelCommand { get; }
+
     public string AgentName
     {
         get => _agentName;
@@ -226,7 +290,15 @@ public sealed class DashboardPageViewModel : ViewModelBase
 
     public bool IsMaintenanceTab => SelectedTab == "Maintenance";
 
-    public bool CanAccessMaintenance => SessionManager.AgentDetails?.AgentRole == "Admin";
+    public bool CanAccessMaintenance
+    {
+        get
+        {
+            var role = SessionManager.AgentDetails?.AgentRole?.Trim();
+            return !string.IsNullOrWhiteSpace(role) &&
+                   role.Contains("admin", StringComparison.OrdinalIgnoreCase);
+        }
+    }
 
     public string ItemsCount
     {
@@ -385,10 +457,16 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 OnPropertyChanged(nameof(IsMaintenanceAccountsTab));
                 OnPropertyChanged(nameof(IsMaintenanceAgentsTab));
                 OnPropertyChanged(nameof(IsMaintenanceItemsTab));
+                OnPropertyChanged(nameof(IsMaintenanceSuppliersTab));
+                OnPropertyChanged(nameof(IsMaintenanceStockTab));
+                OnPropertyChanged(nameof(IsMaintenanceExpensesTab));
                 OnPropertyChanged(nameof(IsMaintenanceReportsTab));
                 OnPropertyChanged(nameof(IsMaintenanceAgentEditor));
                 OnPropertyChanged(nameof(IsMaintenanceAccountEditor));
                 OnPropertyChanged(nameof(IsMaintenanceItemEditor));
+                OnPropertyChanged(nameof(IsMaintenanceSupplierEditor));
+                OnPropertyChanged(nameof(IsMaintenanceStockEditor));
+                OnPropertyChanged(nameof(IsMaintenanceExpenseEditor));
                 ((Command)MaintenanceImportExcelCommand).ChangeCanExecute();
             }
         }
@@ -399,6 +477,12 @@ public sealed class DashboardPageViewModel : ViewModelBase
     public bool IsMaintenanceAgentsTab => SelectedMaintenanceTab == "Agents";
 
     public bool IsMaintenanceItemsTab => SelectedMaintenanceTab == "Items";
+
+    public bool IsMaintenanceSuppliersTab => SelectedMaintenanceTab == "Suppliers";
+
+    public bool IsMaintenanceStockTab => SelectedMaintenanceTab == "Stock";
+
+    public bool IsMaintenanceExpensesTab => SelectedMaintenanceTab == "Expenses";
 
     public bool IsMaintenanceReportsTab => SelectedMaintenanceTab == "Reports";
 
@@ -420,6 +504,24 @@ public sealed class DashboardPageViewModel : ViewModelBase
         set => SetProperty(ref _selectedMaintenanceItem, value);
     }
 
+    public Supplier? SelectedMaintenanceSupplier
+    {
+        get => _selectedMaintenanceSupplier;
+        set => SetProperty(ref _selectedMaintenanceSupplier, value);
+    }
+
+    public StockMovement? SelectedMaintenanceStockMovement
+    {
+        get => _selectedMaintenanceStockMovement;
+        set => SetProperty(ref _selectedMaintenanceStockMovement, value);
+    }
+
+    public Expense? SelectedMaintenanceExpense
+    {
+        get => _selectedMaintenanceExpense;
+        set => SetProperty(ref _selectedMaintenanceExpense, value);
+    }
+
     public bool IsMaintenanceEditorOpen
     {
         get => _isMaintenanceEditorOpen;
@@ -430,6 +532,9 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 OnPropertyChanged(nameof(IsMaintenanceAgentEditor));
                 OnPropertyChanged(nameof(IsMaintenanceAccountEditor));
                 OnPropertyChanged(nameof(IsMaintenanceItemEditor));
+                OnPropertyChanged(nameof(IsMaintenanceSupplierEditor));
+                OnPropertyChanged(nameof(IsMaintenanceStockEditor));
+                OnPropertyChanged(nameof(IsMaintenanceExpenseEditor));
             }
         }
     }
@@ -445,6 +550,12 @@ public sealed class DashboardPageViewModel : ViewModelBase
     public bool IsMaintenanceAccountEditor => IsMaintenanceEditorOpen && IsMaintenanceAccountsTab;
 
     public bool IsMaintenanceItemEditor => IsMaintenanceEditorOpen && IsMaintenanceItemsTab;
+
+    public bool IsMaintenanceSupplierEditor => IsMaintenanceEditorOpen && IsMaintenanceSuppliersTab;
+
+    public bool IsMaintenanceStockEditor => IsMaintenanceEditorOpen && IsMaintenanceStockTab;
+
+    public bool IsMaintenanceExpenseEditor => IsMaintenanceEditorOpen && IsMaintenanceExpensesTab;
 
     public string EditAgentUsername { get => _editAgentUsername; set => SetProperty(ref _editAgentUsername, value); }
 
@@ -470,27 +581,99 @@ public sealed class DashboardPageViewModel : ViewModelBase
 
     public string EditAccountTerms { get => _editAccountTerms; set => SetProperty(ref _editAccountTerms, value); }
 
+    public string EditAccountCreditLimit { get => _editAccountCreditLimit; set => SetProperty(ref _editAccountCreditLimit, value); }
+
     public string EditItemCode { get => _editItemCode; set => SetProperty(ref _editItemCode, value); }
 
     public string EditItemName { get => _editItemName; set => SetProperty(ref _editItemName, value); }
 
     public string EditItemDescription { get => _editItemDescription; set => SetProperty(ref _editItemDescription, value); }
 
+    public string EditItemUnitOfMeasure { get => _editItemUnitOfMeasure; set => SetProperty(ref _editItemUnitOfMeasure, value); }
+
+    public string EditItemCostPrice { get => _editItemCostPrice; set => SetProperty(ref _editItemCostPrice, value); }
+
+    public string EditItemMinimumStockLevel { get => _editItemMinimumStockLevel; set => SetProperty(ref _editItemMinimumStockLevel, value); }
+
     public string EditItemOnHand { get => _editItemOnHand; set => SetProperty(ref _editItemOnHand, value); }
 
     public string EditItemQuantityPerBox { get => _editItemQuantityPerBox; set => SetProperty(ref _editItemQuantityPerBox, value); }
 
-    public string EditItemBataanRetail { get => _editItemBataanRetail; set => SetProperty(ref _editItemBataanRetail, value); }
+    public string EditItemRetailPrice { get => _editItemRetailPrice; set => SetProperty(ref _editItemRetailPrice, value); }
 
-    public string EditItemBataanWholesale { get => _editItemBataanWholesale; set => SetProperty(ref _editItemBataanWholesale, value); }
+    public string EditItemWholesalePrice { get => _editItemWholesalePrice; set => SetProperty(ref _editItemWholesalePrice, value); }
 
-    public string EditItemPampangaRetail { get => _editItemPampangaRetail; set => SetProperty(ref _editItemPampangaRetail, value); }
+    public string? MaintenanceSupplierSearchText
+    {
+        get => _maintenanceSupplierSearchText;
+        set
+        {
+            if (SetProperty(ref _maintenanceSupplierSearchText, value))
+            {
+                ApplyMaintenanceSupplierFilter();
+            }
+        }
+    }
 
-    public string EditItemPampangaWholesale { get => _editItemPampangaWholesale; set => SetProperty(ref _editItemPampangaWholesale, value); }
+    public string EditSupplierName { get => _editSupplierName; set => SetProperty(ref _editSupplierName, value); }
 
-    public string EditItemZambalesRetail { get => _editItemZambalesRetail; set => SetProperty(ref _editItemZambalesRetail, value); }
+    public string EditSupplierContactPerson { get => _editSupplierContactPerson; set => SetProperty(ref _editSupplierContactPerson, value); }
 
-    public string EditItemZambalesWholesale { get => _editItemZambalesWholesale; set => SetProperty(ref _editItemZambalesWholesale, value); }
+    public string EditSupplierContactNumber { get => _editSupplierContactNumber; set => SetProperty(ref _editSupplierContactNumber, value); }
+
+    public string EditSupplierEmail { get => _editSupplierEmail; set => SetProperty(ref _editSupplierEmail, value); }
+
+    public string EditSupplierAddress { get => _editSupplierAddress; set => SetProperty(ref _editSupplierAddress, value); }
+
+    public string EditStockMovementItemCode { get => _editStockMovementItemCode; set => SetProperty(ref _editStockMovementItemCode, value); }
+
+    public string EditStockMovementType { get => _editStockMovementType; set => SetProperty(ref _editStockMovementType, value); }
+
+    public string EditStockMovementQuantity { get => _editStockMovementQuantity; set => SetProperty(ref _editStockMovementQuantity, value); }
+
+    public string EditStockMovementUnitCost { get => _editStockMovementUnitCost; set => SetProperty(ref _editStockMovementUnitCost, value); }
+
+    public string EditStockMovementReference { get => _editStockMovementReference; set => SetProperty(ref _editStockMovementReference, value); }
+
+    public string EditStockMovementNotes { get => _editStockMovementNotes; set => SetProperty(ref _editStockMovementNotes, value); }
+
+    public string EditExpenseCategory { get => _editExpenseCategory; set => SetProperty(ref _editExpenseCategory, value); }
+
+    public string EditExpenseDescription { get => _editExpenseDescription; set => SetProperty(ref _editExpenseDescription, value); }
+
+    public string EditExpenseAmount { get => _editExpenseAmount; set => SetProperty(ref _editExpenseAmount, value); }
+
+    public string EditExpenseReference { get => _editExpenseReference; set => SetProperty(ref _editExpenseReference, value); }
+
+    public string SelectedReportPeriod
+    {
+        get => _selectedReportPeriod;
+        set
+        {
+            if (SetProperty(ref _selectedReportPeriod, value))
+            {
+                BuildReports();
+            }
+        }
+    }
+
+    public string ReportDateRangeText
+    {
+        get => _reportDateRangeText;
+        private set => SetProperty(ref _reportDateRangeText, value);
+    }
+
+    public string ReportGeneratedText
+    {
+        get => _reportGeneratedText;
+        private set => SetProperty(ref _reportGeneratedText, value);
+    }
+
+    public string ReportExecutiveSummary
+    {
+        get => _reportExecutiveSummary;
+        private set => SetProperty(ref _reportExecutiveSummary, value);
+    }
 
     public string PricingMode
     {
@@ -498,18 +681,6 @@ public sealed class DashboardPageViewModel : ViewModelBase
         set
         {
             if (SetProperty(ref _pricingMode, value))
-            {
-                RefreshCartPrices();
-            }
-        }
-    }
-
-    public string SelectedLocation
-    {
-        get => _selectedLocation;
-        set
-        {
-            if (SetProperty(ref _selectedLocation, value))
             {
                 RefreshCartPrices();
             }
@@ -615,6 +786,7 @@ public sealed class DashboardPageViewModel : ViewModelBase
             if (SetProperty(ref _operationMessage, value))
             {
                 OnPropertyChanged(nameof(HasOperationMessage));
+                ScheduleOperationMessageClear(value);
             }
         }
     }
@@ -744,6 +916,7 @@ public sealed class DashboardPageViewModel : ViewModelBase
 
         Replace(Invoices, filtered.Select(invoice => new InvoiceRow(invoice)));
         InvoicesCount = Invoices.Count.ToString("N0");
+        BuildReports();
     }
 
     public void ApplyMaintenanceAccountFilter()
@@ -784,6 +957,20 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 Contains(item.ItemDescription, keyword));
 
         Replace(MaintenanceItems, filtered);
+    }
+
+    public void ApplyMaintenanceSupplierFilter()
+    {
+        var keyword = MaintenanceSupplierSearchText?.Trim() ?? string.Empty;
+        var filtered = string.IsNullOrWhiteSpace(keyword)
+            ? _allSuppliers
+            : _allSuppliers.Where(supplier =>
+                Contains(supplier.SupplierName, keyword) ||
+                Contains(supplier.ContactPerson, keyword) ||
+                Contains(supplier.ContactNumber, keyword) ||
+                Contains(supplier.Address, keyword));
+
+        Replace(MaintenanceSuppliers, filtered.OrderBy(supplier => supplier.SupplierName));
     }
 
     private async Task SelectTabAsync(string? tab)
@@ -935,7 +1122,6 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 TotalLiters = 0,
                 Cluster = SelectedAccount.Cluster ?? string.Empty,
                 AccountId = SelectedAccount.Id,
-                LocationId = SelectedAccount.LocationId,
                 strInvoiceNumber = string.Empty,
                 PurchasedItems = CartItems.Select(line => new InvoiceItemDTO
                 {
@@ -1026,6 +1212,20 @@ public sealed class DashboardPageViewModel : ViewModelBase
             _maintenanceItems.AddRange(await _itemServices.GetAllItemsAsync());
             ApplyMaintenanceItemFilter();
             ApplyMaintenanceAccountFilter();
+
+            _allSuppliers.Clear();
+            _allSuppliers.AddRange(await _supplierService.GetAllAsync());
+            ApplyMaintenanceSupplierFilter();
+
+            _allStockMovements.Clear();
+            _allStockMovements.AddRange(await _stockMovementService.GetAllAsync());
+            Replace(MaintenanceStockMovements, _allStockMovements.OrderByDescending(m => m.MovementDate));
+
+            _allExpenses.Clear();
+            _allExpenses.AddRange(await _expenseService.GetAllAsync());
+            Replace(MaintenanceExpenses, _allExpenses.OrderByDescending(e => e.ExpenseDate));
+
+            BuildReports();
             _maintenanceLoaded = true;
         }
         catch (Exception ex)
@@ -1062,6 +1262,24 @@ public sealed class DashboardPageViewModel : ViewModelBase
         if (IsMaintenanceItemsTab)
         {
             OpenItemEditor(null);
+            return;
+        }
+
+        if (IsMaintenanceSuppliersTab)
+        {
+            OpenSupplierEditor(null);
+            return;
+        }
+
+        if (IsMaintenanceStockTab)
+        {
+            OpenStockMovementEditor();
+            return;
+        }
+
+        if (IsMaintenanceExpensesTab)
+        {
+            OpenExpenseEditor(null);
             return;
         }
 
@@ -1103,6 +1321,36 @@ public sealed class DashboardPageViewModel : ViewModelBase
             }
 
             OpenItemEditor(SelectedMaintenanceItem);
+            return;
+        }
+
+        if (IsMaintenanceSuppliersTab)
+        {
+            if (SelectedMaintenanceSupplier is null)
+            {
+                OperationMessage = "Select a supplier to edit.";
+                return;
+            }
+
+            OpenSupplierEditor(SelectedMaintenanceSupplier);
+            return;
+        }
+
+        if (IsMaintenanceExpensesTab)
+        {
+            if (SelectedMaintenanceExpense is null)
+            {
+                OperationMessage = "Select an expense to edit.";
+                return;
+            }
+
+            OpenExpenseEditor(SelectedMaintenanceExpense);
+            return;
+        }
+
+        if (IsMaintenanceStockTab)
+        {
+            OperationMessage = "Stock movements are audit records. Add a new correction or adjustment instead.";
             return;
         }
 
@@ -1159,12 +1407,8 @@ public sealed class DashboardPageViewModel : ViewModelBase
                     ItemDescription = row.Cell(3).GetString().Trim(),
                     OnHand = GetCellDouble(row.Cell(4)),
                     QuantityPerBox = GetCellDouble(row.Cell(5)),
-                    BataanRetail = GetCellDouble(row.Cell(6)),
-                    BataanWholeSale = GetCellDouble(row.Cell(7)),
-                    PampangaRetail = GetCellDouble(row.Cell(8)),
-                    PampangaWholeSale = GetCellDouble(row.Cell(9)),
-                    ZambalesRetail = GetCellDouble(row.Cell(10)),
-                    ZambalesWholeSale = GetCellDouble(row.Cell(11)),
+                    RetailPrice = GetCellDouble(row.Cell(6)),
+                    WholesalePrice = GetCellDouble(row.Cell(7)),
                     ItemsSold = 0,
                     Sales = 0,
                     Quantity = 0
@@ -1214,6 +1458,7 @@ public sealed class DashboardPageViewModel : ViewModelBase
         EditAccountContactNumber = account?.ContactNumber ?? string.Empty;
         EditAccountAddress = account?.Address ?? string.Empty;
         EditAccountTerms = (account?.Terms ?? 0).ToString(CultureInfo.InvariantCulture);
+        EditAccountCreditLimit = FormatEditorNumber(account?.CreditLimit ?? 0);
         IsMaintenanceEditorOpen = true;
     }
 
@@ -1225,14 +1470,49 @@ public sealed class DashboardPageViewModel : ViewModelBase
         EditItemCode = item?.ItemCode ?? string.Empty;
         EditItemName = item?.ItemName ?? string.Empty;
         EditItemDescription = item?.ItemDescription ?? string.Empty;
+        EditItemUnitOfMeasure = item?.UnitOfMeasure ?? "pcs";
+        EditItemCostPrice = FormatEditorNumber(item?.CostPrice ?? 0);
+        EditItemMinimumStockLevel = FormatEditorNumber(item?.MinimumStockLevel ?? 0);
         EditItemOnHand = FormatEditorNumber(details?.OnHand ?? 0);
         EditItemQuantityPerBox = FormatEditorNumber(details?.QuantityPerBox ?? 0);
-        EditItemBataanRetail = FormatEditorNumber(details?.BataanRetail ?? 0);
-        EditItemBataanWholesale = FormatEditorNumber(details?.BataanWholeSale ?? 0);
-        EditItemPampangaRetail = FormatEditorNumber(details?.PampangaRetail ?? 0);
-        EditItemPampangaWholesale = FormatEditorNumber(details?.PampangaWholeSale ?? 0);
-        EditItemZambalesRetail = FormatEditorNumber(details?.ZambalesRetail ?? 0);
-        EditItemZambalesWholesale = FormatEditorNumber(details?.ZambalesWholeSale ?? 0);
+        EditItemRetailPrice = FormatEditorNumber(details?.RetailPrice ?? 0);
+        EditItemWholesalePrice = FormatEditorNumber(details?.WholesalePrice ?? 0);
+        IsMaintenanceEditorOpen = true;
+    }
+
+    private void OpenSupplierEditor(Supplier? supplier)
+    {
+        _isMaintenanceEditorForNewRecord = supplier is null;
+        MaintenanceEditorTitle = _isMaintenanceEditorForNewRecord ? "Add Supplier" : "Edit Supplier";
+        EditSupplierName = supplier?.SupplierName ?? string.Empty;
+        EditSupplierContactPerson = supplier?.ContactPerson ?? string.Empty;
+        EditSupplierContactNumber = supplier?.ContactNumber ?? string.Empty;
+        EditSupplierEmail = supplier?.Email ?? string.Empty;
+        EditSupplierAddress = supplier?.Address ?? string.Empty;
+        IsMaintenanceEditorOpen = true;
+    }
+
+    private void OpenStockMovementEditor()
+    {
+        _isMaintenanceEditorForNewRecord = true;
+        MaintenanceEditorTitle = "Add Stock Movement";
+        EditStockMovementItemCode = SelectedMaintenanceItem?.ItemCode ?? string.Empty;
+        EditStockMovementType = "Stock In";
+        EditStockMovementQuantity = "0";
+        EditStockMovementUnitCost = "0";
+        EditStockMovementReference = string.Empty;
+        EditStockMovementNotes = string.Empty;
+        IsMaintenanceEditorOpen = true;
+    }
+
+    private void OpenExpenseEditor(Expense? expense)
+    {
+        _isMaintenanceEditorForNewRecord = expense is null;
+        MaintenanceEditorTitle = _isMaintenanceEditorForNewRecord ? "Add Expense" : "Edit Expense";
+        EditExpenseCategory = expense?.Category ?? "Miscellaneous";
+        EditExpenseDescription = expense?.Description ?? string.Empty;
+        EditExpenseAmount = FormatEditorNumber(expense?.Amount ?? 0);
+        EditExpenseReference = expense?.ReferenceNumber ?? string.Empty;
         IsMaintenanceEditorOpen = true;
     }
 
@@ -1258,6 +1538,24 @@ public sealed class DashboardPageViewModel : ViewModelBase
         if (IsMaintenanceItemsTab)
         {
             await SaveItemEditorAsync();
+            return;
+        }
+
+        if (IsMaintenanceSuppliersTab)
+        {
+            await SaveSupplierEditorAsync();
+            return;
+        }
+
+        if (IsMaintenanceStockTab)
+        {
+            await SaveStockMovementEditorAsync();
+            return;
+        }
+
+        if (IsMaintenanceExpensesTab)
+        {
+            await SaveExpenseEditorAsync();
         }
     }
 
@@ -1281,10 +1579,6 @@ public sealed class DashboardPageViewModel : ViewModelBase
         {
             IsBusy = true;
             var source = _isMaintenanceEditorForNewRecord ? null : SelectedMaintenanceAgent;
-            var locationId = source?.LocationId
-                ?? SessionManager.AgentDetails?.LocationId
-                ?? _loadService.Context.Accounts.FirstOrDefault()?.LocationId
-                ?? Guid.Empty;
 
             var request = new AgentRequestDTO
             {
@@ -1298,8 +1592,7 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 AgentAddress = EditAgentAddress.Trim(),
                 AgentRole = EditAgentRole.Trim(),
                 DateCreated = source?.DateCreated ?? DateTime.Now,
-                DateLastLogin = source?.DateLastLogin,
-                LocationId = locationId
+                DateLastLogin = source?.DateLastLogin
             };
 
             if (_isMaintenanceEditorForNewRecord)
@@ -1340,6 +1633,11 @@ public sealed class DashboardPageViewModel : ViewModelBase
             return;
         }
 
+        if (!TryParseEditorNumber(EditAccountCreditLimit, "Credit limit", out var creditLimit))
+        {
+            return;
+        }
+
         try
         {
             IsBusy = true;
@@ -1349,11 +1647,9 @@ public sealed class DashboardPageViewModel : ViewModelBase
             {
                 Id = Guid.NewGuid(),
                 DiscountPercent = 0,
-                Cluster = agent?.Location?.LocationName ?? string.Empty,
+                Cluster = string.Empty,
                 isActive = true,
-                RegisterDate = DateTime.Now,
-                LocationId = agent?.LocationId ?? _loadService.Context.Accounts.FirstOrDefault()?.LocationId ?? Guid.Empty,
-                Location = agent?.Location!
+                RegisterDate = DateTime.Now
             };
 
             account.Name = EditAccountName.Trim();
@@ -1362,6 +1658,7 @@ public sealed class DashboardPageViewModel : ViewModelBase
             account.ContactNumber = EditAccountContactNumber.Trim();
             account.Address = EditAccountAddress.Trim();
             account.Terms = terms;
+            account.CreditLimit = creditLimit;
 
             if (_isMaintenanceEditorForNewRecord)
             {
@@ -1397,8 +1694,7 @@ public sealed class DashboardPageViewModel : ViewModelBase
             return;
         }
 
-        if (!TryReadItemEditorNumbers(out var onHand, out var quantityPerBox, out var bataanRetail, out var bataanWholesale,
-                out var pampangaRetail, out var pampangaWholesale, out var zambalesRetail, out var zambalesWholesale))
+        if (!TryReadItemEditorNumbers(out var onHand, out var quantityPerBox, out var costPrice, out var minimumStockLevel, out var retailPrice, out var wholesalePrice))
         {
             return;
         }
@@ -1416,14 +1712,13 @@ public sealed class DashboardPageViewModel : ViewModelBase
                         ItemCode = EditItemCode.Trim(),
                         ItemName = EditItemName.Trim(),
                         ItemDescription = EditItemDescription.Trim(),
+                        UnitOfMeasure = EditItemUnitOfMeasure.Trim(),
+                        CostPrice = costPrice,
+                        MinimumStockLevel = minimumStockLevel,
                         OnHand = onHand,
                         QuantityPerBox = quantityPerBox,
-                        BataanRetail = bataanRetail,
-                        BataanWholeSale = bataanWholesale,
-                        PampangaRetail = pampangaRetail,
-                        PampangaWholeSale = pampangaWholesale,
-                        ZambalesRetail = zambalesRetail,
-                        ZambalesWholeSale = zambalesWholesale,
+                        RetailPrice = retailPrice,
+                        WholesalePrice = wholesalePrice,
                         ItemsSold = 0,
                         Sales = 0,
                         Quantity = 0
@@ -1439,14 +1734,13 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 item.ItemCode = EditItemCode.Trim();
                 item.ItemName = EditItemName.Trim();
                 item.ItemDescription = EditItemDescription.Trim();
+                item.UnitOfMeasure = EditItemUnitOfMeasure.Trim();
+                item.CostPrice = costPrice;
+                item.MinimumStockLevel = minimumStockLevel;
                 item.itemDetails.OnHand = onHand;
                 item.itemDetails.QuantityPerBox = quantityPerBox;
-                item.itemDetails.BataanRetail = bataanRetail;
-                item.itemDetails.BataanWholeSale = bataanWholesale;
-                item.itemDetails.PampangaRetail = pampangaRetail;
-                item.itemDetails.PampangaWholeSale = pampangaWholesale;
-                item.itemDetails.ZambalesRetail = zambalesRetail;
-                item.itemDetails.ZambalesWholeSale = zambalesWholesale;
+                item.itemDetails.RetailPrice = retailPrice;
+                item.itemDetails.WholesalePrice = wholesalePrice;
 
                 var success = await _itemServices.UpdateItemAsync(item);
                 OperationMessage = success ? "Item updated successfully." : "Failed to update item.";
@@ -1465,25 +1759,143 @@ public sealed class DashboardPageViewModel : ViewModelBase
         }
     }
 
+    private async Task SaveSupplierEditorAsync()
+    {
+        if (string.IsNullOrWhiteSpace(EditSupplierName))
+        {
+            OperationMessage = "Supplier name is required.";
+            return;
+        }
+
+        try
+        {
+            IsBusy = true;
+            var supplier = _isMaintenanceEditorForNewRecord ? new Supplier { Id = Guid.Empty, DateAdded = DateTime.Now } : SelectedMaintenanceSupplier;
+            if (supplier is null)
+            {
+                OperationMessage = "Select a supplier to edit.";
+                return;
+            }
+
+            supplier.SupplierName = EditSupplierName.Trim();
+            supplier.ContactPerson = EditSupplierContactPerson.Trim();
+            supplier.ContactNumber = EditSupplierContactNumber.Trim();
+            supplier.Email = EditSupplierEmail.Trim();
+            supplier.Address = EditSupplierAddress.Trim();
+            supplier.IsActive = true;
+
+            await _supplierService.SaveAsync(supplier);
+            OperationMessage = _isMaintenanceEditorForNewRecord ? "Supplier added successfully." : "Supplier updated successfully.";
+            CloseMaintenanceEditor();
+            await RefreshMaintenanceAsync();
+        }
+        catch (Exception ex)
+        {
+            OperationMessage = $"Failed to save supplier: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task SaveStockMovementEditorAsync()
+    {
+        var item = _maintenanceItems.FirstOrDefault(i => string.Equals(i.ItemCode, EditStockMovementItemCode.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (item is null)
+        {
+            OperationMessage = "Enter a valid item code for the stock movement.";
+            return;
+        }
+
+        if (!TryParseEditorNumber(EditStockMovementQuantity, "Quantity", out var quantity) ||
+            !TryParseEditorNumber(EditStockMovementUnitCost, "Unit cost", out var unitCost))
+        {
+            return;
+        }
+
+        try
+        {
+            IsBusy = true;
+            await _stockMovementService.AddAsync(new StockMovement
+            {
+                Id = Guid.NewGuid(),
+                ItemId = item.Id,
+                MovementType = EditStockMovementType,
+                Quantity = quantity,
+                UnitCost = unitCost,
+                ReferenceNumber = EditStockMovementReference.Trim(),
+                Notes = EditStockMovementNotes.Trim(),
+                MovementDate = DateTime.Now
+            });
+
+            OperationMessage = "Stock movement saved and on-hand quantity updated.";
+            CloseMaintenanceEditor();
+            await RefreshMaintenanceAsync();
+        }
+        catch (Exception ex)
+        {
+            OperationMessage = $"Failed to save stock movement: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task SaveExpenseEditorAsync()
+    {
+        if (!TryParseEditorNumber(EditExpenseAmount, "Expense amount", out var amount))
+        {
+            return;
+        }
+
+        try
+        {
+            IsBusy = true;
+            var expense = _isMaintenanceEditorForNewRecord ? new Expense { Id = Guid.Empty, ExpenseDate = DateTime.Now } : SelectedMaintenanceExpense;
+            if (expense is null)
+            {
+                OperationMessage = "Select an expense to edit.";
+                return;
+            }
+
+            expense.Category = EditExpenseCategory;
+            expense.Description = EditExpenseDescription.Trim();
+            expense.Amount = amount;
+            expense.ReferenceNumber = EditExpenseReference.Trim();
+            expense.ExpenseDate = expense.ExpenseDate == default ? DateTime.Now : expense.ExpenseDate;
+
+            await _expenseService.SaveAsync(expense);
+            OperationMessage = _isMaintenanceEditorForNewRecord ? "Expense added successfully." : "Expense updated successfully.";
+            CloseMaintenanceEditor();
+            await RefreshMaintenanceAsync();
+        }
+        catch (Exception ex)
+        {
+            OperationMessage = $"Failed to save expense: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     private bool TryReadItemEditorNumbers(
         out double onHand,
         out double quantityPerBox,
-        out double bataanRetail,
-        out double bataanWholesale,
-        out double pampangaRetail,
-        out double pampangaWholesale,
-        out double zambalesRetail,
-        out double zambalesWholesale)
+        out double costPrice,
+        out double minimumStockLevel,
+        out double retailPrice,
+        out double wholesalePrice)
     {
-        onHand = quantityPerBox = bataanRetail = bataanWholesale = pampangaRetail = pampangaWholesale = zambalesRetail = zambalesWholesale = 0;
+        onHand = quantityPerBox = costPrice = minimumStockLevel = retailPrice = wholesalePrice = 0;
         return TryParseEditorNumber(EditItemOnHand, "On hand", out onHand)
             && TryParseEditorNumber(EditItemQuantityPerBox, "Quantity per box", out quantityPerBox)
-            && TryParseEditorNumber(EditItemBataanRetail, "Bataan retail", out bataanRetail)
-            && TryParseEditorNumber(EditItemBataanWholesale, "Bataan wholesale", out bataanWholesale)
-            && TryParseEditorNumber(EditItemPampangaRetail, "Pampanga retail", out pampangaRetail)
-            && TryParseEditorNumber(EditItemPampangaWholesale, "Pampanga wholesale", out pampangaWholesale)
-            && TryParseEditorNumber(EditItemZambalesRetail, "Zambales retail", out zambalesRetail)
-            && TryParseEditorNumber(EditItemZambalesWholesale, "Zambales wholesale", out zambalesWholesale);
+            && TryParseEditorNumber(EditItemCostPrice, "Cost price", out costPrice)
+            && TryParseEditorNumber(EditItemMinimumStockLevel, "Minimum stock level", out minimumStockLevel)
+            && TryParseEditorNumber(EditItemRetailPrice, "Retail price", out retailPrice)
+            && TryParseEditorNumber(EditItemWholesalePrice, "Wholesale price", out wholesalePrice);
     }
 
     private bool TryParseEditorNumber(string text, string label, out double value)
@@ -1504,12 +1916,556 @@ public sealed class DashboardPageViewModel : ViewModelBase
 
     private void OpenProfitPerMonthReport()
     {
-        OperationMessage = "Profit Per Month report still needs a native MAUI report view.";
+        SelectedReportPeriod = "This Month";
+        BuildReports();
+        OperationMessage = "Profit report refreshed.";
     }
 
     private void OpenItemSalesReport()
     {
-        OperationMessage = "Item sales report still needs a native MAUI report view.";
+        BuildReports();
+        OperationMessage = "Item sales report refreshed.";
+    }
+
+    private void BuildReports()
+    {
+        var now = TimeHelper.GetPhilippineTime();
+        var invoices = GetReportInvoices(now).ToList();
+        var allItems = _maintenanceItems.Count > 0
+            ? _maintenanceItems
+            : _loadService.Context.AllItems.Count > 0
+                ? _loadService.Context.AllItems
+                : _currentPageItems;
+
+        var grossSales = invoices.Sum(invoice => invoice.TotalSales);
+        var tax = invoices.Sum(invoice => invoice.Tax);
+        var discounts = invoices.Sum(invoice => invoice.DiscountPeso);
+        var netSales = grossSales - discounts;
+        var remaining = invoices.Sum(invoice => invoice.RemainingBalance);
+        var invoiceCount = invoices.Count;
+        var averageInvoice = invoiceCount == 0 ? 0 : grossSales / invoiceCount;
+        var unitsSold = invoices.SelectMany(invoice => invoice.PurchasedItems ?? []).Sum(item => item.Quantity);
+        var inventoryValue = allItems.Sum(GetInventoryValue);
+        var lowStockCount = allItems.Count(item => (item.itemDetails?.OnHand ?? 0) <= Math.Max(1, item.itemDetails?.QuantityPerBox ?? 0));
+
+        Replace(ReportKpis,
+        [
+            new ReportKpi("Gross Sales", FormatReportMoney(grossSales), "Before discounts", "#38DCC8"),
+            new ReportKpi("Net Sales", FormatReportMoney(netSales), "After discounts", "#87E0B0"),
+            new ReportKpi("Outstanding", FormatReportMoney(remaining), "Uncollected balance", "#F0B35A"),
+            new ReportKpi("Invoices", invoiceCount.ToString("N0", CultureInfo.CurrentCulture), $"Avg {FormatReportMoney(averageInvoice)}", "#8DB7FF"),
+            new ReportKpi("Units Sold", unitsSold.ToString("N0", CultureInfo.CurrentCulture), "Across invoice lines", "#D8A6FF"),
+            new ReportKpi("Inventory Value", FormatReportMoney(inventoryValue), $"{lowStockCount:N0} low-stock SKUs", "#F07F7F")
+        ]);
+
+        ReportDateRangeText = GetReportDateRangeText(now);
+        ReportGeneratedText = $"Generated {now:dd MMM yyyy h:mm tt}";
+        ReportExecutiveSummary = BuildExecutiveSummary(grossSales, remaining, invoiceCount, lowStockCount);
+
+        Replace(SalesByStatusReport, BuildBreakdown(invoices, invoice => invoice.Status, invoice => invoice.TotalSales, "No Status", "#F1C40F"));
+        Replace(SalesByAgentReport, BuildBreakdown(invoices, invoice => invoice.Agent, invoice => invoice.TotalSales, "No Agent", "#38DCC8"));
+        Replace(SalesByCustomerReport, BuildBreakdown(invoices, invoice => invoice.AccountName, invoice => invoice.TotalSales, "Walk-in", "#87E0B0"));
+        Replace(SalesByPaymentReport, BuildBreakdown(invoices, invoice => invoice.PaymentType, invoice => invoice.TotalSales, "No Payment", "#8DB7FF"));
+        Replace(MonthlySalesTrendReport, BuildMonthlyTrend(invoices));
+        Replace(TopSellingItemsReport, BuildTopSellingItems(invoices));
+        Replace(InventoryValuationReport, BuildInventoryValuation(allItems));
+        Replace(LowStockReport, BuildLowStock(allItems));
+    }
+
+    private IEnumerable<SalesDTO> GetReportInvoices(DateTime now)
+    {
+        var invoices = _allInvoices.AsEnumerable();
+        return SelectedReportPeriod switch
+        {
+            "Today" => invoices.Where(invoice => invoice.DateSold.Date == now.Date),
+            "This Week" => invoices.Where(invoice => invoice.DateSold.Date >= now.Date.AddDays(-(int)now.DayOfWeek)),
+            "This Month" => invoices.Where(invoice => invoice.DateSold.Year == now.Year && invoice.DateSold.Month == now.Month),
+            "This Quarter" => invoices.Where(invoice => invoice.DateSold.Year == now.Year && ((invoice.DateSold.Month - 1) / 3) == ((now.Month - 1) / 3)),
+            "This Year" => invoices.Where(invoice => invoice.DateSold.Year == now.Year),
+            _ => invoices
+        };
+    }
+
+    private string GetReportDateRangeText(DateTime now)
+    {
+        return SelectedReportPeriod switch
+        {
+            "Today" => now.ToString("dd MMM yyyy", CultureInfo.CurrentCulture),
+            "This Week" => $"{now.Date.AddDays(-(int)now.DayOfWeek):dd MMM yyyy} - {now:dd MMM yyyy}",
+            "This Month" => now.ToString("MMMM yyyy", CultureInfo.CurrentCulture),
+            "This Quarter" => $"Q{((now.Month - 1) / 3) + 1} {now:yyyy}",
+            "This Year" => now.ToString("yyyy", CultureInfo.CurrentCulture),
+            _ => "All available invoices"
+        };
+    }
+
+    private static string BuildExecutiveSummary(double grossSales, double remaining, int invoiceCount, int lowStockCount)
+    {
+        var collectionRate = grossSales <= 0 ? 100 : Math.Max(0, (grossSales - remaining) / grossSales * 100);
+        return $"Sales performance covers {invoiceCount:N0} invoice(s), with a collection rate of {collectionRate:N1}% and {lowStockCount:N0} item(s) needing stock attention.";
+    }
+
+    private static IEnumerable<ReportBreakdownRow> BuildBreakdown(
+        IEnumerable<SalesDTO> invoices,
+        Func<SalesDTO, string?> groupSelector,
+        Func<SalesDTO, double> valueSelector,
+        string fallback,
+        string accent)
+    {
+        var groups = invoices
+            .GroupBy(invoice => string.IsNullOrWhiteSpace(groupSelector(invoice)) ? fallback : groupSelector(invoice)!.Trim())
+            .Select(group => new { Name = group.Key, Amount = group.Sum(valueSelector), Count = group.Count() })
+            .OrderByDescending(group => group.Amount)
+            .Take(8)
+            .ToList();
+        var max = groups.Count == 0 ? 1 : groups.Max(group => group.Amount);
+
+        return groups.Select(group => new ReportBreakdownRow(
+            group.Name,
+            FormatReportMoney(group.Amount),
+            $"{group.Count:N0} invoice(s)",
+            group.Amount <= 0 ? 4 : Math.Max(12, group.Amount / max * 260),
+            accent));
+    }
+
+    private static IEnumerable<ReportBreakdownRow> BuildMonthlyTrend(IEnumerable<SalesDTO> invoices)
+    {
+        var groups = invoices
+            .GroupBy(invoice => new DateTime(invoice.DateSold.Year, invoice.DateSold.Month, 1))
+            .OrderBy(group => group.Key)
+            .TakeLast(12)
+            .Select(group => new { Name = group.Key.ToString("MMM yyyy", CultureInfo.CurrentCulture), Amount = group.Sum(invoice => invoice.TotalSales), Count = group.Count() })
+            .ToList();
+        var max = groups.Count == 0 ? 1 : groups.Max(group => group.Amount);
+
+        return groups.Select(group => new ReportBreakdownRow(
+            group.Name,
+            FormatReportMoney(group.Amount),
+            $"{group.Count:N0} invoice(s)",
+            group.Amount <= 0 ? 4 : Math.Max(12, group.Amount / max * 260),
+            "#38DCC8"));
+    }
+
+    private static IEnumerable<ReportBreakdownRow> BuildTopSellingItems(IEnumerable<SalesDTO> invoices)
+    {
+        var groups = invoices
+            .SelectMany(invoice => invoice.PurchasedItems ?? [])
+            .GroupBy(item => string.IsNullOrWhiteSpace(item.ItemName) ? "Unnamed item" : item.ItemName.Trim())
+            .Select(group => new { Name = group.Key, Amount = group.Sum(item => item.TotalPrice), Quantity = group.Sum(item => item.Quantity) })
+            .OrderByDescending(group => group.Amount)
+            .Take(10)
+            .ToList();
+        var max = groups.Count == 0 ? 1 : groups.Max(group => group.Amount);
+
+        return groups.Select(group => new ReportBreakdownRow(
+            group.Name,
+            FormatReportMoney(group.Amount),
+            $"{group.Quantity:N0} sold",
+            group.Amount <= 0 ? 4 : Math.Max(12, group.Amount / max * 260),
+            "#D8A6FF"));
+    }
+
+    private static IEnumerable<InventoryValuationRow> BuildInventoryValuation(IEnumerable<Items> items)
+    {
+        return items
+            .Where(item => item.itemDetails is not null)
+            .Select(item => new InventoryValuationRow(
+                item.ItemCode,
+                item.ItemName,
+                item.itemDetails.OnHand,
+                GetAverageRetailPrice(item),
+                GetInventoryValue(item),
+                GetStockStatus(item)))
+            .OrderByDescending(row => row.Value)
+            .Take(12);
+    }
+
+    private static IEnumerable<InventoryValuationRow> BuildLowStock(IEnumerable<Items> items)
+    {
+        return items
+            .Where(item => item.itemDetails is not null)
+            .Where(item => item.itemDetails.OnHand <= Math.Max(1, item.itemDetails.QuantityPerBox))
+            .Select(item => new InventoryValuationRow(
+                item.ItemCode,
+                item.ItemName,
+                item.itemDetails.OnHand,
+                GetAverageRetailPrice(item),
+                GetInventoryValue(item),
+                GetStockStatus(item)))
+            .OrderBy(row => row.OnHand)
+            .Take(12);
+    }
+
+    private static string GetStockStatus(Items item)
+    {
+        var details = item.itemDetails;
+        if (details is null)
+        {
+            return "No details";
+        }
+
+        var reorderPoint = Math.Max(1, details.QuantityPerBox);
+        if (details.OnHand <= 0)
+        {
+            return "Out";
+        }
+
+        return details.OnHand <= reorderPoint ? "Low" : "Healthy";
+    }
+
+    private static double GetInventoryValue(Items item)
+    {
+        return Math.Max(0, item.itemDetails?.OnHand ?? 0) * GetAverageRetailPrice(item);
+    }
+
+    private static double GetAverageRetailPrice(Items item)
+    {
+        var details = item.itemDetails;
+        if (details is null)
+        {
+            return 0;
+        }
+
+        return details.RetailPrice > 0 ? details.RetailPrice : details.WholesalePrice;
+    }
+
+    private static string FormatReportMoney(double value)
+    {
+        return value.ToString("N2", CultureInfo.CurrentCulture);
+    }
+
+    private void ScheduleOperationMessageClear(string? message)
+    {
+        _operationMessageClearToken?.Cancel();
+        _operationMessageClearToken?.Dispose();
+        _operationMessageClearToken = null;
+
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        var delay = IsErrorMessage(message) ? TimeSpan.FromSeconds(10) : TimeSpan.FromSeconds(5);
+        var tokenSource = new CancellationTokenSource();
+        _operationMessageClearToken = tokenSource;
+        _ = ClearOperationMessageAfterDelayAsync(message, delay, tokenSource.Token);
+    }
+
+    private async Task ClearOperationMessageAfterDelayAsync(string message, TimeSpan delay, CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(delay, token);
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (OperationMessage == message)
+                {
+                    OperationMessage = null;
+                }
+            });
+        }
+        catch (TaskCanceledException)
+        {
+        }
+    }
+
+    private static bool IsErrorMessage(string message)
+    {
+        return message.Contains("failed", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("unable", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("invalid", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("required", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("select ", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("please ", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("must ", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task ExportReportsExcelAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            BuildReports();
+            var path = Path.Combine(GetReportsFolder(), $"StockPilotProERP_Business_Report_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx");
+
+            using var workbook = new XLWorkbook();
+            var overview = workbook.Worksheets.Add("Overview");
+            overview.Cell(1, 1).Value = "StockPilot Pro ERP Business Report";
+            overview.Cell(2, 1).Value = ReportDateRangeText;
+            overview.Cell(3, 1).Value = ReportGeneratedText;
+            overview.Cell(5, 1).Value = ReportExecutiveSummary;
+            overview.Range("A1:D1").Merge().Style.Font.SetBold().Font.SetFontSize(18);
+            overview.Range("A5:D5").Merge();
+
+            AddKpiSheet(workbook);
+            AddBreakdownSheet(workbook, "Sales by Status", SalesByStatusReport);
+            AddBreakdownSheet(workbook, "Monthly Sales Trend", MonthlySalesTrendReport);
+            AddBreakdownSheet(workbook, "Sales by Agent", SalesByAgentReport);
+            AddBreakdownSheet(workbook, "Sales by Customer", SalesByCustomerReport);
+            AddBreakdownSheet(workbook, "Sales by Payment", SalesByPaymentReport);
+            AddBreakdownSheet(workbook, "Top Selling Items", TopSellingItemsReport);
+            AddInventorySheet(workbook, "Inventory Valuation", InventoryValuationReport);
+            AddInventorySheet(workbook, "Stock Attention", LowStockReport);
+
+            foreach (var worksheet in workbook.Worksheets)
+            {
+                worksheet.Columns().AdjustToContents();
+                worksheet.SheetView.FreezeRows(1);
+            }
+
+            workbook.SaveAs(path);
+            OperationMessage = $"Excel report exported: {path}";
+            await Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            OperationMessage = $"Excel export failed: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task ExportReportsPdfAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            BuildReports();
+            var path = Path.Combine(GetReportsFolder(), $"StockPilotProERP_Business_Report_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
+            var lines = BuildPdfReportLines();
+            File.WriteAllBytes(path, CreateSimplePdf(lines));
+            OperationMessage = $"PDF report exported: {path}";
+            await Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            OperationMessage = $"PDF export failed: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private static string GetReportsFolder()
+    {
+        var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "StockPilot Pro ERP Reports");
+        Directory.CreateDirectory(folder);
+        return folder;
+    }
+
+    private void AddKpiSheet(XLWorkbook workbook)
+    {
+        var sheet = workbook.Worksheets.Add("KPIs");
+        sheet.Cell(1, 1).Value = "Metric";
+        sheet.Cell(1, 2).Value = "Value";
+        sheet.Cell(1, 3).Value = "Note";
+        StyleHeader(sheet.Range("A1:C1"));
+
+        var row = 2;
+        foreach (var kpi in ReportKpis)
+        {
+            sheet.Cell(row, 1).Value = kpi.Title;
+            sheet.Cell(row, 2).Value = kpi.Value;
+            sheet.Cell(row, 3).Value = kpi.Caption;
+            row++;
+        }
+    }
+
+    private static void AddBreakdownSheet(XLWorkbook workbook, string name, IEnumerable<ReportBreakdownRow> rows)
+    {
+        var sheet = workbook.Worksheets.Add(name);
+        sheet.Cell(1, 1).Value = "Label";
+        sheet.Cell(1, 2).Value = "Value";
+        sheet.Cell(1, 3).Value = "Detail";
+        StyleHeader(sheet.Range("A1:C1"));
+
+        var row = 2;
+        foreach (var item in rows)
+        {
+            sheet.Cell(row, 1).Value = item.Label;
+            sheet.Cell(row, 2).Value = item.Value;
+            sheet.Cell(row, 3).Value = item.Caption;
+            row++;
+        }
+    }
+
+    private static void AddInventorySheet(XLWorkbook workbook, string name, IEnumerable<InventoryValuationRow> rows)
+    {
+        var sheet = workbook.Worksheets.Add(name);
+        sheet.Cell(1, 1).Value = "Code";
+        sheet.Cell(1, 2).Value = "Item";
+        sheet.Cell(1, 3).Value = "On Hand";
+        sheet.Cell(1, 4).Value = "Unit Value";
+        sheet.Cell(1, 5).Value = "Inventory Value";
+        sheet.Cell(1, 6).Value = "Status";
+        StyleHeader(sheet.Range("A1:F1"));
+
+        var row = 2;
+        foreach (var item in rows)
+        {
+            sheet.Cell(row, 1).Value = item.Code;
+            sheet.Cell(row, 2).Value = item.Name;
+            sheet.Cell(row, 3).Value = item.OnHand;
+            sheet.Cell(row, 4).Value = item.UnitValue;
+            sheet.Cell(row, 5).Value = item.Value;
+            sheet.Cell(row, 6).Value = item.Status;
+            row++;
+        }
+
+        sheet.Column(4).Style.NumberFormat.Format = "#,##0.00";
+        sheet.Column(5).Style.NumberFormat.Format = "#,##0.00";
+    }
+
+    private static void StyleHeader(IXLRange range)
+    {
+        range.Style.Font.SetBold();
+        range.Style.Fill.SetBackgroundColor(XLColor.FromHtml("#E8F2EF"));
+        range.Style.Font.SetFontColor(XLColor.FromHtml("#12312D"));
+    }
+
+    private List<string> BuildPdfReportLines()
+    {
+        var lines = new List<string>
+        {
+            "StockPilot Pro ERP Business Report",
+            ReportDateRangeText,
+            ReportGeneratedText,
+            string.Empty,
+            ReportExecutiveSummary,
+            string.Empty,
+            "Executive KPIs"
+        };
+
+        lines.AddRange(ReportKpis.Select(kpi => $"{kpi.Title}: {kpi.Value} ({kpi.Caption})"));
+        AddPdfSection(lines, "Sales By Status", SalesByStatusReport);
+        AddPdfSection(lines, "Monthly Sales Trend", MonthlySalesTrendReport);
+        AddPdfSection(lines, "Sales By Agent", SalesByAgentReport);
+        AddPdfSection(lines, "Sales By Customer", SalesByCustomerReport);
+        AddPdfSection(lines, "Sales By Payment Method", SalesByPaymentReport);
+        AddPdfSection(lines, "Top Selling Items", TopSellingItemsReport);
+        AddPdfInventorySection(lines, "Inventory Valuation", InventoryValuationReport);
+        AddPdfInventorySection(lines, "Stock Attention", LowStockReport);
+        return lines.SelectMany(WrapPdfLine).ToList();
+    }
+
+    private static void AddPdfSection(List<string> lines, string title, IEnumerable<ReportBreakdownRow> rows)
+    {
+        lines.Add(string.Empty);
+        lines.Add(title);
+        lines.AddRange(rows.Select(row => $"{row.Label} | {row.Value} | {row.Caption}"));
+    }
+
+    private static void AddPdfInventorySection(List<string> lines, string title, IEnumerable<InventoryValuationRow> rows)
+    {
+        lines.Add(string.Empty);
+        lines.Add(title);
+        lines.AddRange(rows.Select(row => $"{row.Code} | {row.Name} | On hand {row.OnHandText} | Unit {row.UnitValueText} | Value {row.ValueText} | {row.Status}"));
+    }
+
+    private static IEnumerable<string> WrapPdfLine(string line)
+    {
+        const int maxLength = 112;
+        if (line.Length <= maxLength)
+        {
+            yield return line;
+            yield break;
+        }
+
+        for (var index = 0; index < line.Length; index += maxLength)
+        {
+            yield return line.Substring(index, Math.Min(maxLength, line.Length - index));
+        }
+    }
+
+    private static byte[] CreateSimplePdf(IReadOnlyList<string> lines)
+    {
+        const int linesPerPage = 34;
+        var pages = lines.Chunk(linesPerPage).ToList();
+        if (pages.Count == 0)
+        {
+            pages.Add(["No report data."]);
+        }
+
+        var objects = new List<string> { string.Empty };
+        var pageObjectIds = new List<int>();
+        var fontObjectId = 0;
+
+        int AddObject(string body)
+        {
+            objects.Add(body);
+            return objects.Count - 1;
+        }
+
+        AddObject(string.Empty);
+        AddObject(string.Empty);
+
+        foreach (var pageLines in pages)
+        {
+            var content = BuildPdfPageContent(pageLines);
+            var contentObjectId = AddObject($"<< /Length {Encoding.ASCII.GetByteCount(content)} >>\nstream\n{content}\nendstream");
+            var pageObjectId = AddObject($"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 {{FONT}} 0 R >> >> /Contents {contentObjectId} 0 R >>");
+            pageObjectIds.Add(pageObjectId);
+        }
+
+        fontObjectId = AddObject("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+        objects[1] = "<< /Type /Catalog /Pages 2 0 R >>";
+        objects[2] = $"<< /Type /Pages /Kids [{string.Join(" ", pageObjectIds.Select(id => $"{id} 0 R"))}] /Count {pageObjectIds.Count} >>";
+
+        for (var i = 1; i < objects.Count; i++)
+        {
+            objects[i] = objects[i].Replace("{FONT}", fontObjectId.ToString(CultureInfo.InvariantCulture));
+        }
+
+        var builder = new StringBuilder();
+        var offsets = new List<int> { 0 };
+        builder.Append("%PDF-1.4\n");
+
+        for (var i = 1; i < objects.Count; i++)
+        {
+            offsets.Add(Encoding.ASCII.GetByteCount(builder.ToString()));
+            builder.Append(CultureInfo.InvariantCulture, $"{i} 0 obj\n{objects[i]}\nendobj\n");
+        }
+
+        var xrefOffset = Encoding.ASCII.GetByteCount(builder.ToString());
+        builder.Append(CultureInfo.InvariantCulture, $"xref\n0 {objects.Count}\n0000000000 65535 f \n");
+
+        for (var i = 1; i < objects.Count; i++)
+        {
+            builder.Append(CultureInfo.InvariantCulture, $"{offsets[i]:0000000000} 00000 n \n");
+        }
+
+        builder.Append(CultureInfo.InvariantCulture, $"trailer\n<< /Size {objects.Count} /Root 1 0 R >>\nstartxref\n{xrefOffset}\n%%EOF");
+        return Encoding.ASCII.GetBytes(builder.ToString());
+    }
+
+    private static string BuildPdfPageContent(IEnumerable<string> lines)
+    {
+        var content = new StringBuilder();
+        var y = 555;
+        var first = true;
+
+        foreach (var line in lines)
+        {
+            var fontSize = first ? 16 : 9;
+            content.Append(CultureInfo.InvariantCulture, $"BT /F1 {fontSize} Tf 40 {y} Td ({EscapePdf(line)}) Tj ET\n");
+            y -= first ? 24 : 15;
+            first = false;
+        }
+
+        return content.ToString();
+    }
+
+    private static string EscapePdf(string value)
+    {
+        return value.Replace("\\", "\\\\").Replace("(", "\\(").Replace(")", "\\)");
     }
 
     private async Task EditAccountAsync(Accounts account)
@@ -1602,11 +2558,9 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 Address = address.Trim(),
                 Terms = terms,
                 DiscountPercent = 0,
-                Cluster = agent?.Location?.LocationName ?? string.Empty,
+                Cluster = string.Empty,
                 isActive = true,
-                RegisterDate = DateTime.Now,
-                LocationId = agent?.LocationId ?? _loadService.Context.Accounts.FirstOrDefault()?.LocationId ?? Guid.Empty,
-                Location = agent?.Location!
+                RegisterDate = DateTime.Now
             };
 
             await _accountService.AddAccountAsync(account);
@@ -1648,7 +2602,6 @@ public sealed class DashboardPageViewModel : ViewModelBase
         try
         {
             IsBusy = true;
-            var locationId = SessionManager.AgentDetails?.LocationId ?? _loadService.Context.Accounts.FirstOrDefault()?.LocationId ?? Guid.Empty;
             await _agentsService.AddAgentAsync(new AgentRequestDTO
             {
                 Id = Guid.NewGuid(),
@@ -1659,8 +2612,7 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 AgentAddress = address.Trim(),
                 AgentRole = role.Trim(),
                 DateCreated = DateTime.Now,
-                DateLastLogin = null,
-                LocationId = locationId
+                DateLastLogin = null
             });
 
             await RefreshMaintenanceAsync();
@@ -1693,23 +2645,11 @@ public sealed class DashboardPageViewModel : ViewModelBase
         var qtyPerBox = await PromptNumberAsync("Add Item", "Quantity per box", 0);
         if (qtyPerBox is null) return;
 
-        var bataanRetail = await PromptNumberAsync("Add Item", "Bataan retail", 0);
-        if (bataanRetail is null) return;
+        var retailPrice = await PromptNumberAsync("Add Item", "Retail price", 0);
+        if (retailPrice is null) return;
 
-        var bataanWholesale = await PromptNumberAsync("Add Item", "Bataan wholesale", 0);
-        if (bataanWholesale is null) return;
-
-        var pampangaRetail = await PromptNumberAsync("Add Item", "Pampanga retail", 0);
-        if (pampangaRetail is null) return;
-
-        var pampangaWholesale = await PromptNumberAsync("Add Item", "Pampanga wholesale", 0);
-        if (pampangaWholesale is null) return;
-
-        var zambalesRetail = await PromptNumberAsync("Add Item", "Zambales retail", 0);
-        if (zambalesRetail is null) return;
-
-        var zambalesWholesale = await PromptNumberAsync("Add Item", "Zambales wholesale", 0);
-        if (zambalesWholesale is null) return;
+        var wholesalePrice = await PromptNumberAsync("Add Item", "Wholesale price", 0);
+        if (wholesalePrice is null) return;
 
         try
         {
@@ -1724,12 +2664,8 @@ public sealed class DashboardPageViewModel : ViewModelBase
                     ItemDescription = description.Trim(),
                     OnHand = onHand.Value,
                     QuantityPerBox = qtyPerBox.Value,
-                    BataanRetail = bataanRetail.Value,
-                    BataanWholeSale = bataanWholesale.Value,
-                    PampangaRetail = pampangaRetail.Value,
-                    PampangaWholeSale = pampangaWholesale.Value,
-                    ZambalesRetail = zambalesRetail.Value,
-                    ZambalesWholeSale = zambalesWholesale.Value,
+                    RetailPrice = retailPrice.Value,
+                    WholesalePrice = wholesalePrice.Value,
                     ItemsSold = 0,
                     Sales = 0,
                     Quantity = 0
@@ -1782,8 +2718,7 @@ public sealed class DashboardPageViewModel : ViewModelBase
                 AgentAddress = address.Trim(),
                 AgentRole = role.Trim(),
                 DateCreated = agent.DateCreated,
-                DateLastLogin = agent.DateLastLogin,
-                LocationId = agent.LocationId
+                DateLastLogin = agent.DateLastLogin
             });
 
             await RefreshMaintenanceAsync();
@@ -1818,23 +2753,11 @@ public sealed class DashboardPageViewModel : ViewModelBase
         var qtyPerBox = await PromptNumberAsync("Edit Item", "Quantity per box", item.itemDetails.QuantityPerBox);
         if (qtyPerBox is null) return;
 
-        var bataanRetail = await PromptNumberAsync("Edit Item", "Bataan retail", item.itemDetails.BataanRetail);
-        if (bataanRetail is null) return;
+        var retailPrice = await PromptNumberAsync("Edit Item", "Retail price", item.itemDetails.RetailPrice);
+        if (retailPrice is null) return;
 
-        var bataanWholesale = await PromptNumberAsync("Edit Item", "Bataan wholesale", item.itemDetails.BataanWholeSale);
-        if (bataanWholesale is null) return;
-
-        var pampangaRetail = await PromptNumberAsync("Edit Item", "Pampanga retail", item.itemDetails.PampangaRetail);
-        if (pampangaRetail is null) return;
-
-        var pampangaWholesale = await PromptNumberAsync("Edit Item", "Pampanga wholesale", item.itemDetails.PampangaWholeSale);
-        if (pampangaWholesale is null) return;
-
-        var zambalesRetail = await PromptNumberAsync("Edit Item", "Zambales retail", item.itemDetails.ZambalesRetail);
-        if (zambalesRetail is null) return;
-
-        var zambalesWholesale = await PromptNumberAsync("Edit Item", "Zambales wholesale", item.itemDetails.ZambalesWholeSale);
-        if (zambalesWholesale is null) return;
+        var wholesalePrice = await PromptNumberAsync("Edit Item", "Wholesale price", item.itemDetails.WholesalePrice);
+        if (wholesalePrice is null) return;
 
         try
         {
@@ -1844,12 +2767,8 @@ public sealed class DashboardPageViewModel : ViewModelBase
             item.ItemDescription = description.Trim();
             item.itemDetails.OnHand = onHand.Value;
             item.itemDetails.QuantityPerBox = qtyPerBox.Value;
-            item.itemDetails.BataanRetail = bataanRetail.Value;
-            item.itemDetails.BataanWholeSale = bataanWholesale.Value;
-            item.itemDetails.PampangaRetail = pampangaRetail.Value;
-            item.itemDetails.PampangaWholeSale = pampangaWholesale.Value;
-            item.itemDetails.ZambalesRetail = zambalesRetail.Value;
-            item.itemDetails.ZambalesWholeSale = zambalesWholesale.Value;
+            item.itemDetails.RetailPrice = retailPrice.Value;
+            item.itemDetails.WholesalePrice = wholesalePrice.Value;
 
             var success = await _itemServices.UpdateItemAsync(item);
             OperationMessage = success ? "Item updated successfully." : "Failed to update item.";
@@ -1934,32 +2853,18 @@ public sealed class DashboardPageViewModel : ViewModelBase
             return 0;
         }
 
-        var isRetail = PricingMode == "Retail";
-        return SelectedLocation switch
-        {
-            "Bataan" => isRetail ? item.itemDetails.BataanRetail : item.itemDetails.BataanWholeSale,
-            "Pampanga" => isRetail ? item.itemDetails.PampangaRetail : item.itemDetails.PampangaWholeSale,
-            "Zambales" => isRetail ? item.itemDetails.ZambalesRetail : item.itemDetails.ZambalesWholeSale,
-            _ => 0
-        };
+        return PricingMode == "Retail"
+            ? item.itemDetails.RetailPrice
+            : item.itemDetails.WholesalePrice;
     }
 
     private void UpdateAgentHeader()
     {
         var agent = SessionManager.AgentDetails;
-        AgentName = agent?.AgentName ?? "Autotech";
+        AgentName = agent?.AgentName ?? "StockPilot Pro ERP";
 
         var role = agent?.AgentRole ?? "User";
-        var location = agent?.Location?.LocationName ?? "No location";
-        AgentMeta = $"{role} - {location}";
-
-        SelectedLocation = location switch
-        {
-            "Bataan" => "Bataan",
-            "Zambales" => "Zambales",
-            "Upper Pampanga" or "Lower Pampanga" => "Pampanga",
-            _ => SelectedLocation
-        };
+        AgentMeta = role;
 
         OnPropertyChanged(nameof(CanAccessMaintenance));
     }
@@ -2014,6 +2919,58 @@ public sealed class DashboardPageViewModel : ViewModelBase
         public PaymentMethod Method { get; } = method;
 
         public string Description { get; } = description;
+    }
+
+    public sealed class ReportKpi(string title, string value, string caption, string accentColor)
+    {
+        public string Title { get; } = title;
+
+        public string Value { get; } = value;
+
+        public string Caption { get; } = caption;
+
+        public string AccentColor { get; } = accentColor;
+    }
+
+    public sealed class ReportBreakdownRow(string label, string value, string caption, double barWidth, string accentColor)
+    {
+        public string Label { get; } = label;
+
+        public string Value { get; } = value;
+
+        public string Caption { get; } = caption;
+
+        public double BarWidth { get; } = barWidth;
+
+        public string AccentColor { get; } = accentColor;
+    }
+
+    public sealed class InventoryValuationRow(string code, string name, double onHand, double unitValue, double value, string status)
+    {
+        public string Code { get; } = code;
+
+        public string Name { get; } = name;
+
+        public double OnHand { get; } = onHand;
+
+        public string OnHandText => OnHand.ToString("N0", CultureInfo.CurrentCulture);
+
+        public double UnitValue { get; } = unitValue;
+
+        public string UnitValueText => UnitValue.ToString("N2", CultureInfo.CurrentCulture);
+
+        public double Value { get; } = value;
+
+        public string ValueText => Value.ToString("N2", CultureInfo.CurrentCulture);
+
+        public string Status { get; } = status;
+
+        public string StatusColor => Status switch
+        {
+            "Out" => "#F07F7F",
+            "Low" => "#F0B35A",
+            _ => "#87E0B0"
+        };
     }
 
     public sealed class InvoiceRow

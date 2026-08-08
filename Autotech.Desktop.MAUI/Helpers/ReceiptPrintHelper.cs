@@ -116,9 +116,9 @@ public static class ReceiptPrintHelper
         var lineHeight = bodyFont.GetHeight(graphics) + 2;
         const string peso = "\u20B1";
 
-        graphics.DrawString("AUTOTECH CAR CARE CENTER", headerFont, Brushes.Black, x + usableWidth / 4, y);
+        graphics.DrawString("STOCKPILOT PRO ERP", headerFont, Brushes.Black, x + usableWidth / 4, y);
         y += lineHeight;
-        graphics.DrawString("Wawa, Abucay, Bataan", bodyFont, Brushes.Black, x + usableWidth / 3, y);
+        graphics.DrawString("Sales and Inventory Management", bodyFont, Brushes.Black, x + usableWidth / 3, y);
         y += lineHeight;
         graphics.DrawString("TRUST RECEIPT", headerFont, Brushes.Black, x + usableWidth / 3, y);
         y += lineHeight;
@@ -202,7 +202,7 @@ public static class ReceiptPrintHelper
         leftY += lineHeight * 3.5f;
         y = Math.Min(leftY, rightY);
 
-        graphics.DrawString("ALL CHECKS MUST BE PAYABLE TO: AUTOTECH CAR CARE CENTER", termsFont, Brushes.Black, x, y);
+        graphics.DrawString("ALL CHECKS MUST BE PAYABLE TO: SELLER / ACCOUNT HOLDER", termsFont, Brushes.Black, x, y);
         y += lineHeight;
 
         const string ackText = "Received the items in good order, condition and accepted under the terms and conditions stipulated herein and at the back thereof.";

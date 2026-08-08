@@ -25,8 +25,5 @@ namespace Autotech.Desktop.Core.Models
         public Guid AccountId { get; set; }
         public Accounts Accounts { get; set; }
 
-        // Foreign key to Location
-        public Guid LocationId { get; set; }
-        public Locations Location { get; set; }
     }
 }

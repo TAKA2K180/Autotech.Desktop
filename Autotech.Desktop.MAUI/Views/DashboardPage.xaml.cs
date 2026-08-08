@@ -113,6 +113,21 @@ public partial class DashboardPage : ContentPage
         ViewModel.SelectedMaintenanceItem = e.CurrentSelection.FirstOrDefault() as Items;
     }
 
+    private void MaintenanceSuppliers_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedMaintenanceSupplier = e.CurrentSelection.FirstOrDefault() as Supplier;
+    }
+
+    private void MaintenanceStock_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedMaintenanceStockMovement = e.CurrentSelection.FirstOrDefault() as StockMovement;
+    }
+
+    private void MaintenanceExpenses_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedMaintenanceExpense = e.CurrentSelection.FirstOrDefault() as Expense;
+    }
+
     private async void OpenInvoice_Clicked(object? sender, EventArgs e)
     {
         if (_selectedInvoice is null)

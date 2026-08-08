@@ -23,7 +23,6 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public string Status { get; set; }
         public string Cluster { get; set; }
         public double TotalLiters { get; set; }
-        public Guid LocationId { get; set; }
         public Guid AccountId { get; set; }
 
         public List<PurchasedItemDTO> PurchasedItems { get; set; }

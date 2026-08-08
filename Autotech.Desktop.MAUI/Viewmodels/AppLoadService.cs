@@ -38,10 +38,7 @@ public sealed class AppLoadService
         }
 
         progress?.Report("Loading accounts...");
-        var locationId = SessionManager.AgentDetails?.LocationId ?? Guid.Empty;
-        var accounts = locationId == Guid.Empty
-            ? await _accountService.GetAllAccountsAsync()
-            : await _accountService.GetAccountsByLocationIdAsync(locationId);
+        var accounts = await _accountService.GetAllAccountsAsync();
         Context.Accounts.AddRange(accounts);
 
         progress?.Report("Loading invoices...");

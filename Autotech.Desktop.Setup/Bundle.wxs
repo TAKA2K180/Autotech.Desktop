@@ -3,7 +3,7 @@
      xmlns:bal="http://schemas.microsoft.com/wix/BalExtension"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 
-	<Bundle Name="Autotech Desktop Installer"
+	<Bundle Name="StockPilot Pro ERP Installer"
 			Version="$(var.ProductVersion)"
 			Manufacturer="RCST Software Solutions"
 			UpgradeCode="e2bf5af5-d94a-437f-af88-d75495c02f71">
@@ -16,7 +16,7 @@
 
 			<!-- Your MSI package -->
 			<MsiPackage SourceFile="Autotech.Desktop.msi"
-						DisplayName="Autotech Desktop" />
+						DisplayName="StockPilot Pro ERP" />
 		</Chain>
 	</Bundle>
 

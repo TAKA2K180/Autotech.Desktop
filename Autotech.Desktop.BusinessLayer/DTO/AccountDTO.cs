@@ -21,9 +21,6 @@ namespace Autotech.Desktop.BusinessLayer.DTO
         public bool isActive { get; set; }
         public DateTime RegisterDate { get; set; }
         public AccountDetails AccountDetails { get; set; }
-        // Foreign key to Location
-        public Guid LocationId { get; set; }
-        public Locations Location { get; set; }
         public double LitersOrdered { get; set; }
         public int OpenReceipts { get; set; }
     }
