@@ -22,7 +22,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             {
                 using (var httpClient = new HttpClient())
                 {
-                    string apiUrl = "https://api.autotechph.online/api/v1/Auth/Agents/Login";
+                    string apiUrl = $"{ApiConfig.BaseUrl}/Auth/Agents/Login";
 
                     var loginData = new AgentLoginDTO
                     {
@@ -74,7 +74,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
-                    var apiUrl = "https://api.autotechph.online/api/v1/Agents/";
+                    var apiUrl = $"{ApiConfig.BaseUrl}/Agents/";
                     HttpResponseMessage response = await httpClient.GetAsync($"{apiUrl}{agentId}");
 
                     if (response.IsSuccessStatusCode)

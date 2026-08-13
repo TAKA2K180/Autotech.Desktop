@@ -9,30 +9,34 @@
     <OutputName>Autotech.Desktop.Setup</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
-    <!-- Pass ProductVersion and paths as constants -->
+
+    <!--
+      The version stamped into the MSI. Do NOT reuse the ProductVersion property above
+      for this - that is the WiX project schema version (3.10), and feeding it to
+      Product/@Version pins every MSI at 3.10, which stops MajorUpgrade from ever firing.
+      version.ps1 passes /p:AppVersion; a plain Visual Studio build falls back to
+      version.txt so it still produces a correctly versioned MSI.
+    -->
+    <AppVersionFile>$(MSBuildThisFileDirectory)..\version.txt</AppVersionFile>
+    <AppVersion Condition=" '$(AppVersion)' == '' AND Exists('$(AppVersionFile)') ">$([System.IO.File]::ReadAllText($(AppVersionFile)).Trim())</AppVersion>
+    <AppVersion Condition=" '$(AppVersion)' == '' ">0.0.0.0</AppVersion>
+
+    <!-- Output of the self-contained win-x64 Release publish. -->
+    <AppPublishDir Condition=" '$(AppPublishDir)' == '' ">$(MSBuildThisFileDirectory)..\Autotech.Desktop.Main\bin\Release\net10.0-windows7.0\win-x64\publish\</AppPublishDir>
+
     <DefineConstants>
-      ProductVersion=$(ProductVersion);
-      Autotech.Desktop.Main.TargetPath=F:\Autotech\Autotech.Desktop\Autotech.Desktop.Main\bin\Release\net6.0-windows\win-x64\Autotech.Desktop.Main.exe;
-      Autotech.Desktop.Main.TargetDir=F:\Autotech\Autotech.Desktop\Autotech.Desktop.Main\bin\Release\net6.0-windows\win-x64\publish\
+      ProductVersion=$(AppVersion);
+      PublishDir=$(AppPublishDir)
     </DefineConstants>
   </PropertyGroup>
+  <!-- DefineConstants is set once above so it cannot drift between configurations. -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>
-      ProductVersion=$(ProductVersion);
-      Autotech.Desktop.Main.TargetPath=F:\Autotech\Autotech.Desktop\Autotech.Desktop.Main\bin\Release\net6.0-windows\win-x64\Autotech.Desktop.Main.exe;
-      Autotech.Desktop.Main.TargetDir=F:\Autotech\Autotech.Desktop\Autotech.Desktop.Main\bin\Release\net6.0-windows\win-x64\publish\
-    </DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>
-      ProductVersion=$(ProductVersion);
-      Autotech.Desktop.Main.TargetPath=F:\Autotech\Autotech.Desktop\Autotech.Desktop.Main\bin\Release\net6.0-windows\win-x64\Autotech.Desktop.Main.exe;
-      Autotech.Desktop.Main.TargetDir=F:\Autotech\Autotech.Desktop\Autotech.Desktop.Main\bin\Release\net6.0-windows\win-x64\publish\
-    </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />

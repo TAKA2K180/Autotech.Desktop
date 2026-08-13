@@ -11,7 +11,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
 {
     public class UserServices
     {
-        private readonly string apiUrl = "https://api.autotechph.online/api/v1/User";
+        private static string apiUrl => $"{ApiConfig.BaseUrl}/User";
 
         public async Task<Agents> GetCurrentUserAsync()
         {

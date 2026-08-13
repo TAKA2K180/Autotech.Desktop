@@ -11,6 +11,9 @@ namespace Autotech.Desktop.Main
         [STAThread]
         static void Main()
         {
+            // Resolve the API base URL before any form or service is created.
+            ApiConfig.Initialize();
+
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();

@@ -1,5 +1,5 @@
 # version.ps1 - Auto Versioning Script for Autotech Desktop
-$majorMinor = "26.1"
+$majorMinor = "26.3"
 $dateCode = (Get-Date -Format "MMdd")
 $buildNumberFile = "$PSScriptRoot\build_number.txt"
 
@@ -37,6 +37,15 @@ Write-Host "Restoring packages from official NuGet..."
 dotnet restore "$PSScriptRoot\Autotech.Desktop.Main\Autotech.Desktop.Main.csproj" --source "https://api.nuget.org/v3/index.json"
 Write-Host "Publishing .NET WinForms project..."
 dotnet publish "$PSScriptRoot\Autotech.Desktop.Main\Autotech.Desktop.Main.csproj" -c Release -r win-x64 --self-contained true
+if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed with exit code $LASTEXITCODE" }
+
+# -------------------
+# REGENERATE INSTALLER FILE LIST
+# -------------------
+# Must run after publish and before the WiX build, otherwise the MSI ships whatever
+# file list happened to be committed last.
+Write-Host "Regenerating ProductFiles.wxs from the publish output..."
+& "$PSScriptRoot\GenerateFiles.ps1"
 
 # -------------------
 # BUILD WIX INSTALLER
@@ -57,6 +66,7 @@ if (Test-Path $msbuildPath2022) {
 }
 
 Write-Host "Using MSBuild from: $msbuildPath"
-& "$msbuildPath" "$wixProj" /p:Configuration=Release /p:ProductVersion=$version
+& "$msbuildPath" "$wixProj" /p:Configuration=Release /p:AppVersion=$version
+if ($LASTEXITCODE -ne 0) { throw "WiX build failed with exit code $LASTEXITCODE" }
 
 Write-Host "Installer build complete. MSI will be available in Autotech.Desktop.Setup\bin\Release"

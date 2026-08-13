@@ -1,7 +1,6 @@
 ﻿using MetroSet_UI.Controls;
 using System.Drawing;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
 using MetroSet_UI.Enums;
 

@@ -14,7 +14,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
 {
     public class AgentsService
     {
-        private readonly string uri = "https://api.autotechph.online/api/v1/Agents";
+        private static string uri => $"{ApiConfig.BaseUrl}/Agents";
         public async Task<List<AgentDTO>> GetAllAgentsAsync()
         {
             using var client = new HttpClient();
@@ -39,7 +39,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
                 WriteIndented = true
             });
 
-            var response = await client.PutAsJsonAsync($"https://api.autotechph.online/api/v1/Agents/{agent.Id}", agent);
+            var response = await client.PutAsJsonAsync($"{uri}/{agent.Id}", agent);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -53,7 +53,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.Token);
 
-            var response = await client.PostAsJsonAsync("https://api.autotechph.online/api/v1/Agents", agent);
+            var response = await client.PostAsJsonAsync(uri, agent);
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();

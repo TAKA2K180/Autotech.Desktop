@@ -12,7 +12,7 @@ namespace Autotech.Desktop.BusinessLayer.Services
 {
     public class AccountService
     {
-        private readonly string apiUrl = "https://api.autotechph.online/api/v1/Accounts"; // Adjust if needed
+        private static string apiUrl => $"{ApiConfig.BaseUrl}/Accounts";
 
         public async Task<List<Accounts>> GetAllAccountsAsync()
         {

@@ -151,16 +151,23 @@ namespace Autotech.Desktop.Main.View
         #endregion
 
         #region Props
+        // These are set at runtime only - keep the designer from serializing them into
+        // InitializeComponent.
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string AgentName
         {
             get { return lblAgentName.Text; }
             set { lblAgentName.Text = value; }
         }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string DateandSales
         {
             get { return lblSalesInfo.Text; }
             set { lblSalesInfo.Text = value; }
         }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SalesNumber { get; set; }
 
         #endregion
